@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Catch-Up — February to June 2026 — AI Builder Signal</title>
+<meta name="description" content="The opening brief: every model release, tool, pricing shift and pattern from February to June 2026 that still matters for builders today." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  .toc { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); margin-bottom: 8px; line-height: 2; }
+  .toc a { color: var(--muted); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .toc .sep { color: var(--line); margin: 0 6px; }
+
+  .arcs { border-top: 1px solid var(--line); margin-top: 30px; padding: 8px 0 0; }
+  .arcs h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); font-weight: 700; margin: 18px 0 6px; }
+  .arcs ol { margin: 0; padding: 0; list-style: none; counter-reset: arc; }
+  .arcs li { counter-increment: arc; display: flex; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: .98rem; color: var(--body); }
+  .arcs li::before { content: counter(arc, decimal-leading-zero); font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); padding-top: 4px; }
+  .arcs li b { color: var(--text); }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  .note { margin: 56px 0 0; padding: 16px 20px; border-left: 3px solid var(--accent); background: #f4f3ff; border-radius: 0 10px 10px 0; font-size: .93rem; color: var(--body); }
+  .note b { color: var(--text); }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 001 · Catch-up edition · 12 June 2026</p>
+  <h1>The Catch-Up — February to June 2026</h1>
+  <p class="lede">The opening brief. Everything from the last four months that still matters if you're building AI products today — filtered to one test: <b>can you use it, does it change your costs, or does it change your roadmap?</b> Daily briefs from here on are 7–10 bullets; this one is the back-fill.</p>
+
+  <p class="toc">
+    <a href="#frontier">01 Frontier models</a><span class="sep">·</span>
+    <a href="#open">02 Open weights</a><span class="sep">·</span>
+    <a href="#tools">03 Tools &amp; agent infra</a><span class="sep">·</span>
+    <a href="#patterns">04 Build patterns</a><span class="sep">·</span>
+    <a href="#radar-cost">05 Deadlines &amp; pricing</a><span class="sep">·</span>
+    <a href="#radar-fin">06 Regulated finance &amp; AU</a>
+  </p>
+
+  <div class="arcs">
+    <h2>The five arcs of the period</h2>
+    <ol>
+      <li><span><b>Long context became table stakes.</b> 1M-token windows are now standard across Claude, GPT-5.4/5.5, Gemini, Grok 4.3, DeepSeek V4 and MiniMax M3 — the RAG-vs-long-context math has changed.</span></li>
+      <li><span><b>Agents moved into the platform.</b> Every major lab now sells hosted sandboxes, harnesses and subagent primitives — build-vs-buy for agent infra is a different question than it was in January.</span></li>
+      <li><span><b>Open weights caught the frontier in coding.</b> GLM-5.1 and MiniMax M3 took #1 on SWE-bench Pro past closed models, while Meta left the open field — China and NVIDIA filled it.</span></li>
+      <li><span><b>The bill changed shape.</b> Usage-based metering arrived everywhere (Copilot credits, Agent SDK credit pools, per-minute sandboxes), alongside the densest deprecation calendar yet.</span></li>
+      <li><span><b>Australian regulators showed their hand.</b> TPB, APRA, ASIC and AUSTRAC all moved on AI in the same window — governance features are becoming procurement requirements.</span></li>
+    </ol>
+  </div>
+
+  <h2 class="sec" id="frontier"><span class="num">01</span>Ship Log — Frontier models</h2>
+  <p class="secdesc">What shipped at the closed labs, and what it costs.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Fable 5 &amp; Mythos 5</span><span class="em">Anthropic · Jun 9</span></div>
+    <p>Anthropic's new top generation: Fable 5 (<code>claude-fable-5</code>) at $10/$50 per MTok with 1M context default, 128K output and always-on adaptive thinking; Mythos 5 is gated to Project Glasswing participants.</p>
+    <p class="y">A new capability ceiling at half of Mythos Preview pricing — but migration is real work: no prefill, no thinking toggle, a new <code>refusal</code> stop reason, and mandatory 30-day data retention (no ZDR).</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-fable-5-mythos-5">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Opus 4.8</span><span class="em">Anthropic · May 28</span></div>
+    <p>The previous flagship: 1M context by default, 128K output, adaptive thinking that triggers only when needed, mid-conversation <code>system</code> messages, and a fast-mode research preview — at unchanged Opus pricing.</p>
+    <p class="y">Cache-preserving system-message updates matter for long-running agents; a drop-in upgrade if you already absorbed 4.7's tokenizer change.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-opus-4-8">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Opus 4.7</span><span class="em">Anthropic · Apr 16</span></div>
+    <p>Opus refresh at unchanged $5/$25 with high-resolution image input and a new tokenizer; non-default <code>temperature</code>/<code>top_p</code>/<code>top_k</code> now return 400 errors.</p>
+    <p class="y">Not a drop-in swap: the tokenizer counts ~30% more tokens for the same text, so budgets, limits and cost models all need re-checking.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-opus-4-7">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Opus 4.6 &amp; Sonnet 4.6</span><span class="em">Anthropic · Feb 5 / Feb 17</span></div>
+    <p>The generation that introduced adaptive thinking and the GA <code>effort</code> parameter; Sonnet 4.6 landed at $3/$15, and the same day web search, code execution, tool search and the memory tool went GA — with code execution free when used alongside web search/fetch.</p>
+    <p class="y">This is the paradigm every later Claude model requires, and the free-code-execution change was an effective price cut on tool-augmented workloads.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-opus-4-6">anthropic.com ↗</a>
+    <a class="src" href="https://www.anthropic.com/news/claude-sonnet-4-6">sonnet 4.6 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">1M context GA + automatic prompt caching</span><span class="em">Anthropic · Feb 19 → Mar 13</span></div>
+    <p>1M-token context went GA at standard long-context pricing (no beta header, media limit raised to 600 images/pages), and a single <code>cache_control</code> flag now moves the cache point forward automatically.</p>
+    <p class="y">Manual cache-breakpoint engineering is dead, and long-context architectures no longer carry beta risk.</p>
+    <a class="src" href="https://platform.claude.com/docs/en/release-notes/overview">platform.claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GPT-5.4 family</span><span class="em">OpenAI · Mar 5 / Mar 17</span></div>
+    <p>New flagship with native computer use, tool search and server-side compaction in the API, up to 1M context; GPT-5.4 mini followed at roughly 30% of the cost.</p>
+    <p class="y">Agent primitives (computer use, tool search) became base-API features rather than things you build — and the mini tier reset OpenAI unit economics.</p>
+    <a class="src" href="https://developers.openai.com/api/docs/changelog">developers.openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">GPT-5.5 &amp; GPT-5.5 Pro</span><span class="em">OpenAI · Apr 23</span></div>
+    <p>OpenAI's smartest models, focused on end-to-end computer work (code, research, documents, operating software), 1M context — $5/$30 per MTok, Pro at $30/$180.</p>
+    <p class="y">This is OpenAI's current price/capability anchor; benchmark your model choice against it.</p>
+    <a class="src" href="https://openai.com/index/introducing-gpt-5-5/">openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GPT-5.3-Codex &amp; Codex-Spark</span><span class="em">OpenAI · Feb 5 / Feb 12</span></div>
+    <p>Top agentic coding model (25% faster than 5.2-Codex) plus Codex-Spark, a small real-time coder streaming 1,000+ tokens/sec.</p>
+    <p class="y">Real-time-latency coding models open in-editor UX patterns that weren't possible at normal inference speeds.</p>
+    <a class="src" href="https://openai.com/index/introducing-gpt-5-3-codex/">openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI realtime voice trio</span><span class="em">OpenAI · May 7</span></div>
+    <p>GPT-Realtime-2 (GPT-5-class reasoning in live voice), GPT-Realtime-Translate (70+ input / 13 output languages) and GPT-Realtime-Whisper (streaming speech-to-text).</p>
+    <p class="y">Voice agents can now reason, translate and transcribe live instead of doing turn-based call-and-response.</p>
+    <a class="src" href="https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api/">openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Gemini 3.5 Flash GA</span><span class="em">Google · May 19</span></div>
+    <p>First Gemini 3.5-family model, GA in the API on day one — beats Gemini 3.1 Pro on agentic/coding benchmarks at less than half the cost of comparable models, ~4x faster; new Flex and Priority inference tiers add pricing levers.</p>
+    <p class="y">Frontier-level agent performance at Flash pricing resets the cost floor for agent products — note 3.5 Pro doesn't exist yet, Flash is the whole family.</p>
+    <a class="src" href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/">blog.google ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Grok 4.3 + Grok voice APIs</span><span class="em">xAI · Apr 17 / Apr 18</span></div>
+    <p>1M-token context, four reasoning-effort levels, native video input at $1.25/$2.50 per MTok; standalone STT ($0.10/hr batch) and TTS APIs launched the next day.</p>
+    <p class="y">The cheapest frontier-class 1M-context model on the market, and transcription pricing that dramatically undercuts incumbents — worth a line in any voice product's cost model.</p>
+    <a class="src" href="https://docs.x.ai/developers/models">docs.x.ai ↗</a>
+    <a class="src" href="https://x.ai/news/grok-stt-and-tts-apis">x.ai ↗</a>
+  </article>
+
+  <h2 class="sec" id="open"><span class="num">02</span>Ship Log — Open weights</h2>
+  <p class="secdesc">What you can download, self-host and fine-tune — and who left the field.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">DeepSeek V4-Pro &amp; V4-Flash</span><span class="em">DeepSeek · Apr 24</span></div>
+    <p>MIT-licensed MoE pair (1.6T/49B-active and 284B/13B-active) with 1M context and hybrid sparse attention running at ~27% of V3.2's per-token compute; API around $0.435/$0.87 per MTok.</p>
+    <p class="y">Frontier-class coding and reasoning you can self-host under MIT — and an API price that resets the floor for long-context workloads.</p>
+    <a class="src" href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro">huggingface.co ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">GLM-5 → GLM-5.1</span><span class="em">Z.ai · Feb 11 / Apr 7</span></div>
+    <p>MIT-licensed 744B/40B-active MoE trained entirely on Huawei Ascend chips; the 5.1 post-training update took #1 on SWE-bench Pro (58.4%), edging Claude Opus 4.6, with demonstrated 8-hour autonomous runs.</p>
+    <p class="y">The first time open weights held the top spot on a major agentic-coding leaderboard — viable as a primary coding-agent backend, not just a budget fallback.</p>
+    <a class="src" href="https://huggingface.co/zai-org/GLM-5.1">huggingface.co ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Qwen3.5-397B-A17B</span><span class="em">Alibaba · Feb 16</span></div>
+    <p>Apache 2.0 flagship MoE — 397B total but only 17B active, multimodal input, 262K context, 201 languages.</p>
+    <p class="y">One of the cheapest-to-serve large models per unit of capability — but note Alibaba's flagship tier (Qwen3.6-Max, 3.7-Max) has since gone closed-weights, a roadmap signal if you depend on top-tier Qwen.</p>
+    <a class="src" href="https://huggingface.co/Qwen/Qwen3.5-397B-A17B">huggingface.co ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Qwen3-Coder-Next</span><span class="em">Alibaba · Feb 4</span></div>
+    <p>Coding-agent specialist MoE at 80B total / 3B active with 256K context, scoring above 70% on SWE-bench Verified.</p>
+    <p class="y">Near-frontier agentic coding with 3B active params means capable coding agents on local and cheap hardware.</p>
+    <a class="src" href="https://qwen.ai/blog?id=qwen3-coder-next">qwen.ai ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Kimi K2.6</span><span class="em">Moonshot AI · Apr 20</span></div>
+    <p>1T/32B-active natively multimodal MoE under modified MIT, 256K context, 80.2% SWE-bench Verified, built for 12-hour autonomous sessions and large agent swarms.</p>
+    <p class="y">Open-weights coding/agent performance tying GPT-5.5-class closed models, downloadable today.</p>
+    <a class="src" href="https://huggingface.co/moonshotai/Kimi-K2.6">huggingface.co ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">MiniMax M3</span><span class="em">MiniMax · Jun 1</span></div>
+    <p>First open-weight model combining frontier coding (59.0% SWE-bench Pro — the new open #1), 1M context via sparse attention, and native multimodality with computer use; weights were due on Hugging Face this week.</p>
+    <p class="y">The top open coding model of the moment — but the license was unpublished at launch and the predecessor's modified MIT restricted commercial use, so verify before architecting around it.</p>
+    <a class="src" href="https://www.minimax.io/blog/minimax-m3">minimax.io ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Mistral Small 4 &amp; Medium 3.5</span><span class="em">Mistral · Mar 16 / May 22</span></div>
+    <p>Small 4 (Apache 2.0, 119B/6B-active) unifies Mistral's reasoning, vision and coding lines in one model; Medium 3.5 is a dense 128B at 77.6% SWE-bench Verified with per-request reasoning effort.</p>
+    <p class="y">One Apache model replaces three deployments, and Medium 3.5 is a strong self-host default for EU/data-sovereignty requirements.</p>
+    <a class="src" href="https://mistral.ai/news/mistral-small-4/">mistral.ai ↗</a>
+    <a class="src" href="https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/">medium 3.5 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Gemma 4 &amp; DiffusionGemma</span><span class="em">Google · Apr 2 / Jun 10</span></div>
+    <p>Apache 2.0 family (E2B to 31B, native vision+audio, 256K context) built on Gemini 3 research; DiffusionGemma — released two days ago — is the first production-grade open text-diffusion LLM, generating token blocks in parallel for up to 4x faster output (1,000+ tok/s on one H100).</p>
+    <p class="y">Best permissively-licensed small models from a US lab, and diffusion decoding is a genuinely new latency/cost lever where peak quality isn't critical.</p>
+    <a class="src" href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/">gemma 4 ↗</a>
+    <a class="src" href="https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/">diffusiongemma ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">NVIDIA Nemotron 3 &amp; Cosmos 3</span><span class="em">NVIDIA · Mar 11 → Jun 4</span></div>
+    <p>Open-weights agentic family from Super 120B up to Ultra (550B/55B-active reasoning), plus Cosmos 3, an open world-foundation model for physical AI; backed by a coalition including Mistral, Thinking Machines and Cursor.</p>
+    <p class="y">High-quality open models with first-class NVIDIA inference optimization — and a signal that open-frontier investment now has a US industrial anchor.</p>
+    <a class="src" href="https://nvidianews.nvidia.com/news/nvidia-debuts-nemotron-3-family-of-open-models">nvidia.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Meta goes closed — no Llama 5</span><span class="em">Meta · Apr 8</span></div>
+    <p>Meta Superintelligence Labs' first model, Muse Spark, shipped closed/API-only (and the API itself has been repeatedly delayed); no new open Llama weights shipped this period.</p>
+    <p class="y">If your roadmap assumed frontier Llama 5 open weights, the cadence is now uncertain — Meta's best work has moved to a closed track.</p>
+    <a class="src" href="https://ai.meta.com/blog/introducing-muse-spark-msl/">ai.meta.com ↗</a>
+  </article>
+
+  <h2 class="sec" id="tools"><span class="num">03</span>Ship Log — Tools &amp; agent infra</h2>
+  <p class="secdesc">The harnesses, SDKs and protocols you build on.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">MCP's biggest spec revision — RC locked</span><span class="em">MCP · May 21 (final Jul 28)</span></div>
+    <p>The 2026-07-28 spec release candidate: stateless core (no <code>initialize</code> handshake or session IDs), MCP Apps (sandboxed iframe UIs), a Tasks extension for long-running work, OAuth/OIDC hardening, and formal deprecation of Roots/Sampling/Logging.</p>
+    <p class="y">Every MCP server and client needs a migration plan — and the stateless core removes the sticky-session infrastructure burden that blocked enterprise deployments.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI Agents SDK overhaul</span><span class="em">OpenAI · Apr 15 / May 6</span></div>
+    <p>Native sandbox execution, a model-native long-horizon harness, and a subagent primitive; TypeScript SDK with sandbox support followed in May.</p>
+    <p class="y">OpenAI's official agent stack now covers file/command/code execution safely out of the box — a build-vs-buy reset for agent infrastructure.</p>
+    <a class="src" href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/">openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Responses API: compaction, Skills, hosted shells</span><span class="em">OpenAI · Feb 10 → Feb 23</span></div>
+    <p>Server-side context compaction, an implementation of the Skills agent standard, OpenAI-hosted Debian shell containers with major runtimes preinstalled, and a WebSocket mode.</p>
+    <p class="y">Context management and sandboxed code execution can now be offloaded to OpenAI instead of running your own infra.</p>
+    <a class="src" href="https://developers.openai.com/api/docs/changelog">developers.openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Managed Agents + Claude on AWS</span><span class="em">Anthropic · Apr 8 / May 11</span></div>
+    <p>A fully managed agent harness in public beta (sandboxes, webhooks, multi-agent, memory, scheduled deployments, MCP tunnels), plus the full Claude platform on Anthropic-managed infra with AWS billing and IAM.</p>
+    <p class="y">Anthropic now sells hosted agent infrastructure and an AWS-native procurement path — relevant both as a building block and as enterprise distribution.</p>
+    <a class="src" href="https://platform.claude.com/docs/en/release-notes/overview">platform.claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code's spring run</span><span class="em">Anthropic · May 11 → Jun 10</span></div>
+    <p>Agent View dashboard and <code>/goal</code> completion conditions; Dynamic Workflows orchestrating hundreds of background agents; Fast Mode; plugins auto-loading from <code>.claude/skills</code>; and nested sub-agents five levels deep (this week).</p>
+    <p class="y">Fleet-scale agent orchestration from the CLI, with zero-friction plugin distribution — the reference point for what coding-agent UX now means.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Codex: desktop apps, plugins, Goal mode</span><span class="em">OpenAI · Feb 2 → May 21</span></div>
+    <p>Standalone macOS and Windows apps with worktree multitasking, a packaged plugin system bundling skills + MCP configs, in-app browser/computer use, and Goal mode GA.</p>
+    <p class="y">Codex is a full agent workspace now, and its plugin format mirrors Claude Code's — builders can ship extensions to both ecosystems.</p>
+    <a class="src" href="https://developers.openai.com/codex/changelog">developers.openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GitHub Copilot SDK GA + desktop app</span><span class="em">GitHub · Jun 2</span></div>
+    <p>Programmatic access to Copilot's agent runtime for Node, Python, Go, .NET/Java and Rust — custom tools, MCP servers, and BYOK including Anthropic models — plus a desktop app orchestrating parallel agents in isolated worktrees.</p>
+    <p class="y">GitHub's agent engine is now an embeddable, supported building block — a direct alternative to the Claude Agent SDK and OpenAI Agents SDK.</p>
+    <a class="src" href="https://github.blog/changelog/2026-06-02-copilot-sdk-is-now-generally-available/">github.blog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cursor SDK + Cursor 3.7</span><span class="em">Cursor · Apr 29 / Jun 4</span></div>
+    <p><code>@cursor/sdk</code> exposes Cursor's agent runtime and models programmatically (local or cloud); 3.7 added shareable interactive canvases with Design Mode, and Bugbot reviews dropped to ~90 seconds at ~22% lower cost on Composer 2.5.</p>
+    <p class="y">An embeddable agent engine for your own products and CI, and meaningfully cheaper automated code review.</p>
+    <a class="src" href="https://cursor.com/changelog/sdk-release">cursor.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Google Managed Agents + AI Studio full-stack</span><span class="em">Google · May 19</span></div>
+    <p>One API call spins up a stateful agent in a Google-hosted Linux sandbox (public preview); AI Studio gained full-stack app building with one-click Cloud Run deploys; the new Antigravity CLI carries over Skills, Hooks and Subagents.</p>
+    <p class="y">Hosted sandbox agents are now one API call away on the Gemini stack — the third major lab to ship the same primitive this quarter.</p>
+    <a class="src" href="https://blog.google/innovation-and-ai/technology/developers-tools/google-io-2026-developer-highlights/">blog.google ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Self-hosting stack: vLLM MRV2, SGLang, Ollama MLX</span><span class="em">OSS · Mar 24 → Jun 11</span></div>
+    <p>vLLM rebuilt its model runner from the ground up (plus Blackwell kernels, speculative decoding, external KV-cache); SGLang shipped large GB300 gains; Ollama's MLX engine hit its fastest Apple Silicon performance yesterday.</p>
+    <p class="y">Material throughput-per-dollar gains for anyone serving open models — MRV2 is the new base layer to target.</p>
+    <a class="src" href="https://vllm.ai/blog">vllm.ai ↗</a>
+    <a class="src" href="https://ollama.com/blog">ollama.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Apple Foundation Models expansion</span><span class="em">Apple · Jun 9 (WWDC coverage)</span></div>
+    <p>Per WWDC reporting: free Private Cloud Compute inference for apps under 2M first-time downloads, image input, and server-side calls to third-party models (Claude, Gemini) through the same Swift API.</p>
+    <p class="y">Removes inference cost as a barrier for iOS/macOS AI features — one Swift API across on-device, PCC and third-party models.</p>
+    <a class="src" href="https://www.macrumors.com/2026/06/09/apple-outlines-major-ai-and-developer-tool-updates/">macrumors.com ↗</a>
+  </article>
+
+  <h2 class="sec" id="patterns"><span class="num">04</span>Build Patterns</h2>
+  <p class="secdesc">Posts and papers with direct applied value — things to steal.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Karpathy's LLM-wiki pattern</span><span class="em">Karpathy · Apr 3</span></div>
+    <p>An "idea file" for LLM-maintained knowledge bases: raw sources are incrementally compiled by an agent into a cross-linked markdown wiki with ingest/query/lint operations — shared as a copy-pasteable prompt, not code.</p>
+    <p class="y">A concrete alternative to RAG for knowledge-heavy products: persistent compiled knowledge instead of per-query retrieval.</p>
+    <a class="src" href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">gist.github.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Anthropic: decoupling the brain from the hands</span><span class="em">Anthropic · Apr 8</span></div>
+    <p>Engineering post on the managed-agents architecture separating agent reasoning ("brain") from the execution environment ("hands").</p>
+    <p class="y">A reference architecture for running production agents server-side — directly reusable design decisions for hosted agent products.</p>
+    <a class="src" href="https://www.anthropic.com/engineering/managed-agents">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Anthropic: harness design for long-running agents</span><span class="em">Anthropic · Mar 24</span></div>
+    <p>How to design harnesses that let agents make consistent progress across multiple context windows on multi-hour or multi-day tasks.</p>
+    <p class="y">Practical guidance on what to encode in the harness versus delegate to the model — the central design question for long-horizon agent products.</p>
+    <a class="src" href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Anthropic: how auto mode skips permissions safely</span><span class="em">Anthropic · Mar 25</span></div>
+    <p>Design write-up of Claude Code's auto mode — the sandboxing and permission architecture that lets agents act autonomously with a bounded blast radius.</p>
+    <p class="y">A reusable permission/sandbox model for any product that wants autonomous agent execution without YOLO-mode risk.</p>
+    <a class="src" href="https://www.anthropic.com/engineering">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">OpenAI Cookbook: building governed AI agents</span><span class="em">OpenAI · Feb 23</span></div>
+    <p>Code-included guide to multi-agent systems with governance as infrastructure: Agents SDK handoffs, the Guardrails library, pip-deployable policy packages and guardrail evals — demonstrated on a private-equity assistant.</p>
+    <p class="y">The most directly reusable blueprint this period for shipping agents in regulated industries, with financial services explicitly targeted.</p>
+    <a class="src" href="https://developers.openai.com/cookbook/examples/partners/agentic_governance_guide/agentic_governance_cookbook">developers.openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI Cookbook: the agent improvement loop</span><span class="em">OpenAI · May 12 / May 19</span></div>
+    <p>Two notebooks: an improvement flywheel (real traces → feedback → evals → harness changes implemented by Codex) and macro evals that locate which part of a multi-agent workflow fails most.</p>
+    <p class="y">A copyable process for systematically improving a production agent instead of vibe-tuning prompts.</p>
+    <a class="src" href="https://developers.openai.com/cookbook/examples/agents_sdk/agent_improvement_loop">developers.openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cursor: lessons from productionizing cloud agents</span><span class="em">Cursor · Jun 2</span></div>
+    <p>Dedicated VMs per agent, append-only conversation storage and streaming, and progressively moving logic out of the harness into agent-controlled tools as models improve.</p>
+    <p class="y">Hard-won operational patterns for anyone shipping long-running remote agents — including which harness code to delete as models get better.</p>
+    <a class="src" href="https://cursor.com/blog/cloud-agent-lessons">cursor.com ↗</a>
+  </article>
+
+  <h2 class="sec" id="radar-cost"><span class="num">05</span>Your Radar — deadlines &amp; pricing</h2>
+  <p class="secdesc">Dates that break pinned code, and bills that changed shape.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Sonnet 4 &amp; Opus 4 retire June 15 — Monday</span><span class="em">Anthropic · due Jun 15</span></div>
+    <p>The Claude 4.0 generation shuts off in three days; Opus 4.1 follows August 5, and Sonnet 3.7 / Haiku 3.5 / Haiku 3 are already gone.</p>
+    <p class="y">Anything pinned to <code>claude-sonnet-4</code> or <code>claude-opus-4</code> breaks Monday — migrate to 4.6+ now and re-test against the adaptive-thinking API surface.</p>
+    <a class="src" href="https://platform.claude.com/docs/en/about-claude/model-deprecations">platform.claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI's mass deprecation wave</span><span class="em">OpenAI · Jul 23 / Oct 23 / Nov 30</span></div>
+    <p>33 legacy models shut down in two waves (July 23 and October 23); <code>gpt-5.2/5.3-chat-latest</code> end August 10; and the Agent Builder, Evals platform and Reusable Prompts products all close November 30.</p>
+    <p class="y">If you're on older OpenAI models or built tooling on Agent Builder/Evals, you have hard migration deadlines this year.</p>
+    <a class="src" href="https://developers.openai.com/api/docs/deprecations">developers.openai.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Gemini's hard cutovers — one is next week</span><span class="em">Google · Jun 1 → Jun 25</span></div>
+    <p>Gemini 2.0 Flash went dark June 1; the Interactions API breaking schema change became mandatory June 8; Gemini CLI consumer access ends June 18 (migrate to Antigravity CLI); preview image models sunset June 25.</p>
+    <p class="y">Four breaking changes in one month on the Google stack — audit every Gemini integration and script this week.</p>
+    <a class="src" href="https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/">developers.googleblog.com ↗</a>
+    <a class="src" href="https://ai.google.dev/gemini-api/docs/interactions-breaking-changes-may-2026">ai.google.dev ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GitHub Copilot moved to usage-based billing</span><span class="em">GitHub · Jun 1</span></div>
+    <p>All plans replaced premium requests with AI Credits (1 credit = $0.01, token-based at API rates; Pro 1,500/mo), and Copilot code review now consumes Actions minutes.</p>
+    <p class="y">Agent sessions are metered now — re-model your team's Copilot and CI costs, especially if review runs on every PR.</p>
+    <a class="src" href="https://github.blog/changelog/2026-06-01-updates-to-github-copilot-billing-and-plans/">github.blog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">xAI retired eight models — slugs re-bill silently</span><span class="em">xAI · May 15</span></div>
+    <p>Deprecated model slugs (grok-4-fast variants, grok-3, grok-code-fast-1 and others) silently redirect to replacements billed at Grok 4.3 rates.</p>
+    <p class="y">Apps keep working but pay different prices — a silent cost change unless you update model IDs explicitly.</p>
+    <a class="src" href="https://docs.x.ai/developers/migration/may-15-retirement">docs.x.ai ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Anthropic Agent SDK moves to separate credit pools (reported)</span><span class="em">Anthropic · effective Jun 15</span></div>
+    <p>Per industry reporting: Agent SDK, <code>claude -p</code>, and GitHub Actions usage move off subscription plans into per-user monthly credits ($20 Pro / $100–$200 Max) billed at API rates, with a one-time opt-in.</p>
+    <p class="y">If you ship anything on the Agent SDK against subscription auth, automated requests stop when credits run out — verify your auth path before Monday.</p>
+    <a class="src" href="https://thenewstack.io/anthropic-agent-sdk-credits/">thenewstack.io ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI sandbox &amp; cache economics improved</span><span class="em">OpenAI · May 29 / Jun 2</span></div>
+    <p>Container sessions moved to per-minute billing with a 5-minute minimum (previously a 20-minute rate), and extended prompt-cache retention now defaults to 24 hours.</p>
+    <p class="y">Code-interpreter and cache-heavy workloads got cheaper without any code change — re-check your cost assumptions.</p>
+    <a class="src" href="https://developers.openai.com/api/docs/changelog">developers.openai.com ↗</a>
+  </article>
+
+  <h2 class="sec" id="radar-fin"><span class="num">06</span>Your Radar — regulated finance &amp; Australia</h2>
+  <p class="secdesc">For builders shipping AI into financial services, compliance and document automation.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Anthropic shipped finance agent templates — open repo</span><span class="em">Anthropic · May 5</span></div>
+    <p>Ten ready-to-run finance agent templates (KYC screening, pitchbooks, month-end close and more) packaging skills, connectors and subagents — plus GA Office add-ins and connectors to FactSet, S&amp;P Capital IQ, Morningstar and LSEG.</p>
+    <p class="y">Directly reusable scaffolding for advisory/compliance workflows, and the competitive baseline any AI-in-finance product now has to beat.</p>
+    <a class="src" href="https://www.anthropic.com/news/finance-agents">anthropic.com ↗</a>
+    <a class="src" href="https://github.com/anthropics/financial-services">github.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">TPB's first AI guidance for tax &amp; advice practitioners</span><span class="em">TPB · Mar 24</span></div>
+    <p>Exposure draft TPB(I) D62/2026 on using AI under the Code of Professional Conduct — accountability for AI output, competence and confidentiality; consultation closed April 21, final guidance pending.</p>
+    <p class="y">The first concrete Australian professional-conduct framework for AI in advice work — it defines the human-accountability and disclosure features an AI advisory product must support.</p>
+    <a class="src" href="https://www.tpb.gov.au/exposure-draft-tpbi-d622026-use-artificial-intelligence-and-code-professional-conduct">tpb.gov.au ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">APRA's AI expectations letter</span><span class="em">APRA · Apr 30</span></div>
+    <p>After reviewing large banks, insurers and super trustees: expectations on AI lifecycle governance (design to decommissioning) and third-/fourth-party AI dependency management with transparency and auditability requirements.</p>
+    <p class="y">If you sell AI into APRA-regulated entities this is now a procurement checklist — and the fourth-party clause reaches the model providers behind your product.</p>
+    <a class="src" href="https://www.apra.gov.au/apra-letter-to-industry-on-artificial-intelligence-ai">apra.gov.au ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">ASIC: advice boundaries and a cyber ultimatum</span><span class="em">ASIC · Mar 23 / May 8</span></div>
+    <p>Moneysmart guidance drew ASIC's de facto line between general AI money guidance and personal advice; an open letter to all AFS licensees then demanded urgent cyber-resilience uplift as frontier AI accelerates threats.</p>
+    <p class="y">Encode the general-vs-personal-advice boundary in your guardrails, and treat security posture as a licence obligation rather than a nice-to-have.</p>
+    <a class="src" href="https://moneysmart.gov.au/online-safety/ai-and-money-decisions">moneysmart.gov.au ↗</a>
+    <a class="src" href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2026-releases/26-092mr-asic-calls-for-urgent-cyber-uplift-as-ai-accelerates-cyber-threats/">asic.gov.au ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">AUSTRAC: tranche 2 lands July 1</span><span class="em">AUSTRAC · Mar 31 / Jul 1</span></div>
+    <p>AML/CTF reforms commenced March 31 for existing reporting entities and extend to tranche-2 entities (accountants, lawyers, real estate) on July 1; AUSTRAC's threat update flags AI-fabricated identities and forged documents as a scaling risk.</p>
+    <p class="y">A large new market for KYC/compliance/document automation with a hard integration deadline — and synthetic-ID detection just moved up the roadmap.</p>
+    <a class="src" href="https://www.austrac.gov.au/about-us/legislation/updates-legislation/amlctf-transitional-rules-2026">austrac.gov.au ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Watch: full-duplex voice from Thinking Machines</span><span class="em">TML · May 11</span></div>
+    <p>TML-Interaction-Small (276B/12B-active) is a full-duplex multimodal "interaction model" with 200ms micro-turns — gated research preview only, no API or weights yet, wider release planned later in 2026.</p>
+    <p class="y">Not usable yet, but it defines the category that makes VAD-based voice pipelines obsolete — don't over-invest in turn-based voice architecture.</p>
+    <a class="src" href="https://thinkingmachines.ai/blog/interaction-models/">thinkingmachines.ai ↗</a>
+  </article>
+
+  <div class="note">
+    <b>From tomorrow:</b> the daily brief is 7–10 bullets max, covering the previous 24 hours, in the same Ship Log / Build Patterns / Your Radar grouping. Quiet days will say "Quiet day — nothing actionable" rather than pad.
+  </div>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
