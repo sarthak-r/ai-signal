@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent SDK billing split goes live — 15 June 2026 — AI Builder Signal</title>
+<meta name="description" content="A quiet release window — no new models since the last briefing. The one thing that matters lands today: Anthropic's Agent SDK billing split takes effect. Fable 5 and Mythos 5 are still dark." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 003 · 15 June 2026</p>
+  <h1>Claude's Agent SDK billing split goes live today</h1>
+  <p class="lede">A quiet 48 hours for releases — <b>no new models from any major lab</b> since the last briefing. The one thing that moves your numbers lands today: Anthropic's June 15 billing change takes effect, pulling all <b>programmatic</b> Claude usage off your subscription onto a separate capped credit. Fable 5 and Mythos 5 are still dark with no restoration date. Two things to action — no padding.</p>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A cost change that's live as of today, and one open dependency.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Agent SDK usage now bills from a separate, capped pool</span><span class="em">Anthropic · Jun 15</span></div>
+    <p>Effective today, usage via the Claude Agent SDK, <code>claude -p</code>, Claude Code GitHub Actions, and any third-party app built on the Agent SDK no longer draws from your Claude subscription limit. It draws from a separate monthly credit — ~$20 (Pro) / $100 (Max 5x) / $200 (Max 20x) — metered at <b>full API rates</b>, no rollover. Interactive use (web/desktop/mobile chat, Claude Code in the terminal, Cowork) is unchanged.</p>
+    <p class="y">Any unattended Claude automation — CI agents, scheduled jobs, an Agent-SDK feature inside your product — now meters separately and <b>stops</b> when the credit is exhausted unless you opt into overflow billing (one-time toggle, persists across cycles). The credit isn't on by default: enable it before your next automated run or those calls start failing. Running on a Platform API key? Nothing changes — pay-as-you-go continues, but you get no free monthly credit.</p>
+    <a class="src" href="https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan">support.claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Fable 5 &amp; Mythos 5 — still offline, still no date</span><span class="em">Anthropic · status</span></div>
+    <p>Three days after the Jun 12 export-control suspension, Anthropic's news page carries no update and no restoration timeline for Fable 5 or Mythos 5. Opus 4.8, Sonnet 4.6 and Haiku 4.5 remain unaffected and fully available.</p>
+    <p class="y">The open-ended timeline from briefing 002 still stands — treat the outage as indefinite. If you haven't already, revert any <code>claude-fable-5</code> pins to Opus 4.8 and keep a fallback model in config so the next recall is a one-line change, not an outage.</p>
+    <a class="src" href="https://www.anthropic.com/news/fable-mythos-access">anthropic.com ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
