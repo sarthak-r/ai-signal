@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gemini CLI shuts off individual tiers tomorrow — 17 June 2026 — AI Builder Signal</title>
+<meta name="description" content="Another quiet window for new models, but two migration deadlines bite this week: Google's Gemini CLI stops serving individual tiers on June 18, and Anthropic retired the original Opus 4 / Sonnet 4 snapshots on June 15." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 004 · 17 June 2026</p>
+  <h1>Gemini CLI cuts off individual tiers tomorrow</h1>
+  <p class="lede">A second quiet window in a row — <b>no new frontier or open-weight models</b> since the last briefing. But two clocks run out this week. Google's <b>Gemini CLI stops serving individual-tier requests on June 18</b>, and Anthropic <b>retired the original Opus 4 and Sonnet 4 snapshots on June 15</b> — both break code that's still pinned to them. Covers the Jun 16 gap. Action items only, no padding.</p>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Two migration deadlines that bite this week, and one operational note.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Gemini CLI stops serving individual tiers on June 18 — migrate to Antigravity CLI</span><span class="em">Google · Jun 18</span></div>
+    <p>Per Google's developer blog, on <b>June 18</b> the Gemini CLI and Gemini Code Assist IDE extensions stop serving requests for Google AI Pro/Ultra, free Gemini Code Assist for individuals, and Gemini Code Assist for GitHub orgs. Enterprise customers on Code Assist Standard/Enterprise are unaffected and keep getting model updates. The successor is the Go-based <code>Antigravity CLI</code> (<code>agy</code>), available now; Agent Skills, Hooks, Subagents, and Extensions carry over (Extensions become Antigravity plugins).</p>
+    <p class="y">If any pipeline, CI step, or dev machine calls <code>gemini</code> on a Pro/Ultra/free key, it goes dark tomorrow — install <code>agy</code> and re-point your scripts today. Enterprise-licensed setups can stay put. Either way, pin the CLI version in CI so the swap is deliberate, not a surprise failure.</p>
+    <a class="src" href="https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/">developers.googleblog.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Original Opus 4 &amp; Sonnet 4 snapshots retired</span><span class="em">Anthropic · Jun 15</span></div>
+    <p>Anthropic's developer platform release notes mark <code>claude-opus-4-20250514</code> and <code>claude-sonnet-4-20250514</code> — the original May-2025 snapshots — as retired. Calls to those exact model IDs now fail; the platform directs you to the current 4.x successors (Opus 4.8, Sonnet 4.6).</p>
+    <p class="y">Grep your codebase and prompts for the <code>-20250514</code> strings. Anything still hard-pinned to them is now a broken request, not a deprecation warning. Move to <code>claude-opus-4-8</code> / <code>claude-sonnet-4-6</code> and keep model IDs in one config constant so the next retirement is a one-line change.</p>
+    <a class="src" href="https://platform.claude.com/docs/en/release-notes/overview">platform.claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude API saw repeated service disruptions in mid-June</span><span class="em">Anthropic · status</span></div>
+    <p>Claude's status page logged several short disruptions across claude.ai, the API and Claude Code over the past two weeks. Opus 4.8 / Sonnet 4.6 / Haiku 4.5 remain the stable lineup, but uptime has been bumpy.</p>
+    <p class="y">If Claude sits in a production path, this is the nudge to ship a circuit breaker and a fallback model now — pair with the Agent SDK credit cap from briefing 003 so a billing stop or an outage degrades gracefully instead of failing the request. Check live state before assuming an incident is on your side.</p>
+    <a class="src" href="https://status.claude.com">status.claude.com ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">What actually shipped in the window.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code v2.1.176–2.1.179</span><span class="em">Anthropic · Jun 16</span></div>
+    <p>A run of Claude Code releases landed June 16: permission rules now match on tool <b>parameters</b> (not just tool names), nested <code>.claude</code> directories are supported, auto-mode gained extra safety checks, plus footer-link customization via regex and connection-stability fixes.</p>
+    <p class="y">Parameter-level permission rules are the useful one — you can now allow, say, read-only Bash or a specific MCP action without blanket-approving the whole tool, which tightens what an unattended Claude Code run is allowed to do. Worth a pass over your <code>permissions</code> config if you run it in CI or scheduled jobs.</p>
+    <a class="src" href="https://code.claude.com/docs/en/release-notes">code.claude.com ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
