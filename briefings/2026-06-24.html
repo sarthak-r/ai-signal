@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mistral ships OCR 4 for document automation — 24 June 2026 — AI Builder Signal</title>
+<meta name="description" content="Mistral OCR 4 ships with structured extraction, confidence scores and a self-hostable single container at $4 per 1,000 pages — directly usable for financial document automation. Claude Code 2.1.186 adds headless MCP auth. Gemini 3.5 Pro GA is expected this week." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 007 · 24 June 2026</p>
+  <h1>Mistral ships OCR 4 for document automation</h1>
+  <p class="lede">The launch drought broke with a release that lands squarely on this audience: <b>Mistral OCR 4</b>, a state-of-the-art document model that returns typed blocks, bounding boxes and confidence scores — and runs in a single self-hostable container, which matters when client documents can't leave your tenancy. <b>Claude Code 2.1.186</b> added headless MCP authentication for CI and SSH. And <b>Gemini 3.5 Pro</b>'s GA window opens this week. Covers the Jun 23–24 gap.</p>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">What shipped in the last 24 hours.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Mistral OCR 4 — structured document extraction, self-hostable, $4 / 1,000 pages</span><span class="em">Mistral · Jun 23</span></div>
+    <p>Mistral's new OCR model returns more than text: every request yields <b>typed blocks</b> (titles, tables, equations, signatures), <b>bounding boxes</b>, per-block <b>confidence scores</b> and markdown-structured output, across <b>170 languages</b> at ~2,000 pages/minute. It tops OlmOCRBench (85.20) and OmniDocBench (93.07), with annotators preferring it over every tested system at a 72% average win rate. Pricing is <b>$4 / 1,000 pages</b> via API, <b>$2 batch</b>, $5 through Document AI. Available now via Mistral API, Studio, SageMaker and Microsoft Foundry — and critically, it <b>runs in a single container for fully self-hosted, air-gapped deployment</b>.</p>
+    <p class="y">This is the most directly usable release for a wealthtech stack in weeks: SoAs, super statements, tax docs and ID verification are exactly the structured-extraction problem OCR 4 targets, and confidence scores give you a clean threshold for routing low-certainty pages to human review — a defensible control under ASIC/APRA's "AI is a tool, not a replacement" stance. The self-hosted single-container path means you can process client PII without it leaving your VPC, sidestepping the cross-border data questions that block hosted OCR. At $2–4 per 1,000 pages it undercuts AWS Textract for most document mixes.</p>
+    <a class="src" href="https://mistral.ai/news/ocr-4/">mistral.ai/news/ocr-4 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code 2.1.186 — headless MCP login, automatic bash-output responses</span><span class="em">Anthropic · Jun 23</span></div>
+    <p>New <code>claude mcp login &lt;name&gt;</code> / <code>logout</code> commands authenticate MCP servers straight from the CLI — no interactive <code>/mcp</code> menu — with <code>--no-browser</code> stdin redirect to complete auth over SSH. Behaviour change worth noting: <b><code>!</code> bash commands now make Claude respond to their output automatically</b> (set <code>"respondToBashCommands": false</code> to restore the old context-only behaviour). Also: a fix for streaming requests failing with "Content block not found" after the machine wakes from sleep, <code>/workflows</code> status filtering, and Workflow schema-validation subagents now abort after 5 failures instead of looping forever.</p>
+    <p class="y">The MCP CLI auth flow is the unlock for unattended agents: you can now log a server in inside a CI job or a remote box without a browser handoff, which is what you need to run Claude Code against your own MCP tools (e.g. an internal planning server) in a scheduled pipeline. If you script <code>!</code> commands in any automated Claude Code flow, audit them before upgrading — the new default turns every shell call into a model turn, which changes both token spend and behaviour.</p>
+    <a class="src" href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">github.com/anthropics/claude-code ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A roadmap signal to watch this week.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Gemini 3.5 Pro GA window opens — 2M-token context, Deep Think</span><span class="em">Google · expected Jun 23–30</span></div>
+    <p>Google's Gemini 3.5 Pro is in its general-availability window, expected to land between <b>24 and 30 June</b>. Confirmed specs from I/O: a <b>2-million-token context window</b> — double Gemini 3.5 Flash and the largest in any production frontier model — plus a <b>Deep Think</b> reasoning mode (gated to the $250/mo Ultra tier in the consumer app). API pricing has not been published; analyst estimates put it near $15 / $60 per M, but treat that as unconfirmed until Google posts it.</p>
+    <p class="y">If you process long documents — a full client file, a fund PDS, multi-year statement history — a 2M-token window changes what fits in one call and may remove a chunking/RAG layer you currently maintain. Worth a benchmark against Opus 4.8 and Sonnet 4.6 on your own extraction tasks once it's GA, but don't re-architect on estimated pricing; wait for the published rate card.</p>
+    <a class="src" href="https://blog.google/products/gemini/">blog.google/products/gemini ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
