@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenAI's own inference chip; Claude Code logs model responses — 26 June 2026 — AI Builder Signal</title>
+<meta name="description" content="OpenAI and Broadcom unveil Jalapeño, a custom LLM-inference chip claiming ~50% lower inference cost, deploying end-2026. Claude Code 2.1.193 adds OpenTelemetry logging of model responses with redaction controls. DeepSeek's legacy model aliases retire 24 July." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 009 · 26 June 2026</p>
+  <h1>OpenAI's own inference chip; Claude Code logs model responses</h1>
+  <p class="lede">No new models today, but two cost signals worth marking. <b>OpenAI and Broadcom</b> unveiled <b>Jalapeño</b>, OpenAI's first custom LLM-inference chip — claimed ~50% cheaper inference, but not deployed until end-2026, so it's a roadmap signal, not a price cut you can use yet. <b>Claude Code 2.1.193</b> shipped OpenTelemetry logging of model responses with redaction controls — useful audit plumbing for a regulated stack. And <b>DeepSeek</b>'s legacy model aliases retire on 24 July. Covers the Jun 25–26 window.</p>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">What shipped in the last 24 hours.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Code 2.1.193 — OpenTelemetry model-response logging, all-shell auto-mode, MCP auth notices</span><span class="em">Anthropic · Jun 25–26</span></div>
+    <p>The next Claude Code release after 2.1.191. Headline for a regulated shop: <b>OpenTelemetry logging for model responses, with redaction controls</b> — you can now export what the model returned to your observability stack while scrubbing sensitive fields. Also: <code>autoMode.classifyAllShell</code> routes every Bash/PowerShell command through the auto-mode classifier (with denial reasons now recorded in transcripts and permission history), <b>live file-path autocomplete</b> in bash mode, <b>startup notices for MCP servers that need authentication</b>, and automatic memory-pressure reaping of idle background shells.</p>
+    <p class="y">The OTel model-response logging is the one to note: capturing and redacting model output into your own telemetry is exactly the kind of evidence ASIC/APRA expect for AI used in advice workflows — a record of what the system produced, with PII controls. The all-shell classifier tightens the guardrail when an agent runs commands unattended, and the MCP auth notices stop silent failures where a tool quietly isn't connected. Update if you run Claude Code in pipelines or against client data.</p>
+    <a class="src" href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">github.com/anthropics/claude-code ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Cost-trajectory and deprecation signals to watch.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Jalapeño — OpenAI's first custom inference chip, ~50% cheaper inference claimed</span><span class="em">OpenAI · Broadcom · Jun 25</span></div>
+    <p>OpenAI and Broadcom unveiled <b>Jalapeño</b>, a reticle-sized ASIC built specifically for LLM inference (not a repurposed GPU), designed around OpenAI's own model behaviour to cut data-movement and memory bottlenecks. Bloomberg reports it roughly <b>halves inference cost</b>. Built in a ~9-month design cycle using OpenAI's own models; <b>initial deployment is end-2026</b>, scaling toward gigawatt data centres.</p>
+    <p class="y">Not actionable today — there's no price change on the API now, and you can't run on it. But it's a clear signal on the OpenAI cost curve: if a ~50% inference saving lands in OpenAI's own fleet over 2026–27, expect downward pressure on GPT-tier API pricing (and faster responses). File it under "reasons not to lock a multi-year vendor contract at today's rates," and re-check when it's actually serving traffic with published effects.</p>
+    <a class="src" href="https://openai.com/index/openai-broadcom-jalapeno-inference-chip/">openai.com/index/openai-broadcom-jalapeno-inference-chip ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">DeepSeek — legacy <code>deepseek-chat</code> / <code>deepseek-reasoner</code> aliases retire 24 July</span><span class="em">DeepSeek · deadline Jul 24</span></div>
+    <p>If you call DeepSeek's API, the legacy model names <code>deepseek-chat</code> and <code>deepseek-reasoner</code> are <b>fully retired after 24 July 2026, 15:59 UTC</b> — requests using them will fail. They're already transparently routed to <code>deepseek-v4-flash</code> during the grace period. Migrate to <b><code>deepseek-v4-flash</code></b> or <b><code>deepseek-v4-pro</code></b>; for reasoning, enable thinking mode explicitly via the <code>thinking</code> parameter (the old <code>deepseek-reasoner</code> auto-reasoning is gone).</p>
+    <p class="y">A one-line code change, but a hard cutover — anything still hardcoding the old names breaks silently after the date. If DeepSeek is anywhere in your stack (including a cheap fallback tier), grep for the legacy strings and pin to a V4 model now, and decide whether you want Flash (cost) or Pro (1M context, stronger reasoning) for each call path.</p>
+    <a class="src" href="https://api-docs.deepseek.com/updates">api-docs.deepseek.com/updates ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
