@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Claude Code 2.1.195 changes hook matching; Gemini 3.5 Pro slips to July — 27 June 2026 — AI Builder Signal</title>
+<meta name="description" content="Claude Code 2.1.195 ships a behaviour-changing hook-matcher fix and a mouse-click kill switch. Ollama 0.30.11 adds thinking detection and Claude Code/opencode auto-install. Gemini 3.5 Pro GA reportedly pushed to July." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 010 · 27 June 2026</p>
+  <h1>Claude Code 2.1.195 changes hook matching; Gemini 3.5 Pro slips to July</h1>
+  <p class="lede">Another no-new-model day, but two tooling updates and a roadmap signal. <b>Claude Code 2.1.195</b> shipped a behaviour-changing fix — hook matchers with hyphens now match <i>exactly</i>, not by substring — which can silently change which hooks fire in an existing config. <b>Ollama 0.30.11</b> adds thinking-capability detection and auto-install for Claude Code and opencode, smoothing the local-model path. And <b>Gemini 3.5 Pro</b>'s GA has reportedly slipped from "this week" to July. Covers the Jun 26–27 window.</p>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">What shipped in the last 24 hours.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Code 2.1.195 — hook matchers now exact-match, mouse-click kill switch, plugin-consent and background-job fixes</span><span class="em">Anthropic · Jun 26</span></div>
+    <p>The release after 2.1.193. The one that can change behaviour: <b>hook matchers containing hyphens now use exact matching instead of substring matching</b> — if your <code>settings.json</code> relied on a hyphenated matcher firing on partial matches, those hooks may stop firing after you update. Also new: <code>CLAUDE_CODE_DISABLE_MOUSE_CLICKS</code> to turn off mouse interaction in fullscreen (wheel scroll preserved), a fix so <b>external plugins enabled via project settings no longer demand install consent on every loader path</b>, a fix for <b>background jobs losing data</b> when written by a newer Claude Code version, and voice-dictation fixes (macOS silence capture; auto-submit for Japanese/Chinese/Thai).</p>
+    <p class="y">Read the hook-matcher line before you upgrade a CI or agent box: a silent change in which hooks fire is exactly the kind of thing that breaks a guardrail or audit step without an error. Grep your hook configs for hyphenated matchers and confirm they still match what you expect. The plugin-consent and background-job fixes matter if you run Claude Code unattended in pipelines.</p>
+    <a class="src" href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">github.com/anthropics/claude-code ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Ollama 0.30.11 — thinking-capability detection, Claude Code &amp; opencode auto-install, GPU/MLX fixes</span><span class="em">Ollama · Jun 25</span></div>
+    <p>The latest Ollama release wires local models more cleanly into agent tooling: <b>thinking-capability detection</b> when launching against opencode, <b>auto-install for Claude Code and opencode</b>, better Codex model-drift detection, plus fixes for Windows hybrid-graphics GPU classification, MLX speculative decoding, CUDA <code>sm_86</code> support, and generation headroom for shifted prompts.</p>
+    <p class="y">If data residency or cost pushes you toward self-hosting a model behind your wealthtech stack, this shortens the wiring: one <code>ollama</code> launch now stands up a local or cloud model into Claude Code/opencode/Codex with the thinking flag detected for you. Worth a look if you've been keeping a local fallback tier or an on-prem option for sensitive client data.</p>
+    <a class="src" href="https://github.com/ollama/ollama/releases">github.com/ollama/ollama/releases ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Roadmap signals to watch.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Gemini 3.5 Pro GA — reportedly pushed to July for more testing</span><span class="em">Google · timing slip</span></div>
+    <p>After being flagged "due this week" in earlier briefings, <b>Gemini 3.5 Pro's general availability has reportedly slipped to July 2026</b> to gather more feedback from early testers. It remains in limited Vertex preview; the Gemini API changelog still shows no Pro GA entry (latest 3.5-tier item is the Jun 24 Computer Use preview on 3.5 Flash). Expected at GA: ~2M-token context, Deep Think reasoning, frontier multimodal.</p>
+    <p class="y">If you were holding a build decision for 3.5 Pro — long-context document review, a stronger multimodal tier — assume it's not landing in June and don't block your roadmap on it. Watch the API changelog (not blog headlines) for the actual stable model id before you wire it in; preview ids change and aren't production-safe.</p>
+    <a class="src" href="https://ai.google.dev/gemini-api/docs/changelog">ai.google.dev/gemini-api/docs/changelog ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
