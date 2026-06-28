@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenAI previews GPT-5.6 (Sol, Terra, Luna) — but you can't have it yet — 28 June 2026 — AI Builder Signal</title>
+<meta name="description" content="OpenAI previews the GPT-5.6 family — Sol, Terra, Luna — with published API pricing, but access is restricted to a small set of trusted partners at the US government's request. APRA and ASIC tell regulated entities to lift their game on AI risk." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 011 · 28 June 2026</p>
+  <h1>OpenAI previews GPT-5.6 (Sol, Terra, Luna) — but you can't have it yet</h1>
+  <p class="lede">The headline event of the week slipped past the last two briefings, so we catch it up: <b>OpenAI previewed the GPT-5.6 family</b> — flagship <b>Sol</b>, mid-tier <b>Terra</b>, and low-cost <b>Luna</b> — with published API pricing, but limited the rollout to a small set of trusted partners at the <b>US government's request</b> over the models' stronger cyber and bio capabilities. Pricing and positioning are public, so you can plan against them even though you can't call them yet. On the regulatory front, <b>APRA and ASIC have written to regulated entities</b> demanding a step-change in AI-risk management. Quiet on new dev-tool releases in the Jun 27–28 window.</p>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">What shipped — and what its price tells you.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">GPT-5.6 family previewed — Sol, Terra, Luna, with published per-token pricing</span><span class="em">OpenAI · Jun 26</span></div>
+    <p>OpenAI's new generation is three models: <b>Sol</b>, the flagship; <b>Terra</b>, a balanced everyday tier; and <b>Luna</b>, the fastest/cheapest. Pricing per 1M tokens is public: <b>Sol $5 in / $30 out</b>, <b>Terra $2.50 in / $15 out</b>, <b>Luna $1 in / $6 out</b>. OpenAI says Terra matches GPT-5.5 quality at ~2× lower cost, and the line adds a new "ultra" reasoning mode plus stronger coding, biology and cybersecurity performance. The preview is API- and Codex-first; broad GA is promised "in the coming weeks."</p>
+    <p class="y">Even without access, the pricing reshapes your cost model: <b>Terra at $2.50/$15 undercuts the prior flagship tier while claiming parity</b> — that's the number to benchmark your per-request economics against when GA lands, and Luna at $1/$6 is a credible cheap-classifier/extraction tier. Don't rewrite anything yet (preview ids aren't production-safe), but pencil Terra into your next cost projection and plan an eval harness so you can swap-and-measure on day one of GA.</p>
+    <a class="src" href="https://help.openai.com/en/articles/20001325-a-preview-of-gpt-56-sol-terra-and-luna">help.openai.com — GPT-5.6 preview ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Availability and regulatory signals to watch.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">GPT-5.6 access is gated — limited to "trusted partners" at US government request</span><span class="em">OpenAI · Jun 26</span></div>
+    <p>OpenAI restricted the GPT-5.6 preview to a small group of vetted partner organisations, citing a US government request tied to the models' uplift in cyber and biology capability. <b>There is no public waitlist or application, and individual developers are not eligible.</b> OpenAI framed the limits as exceptional rather than the new norm, with broader availability still planned.</p>
+    <p class="y">Treat GPT-5.6 as announced-but-unavailable: you can design against its published pricing and capabilities, but you cannot build on it today, and there's no queue to join. If a roadmap item assumes a GPT-5.6-class model, keep a current-gen fallback (GPT-5.5 / Claude / Gemini) as the shipping path and revisit when GA actually opens — gated previews have slipped before.</p>
+    <a class="src" href="https://techcrunch.com/2026/06/26/openai-limits-gpt-5-6-rollout-after-government-request-says-restrictions-shouldnt-be-the-norm/">techcrunch.com — limited rollout ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">APRA &amp; ASIC tell regulated entities to lift AI-risk management</span><span class="em">CFR · Jun 23</span></div>
+    <p>The Council of Financial Regulators' quarterly statement notes that <b>APRA and ASIC have written to their regulated entities calling for a "step-change" in the management of cyber and AI-related risks</b>, observing that frontier AI models have intensified cyber threats for financial institutions. It reinforces the standing line that existing AFSL obligations — efficient, honest, fair — apply fully to AI-assisted processes.</p>
+    <p class="y">If you sell into Australian advice or wealthtech, your buyers' boards are now being asked to <i>evidence</i> AI governance, not just claim it. That's a sales-and-product signal: model documentation, validation records, audit logs and human-in-the-loop controls become procurement checkboxes. Building those into the product now turns a compliance burden into a differentiator when an advice firm's risk committee reviews your tool.</p>
+    <a class="src" href="https://cfr.gov.au/news/2026/mr-26-04.html">cfr.gov.au — CFR statement, 23 Jun 2026 ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
