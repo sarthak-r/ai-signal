@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiet weekend — GPT-5.6 GA slips to July, legacy models leave ChatGPT — 29 June 2026 — AI Builder Signal</title>
+<meta name="description" content="A quiet 24 hours: no new models or dev tools shipped. The GPT-5.6 GA window has slipped into July, and GPT-4.5 plus o3 have left the ChatGPT model picker — but the API is untouched." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 012 · 29 June 2026</p>
+  <h1>Quiet weekend — GPT-5.6 GA slips to July, legacy models leave ChatGPT</h1>
+  <p class="lede">A genuinely slow 24 hours: <b>no new models, APIs or dev-tool releases</b> from the frontier or open-source labs over the Jun 28–29 window, and the Claude Code, Codex and OpenAI API changelogs are all unchanged since the 26th. Two carry-forward signals are worth a note for your roadmap and your model picker. <b>GPT-5.6's broad availability has slipped into July</b> — the gated preview from last week is still preview-only. And <b>GPT-4.5 and o3 have been retired from the ChatGPT product</b>, but — importantly — the API is untouched.</p>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Roadmap and availability signals to watch — nothing to ship against today.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">GPT-5.6 GA has slipped — still preview-only, now expected July</span><span class="em">OpenAI · ongoing</span></div>
+    <p>Last week's GPT-5.6 preview (Sol / Terra / Luna) remains restricted to ~20 government-approved partners with no public waitlist. OpenAI's "generally available in the coming weeks" line has not moved, and prediction-market odds for a late-June broad release collapsed (~83% → ~18%); a realistic US-wide GA now points to <b>mid-July at the earliest</b>. The published pricing — Terra $2.50/$15, Luna $1/$6 per 1M tokens — is unchanged.</p>
+    <p class="y">If any roadmap item assumed you'd be testing Terra/Luna economics this week, push that to mid-July and keep a current-gen model (GPT-5.5 / Claude / Gemini) as the shipping path. The pricing is stable enough to keep penciling into cost projections, but don't commit a delivery date to a model you still can't call.</p>
+    <a class="src" href="https://openai.com/index/previewing-gpt-5-6-sol/">openai.com — GPT-5.6 preview ↗</a>
+    <a class="src" href="https://explainx.ai/blog/when-will-gpt-5-6-sol-terra-luna-be-available-everyone-2026">explainx.ai — GA timeline ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GPT-4.5 and o3 retired from ChatGPT — but the API is unaffected</span><span class="em">OpenAI · Jun 26–27</span></div>
+    <p>GPT-4.5 was removed from the ChatGPT model picker (and Custom GPTs) on 26 Jun after its 30-day sunset; o3 follows on 26 Aug after a 90-day sunset. Both changes are <b>ChatGPT-product only — there are no changes to the API</b>. The genuine API deprecation to track is separate: the original GPT-5 and o3 snapshots (<code>o3-2025-04-16</code>, <code>gpt-5-2025-08-07</code>, etc.) shut down <b>11 December 2026</b>, with <code>gpt-5.5</code> / <code>gpt-5.5-pro</code> as replacements.</p>
+    <p class="y">If you build on the API, this weekend's ChatGPT retirements don't touch your integrations — no migration needed. The date that matters is 11 Dec: pin to a snapshot, not a floating alias, and schedule the move to a 5.5-class model before then so a silent cutover doesn't surprise you.</p>
+    <a class="src" href="https://developers.openai.com/api/docs/deprecations">developers.openai.com — API deprecations ↗</a>
+    <a class="src" href="https://help.openai.com/en/articles/20001051-retiring-gpt-4o-and-other-chatgpt-models">help.openai.com — ChatGPT retirements ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
