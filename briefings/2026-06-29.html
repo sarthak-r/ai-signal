@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quiet weekend — GPT-5.6 GA slips to July, legacy models leave ChatGPT — 29 June 2026 — AI Builder Signal</title>
-<meta name="description" content="A quiet 24 hours: no new models or dev tools shipped. The GPT-5.6 GA window has slipped into July, and GPT-4.5 plus o3 have left the ChatGPT model picker — but the API is untouched." />
+<title>Builders push back on agent autonomy: human loops, smart routing, real evals — 29 June 2026 — AI Builder Signal</title>
+<meta name="description" content="App-layer day — Udell/Willison on human-in-the-loop, Raschka on local coding agents, a splintering open-model field, plus shippable per-prompt routing and pass@k eval tooling." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -57,6 +57,7 @@
   .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
   .e p.y { color: var(--muted); }
   .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
   .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
   .src:hover { text-decoration: underline; }
 
@@ -71,26 +72,77 @@
   <a class="back" href="../index.html">← AI Builder Signal</a>
 
   <p class="kicker">Briefing 012 · 29 June 2026</p>
-  <h1>Quiet weekend — GPT-5.6 GA slips to July, legacy models leave ChatGPT</h1>
-  <p class="lede">A genuinely slow 24 hours: <b>no new models, APIs or dev-tool releases</b> from the frontier or open-source labs over the Jun 28–29 window, and the Claude Code, Codex and OpenAI API changelogs are all unchanged since the 26th. Two carry-forward signals are worth a note for your roadmap and your model picker. <b>GPT-5.6's broad availability has slipped into July</b> — the gated preview from last week is still preview-only. And <b>GPT-4.5 and o3 have been retired from the ChatGPT product</b>, but — importantly — the API is untouched.</p>
+  <h1>The builders push back on agent autonomy: keep humans in the loop, route smarter, test before you ship</h1>
+  <p class="lede">The app layer is where today's signal lives. The loudest voices — <b>Jon Udell</b>, <b>Simon Willison</b>, <b>Sebastian Raschka</b>, <b>Nathan Lambert</b> — are converging on a thesis: stop stacking agents on agents, and instead give humans tighter control loops, local execution, and real eval harnesses. The open-model field is splintering into specialized players you should pick by <b>license and architecture</b>, not brand. For a regulated wealthtech shop, the through-line is auditability: local-first knowledge bases, per-prompt routing, and pass@k testing are now off-the-shelf.</p>
 
-  <h2 class="sec">Your Radar</h2>
-  <p class="secdesc">Roadmap and availability signals to watch — nothing to ship against today.</p>
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">What the leading builders are arguing this week.</p>
 
   <article class="e">
-    <div class="eh"><span class="et">GPT-5.6 GA has slipped — still preview-only, now expected July</span><span class="em">OpenAI · ongoing</span></div>
-    <p>Last week's GPT-5.6 preview (Sol / Terra / Luna) remains restricted to ~20 government-approved partners with no public waitlist. OpenAI's "generally available in the coming weeks" line has not moved, and prediction-market odds for a late-June broad release collapsed (~83% → ~18%); a realistic US-wide GA now points to <b>mid-July at the earliest</b>. The published pricing — Terra $2.50/$15, Luna $1/$6 per 1M tokens — is unchanged.</p>
-    <p class="y">If any roadmap item assumed you'd be testing Terra/Luna economics this week, push that to mid-July and keep a current-gen model (GPT-5.5 / Claude / Gemini) as the shipping path. The pricing is stable enough to keep penciling into cost projections, but don't commit a delivery date to a model you still can't call.</p>
-    <a class="src" href="https://openai.com/index/previewing-gpt-5-6-sol/">openai.com — GPT-5.6 preview ↗</a>
-    <a class="src" href="https://explainx.ai/blog/when-will-gpt-5-6-sol-terra-luna-be-available-everyone-2026">explainx.ai — GA timeline ↗</a>
+    <div class="eh"><span class="et star">Keep the loop human: don't bolt a reviewer agent onto unreviewable PRs</span><span class="em">Udell + Willison · 28 Jun</span></div>
+    <p>Jon Udell argues against fixing unreviewable agent PRs with a second 'reviewer agent', and demos <b>Bram</b>, a Tauri desktop app that tracks small, testable worklist items locally (shared human/agent context, searchable history) before anything hits GitHub. Simon Willison reshared it the same day — <i>"it's our loop; we recruit agents to join the team."</i></p>
+    <p class="y">A concrete workflow for shipping with coding agents in regulated codebases: break work into small verifiable chunks and keep review human rather than stacking agents on agents — directly applicable to auditability in a wealthtech codebase.</p>
+    <a class="src" href="https://blog.jonudell.net/2026/06/28/doctor-it-hurts-when-agents-create-unreviewable-prs-dont-do-that/">blog.jonudell.net — the post ↗</a>
+    <a class="src" href="https://simonwillison.net/tags/jon-udell/">simonwillison.net — Udell tag ↗</a>
   </article>
 
   <article class="e">
-    <div class="eh"><span class="et">GPT-4.5 and o3 retired from ChatGPT — but the API is unaffected</span><span class="em">OpenAI · Jun 26–27</span></div>
-    <p>GPT-4.5 was removed from the ChatGPT model picker (and Custom GPTs) on 26 Jun after its 30-day sunset; o3 follows on 26 Aug after a 90-day sunset. Both changes are <b>ChatGPT-product only — there are no changes to the API</b>. The genuine API deprecation to track is separate: the original GPT-5 and o3 snapshots (<code>o3-2025-04-16</code>, <code>gpt-5-2025-08-07</code>, etc.) shut down <b>11 December 2026</b>, with <code>gpt-5.5</code> / <code>gpt-5.5-pro</code> as replacements.</p>
-    <p class="y">If you build on the API, this weekend's ChatGPT retirements don't touch your integrations — no migration needed. The date that matters is 11 Dec: pin to a snapshot, not a floating alias, and schedule the move to a 5.5-class model before then so a silent cutover doesn't surprise you.</p>
-    <a class="src" href="https://developers.openai.com/api/docs/deprecations">developers.openai.com — API deprecations ↗</a>
-    <a class="src" href="https://help.openai.com/en/articles/20001051-retiring-gpt-4o-and-other-chatgpt-models">help.openai.com — ChatGPT retirements ↗</a>
+    <div class="eh"><span class="et">Run the coding agent locally: open weights as a real Claude Code / Codex alternative</span><span class="em">Raschka · 27 Jun</span></div>
+    <p>Hands-on guide to a fully local coding-agent stack: an open-weight model (Qwen3.6, ~35B-A3B) served via Ollama, plugged into Codex, Qwen-Code, or Claude Code. Includes token-efficiency comparisons (Codex+Qwen3.6 cheapest; Claude Code ~50% more tokens) and a security checklist.</p>
+    <p class="y">A ~30-minute path to fixed costs, offline operation, and full auditability of an agent that touches your files — with explicit guidance to disable telemetry, treat untrusted repos as hostile, and gate shell/file access in a regulated codebase.</p>
+    <a class="src" href="https://magazine.sebastianraschka.com/p/using-local-coding-agents">magazine.sebastianraschka.com — guide ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">The open-model field splinters: pick by license + architecture, not brand</span><span class="em">Lambert + Brand · 28 Jun</span></div>
+    <p>Interconnects' Artifacts #22 maps fresh open releases: Cohere Command A+ (218B-A25B MoE, now Apache 2.0, multimodal/agentic), Zyphra ZAYA1-74B (4B active, trained on AMD GPUs), Poolside Laguna-M.1 (Apache 2.0), and NVIDIA-Nemotron-3-Ultra-550B (55B active, LatentMoE, OpenMDW).</p>
+    <p class="y">The open layer is no longer one dominant actor but specialized players — source models by permissive license and architecture fit, with AMD-trained and permissively-licensed frontier-ish MoEs widening cheaper deployment options.</p>
+    <a class="src" href="https://www.interconnects.ai/p/artifacts-22-zyphra-cohere-and-poolside">interconnects.ai — Artifacts #22 ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">New tools you can clone and run this week.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenKnowledge: local-first AI wiki agents edit straight in your markdown</span><span class="em">inkeep · 27 Jun</span></div>
+    <p>Open-source (GPL-3.0), AI-native markdown editor / LLM wiki with explicit Claude Code / Codex / Cursor and MCP integration, built on a yjs/ProseMirror dual-observer CRDT — agents read and rewrite local markdown without routing data through a cloud server.</p>
+    <p class="y">A no-cloud-routing knowledge base agents can edit directly is a clean fit for wealthtech data residency — stand it up as an internal second-brain/ops wiki without sending client data offshore (note: native app is Apple-Silicon-only; others run via web/CLI).</p>
+    <a class="src" href="https://github.com/inkeep/open-knowledge">github.com — inkeep/open-knowledge ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48675435">news.ycombinator.com — Show HN ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Persona.js: vanilla-JS, WebMCP-native agent UI you drop into any site (MIT)</span><span class="em">Runtype Labs · 28 Jun</span></div>
+    <p>MIT-licensed, framework-free AI chat/agent UI for React, WordPress, or static HTML; claims to be the first agent UI to natively support WebMCP, plus streaming, voice, tool-call viz, approval gates, and artifact rendering. Backend-agnostic to any SSE endpoint.</p>
+    <p class="y">A fast path to an in-app copilot that can actually drive page actions (forms, search) as WebMCP tools with built-in user approval — no React lock-in, no bespoke backend API. Launched #3 on Product Hunt's Open Source Dev Tools.</p>
+    <a class="src" href="https://github.com/runtypelabs/persona">github.com — runtypelabs/persona ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cloud World Model: simulate AWS/GCP/Azure cost + failure, no real spend</span><span class="em">cloudworldmodel.ai · 27 Jun</span></div>
+    <p>Multi-cloud simulator (AWS/GCP/Azure/OCI/DigitalOcean) modelling cost, CPU, throughput, autoscaling, and failure recovery without provisioning — plus chaos injection, a cost/latency explorer, and an agent-facing RL training API. Claims ~96-98% accuracy (vendor-stated, unverified).</p>
+    <p class="y">Pressure-test infra cost and resilience before paying a cloud bill, and let agents optimize your deployment in a safe sandbox — treat the accuracy number as a thing to evaluate, not a proven figure.</p>
+    <a class="src" href="https://www.producthunt.com/products/cloud-world-model">producthunt.com — Cloud World Model ↗</a>
+    <a class="src" href="https://cloudworldmodel.ai/">cloudworldmodel.ai — site ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Cost and reliability levers for agent stacks.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Workweave router: per-prompt model routing in &lt;50ms, 40-70% cost cut</span><span class="em">Workweave · 27 Jun</span></div>
+    <p>Source-available (Elastic License 2.0) model router that sits as an Anthropic/OpenAI-compatible endpoint and picks the best model per prompt in under 50ms; <code>npx @workweave/router</code> wires Claude Code, Codex, opencode, and Cursor, or self-host. Claims 40-70% infra cost reductions; built by the Weave platform whose customers include Robinhood, PostHog, Reducto.</p>
+    <p class="y">Per-prompt routing behind one endpoint is the cheapest lever on agent costs — a single config change, no app rewrite, directly relevant to unit economics for an AI product.</p>
+    <a class="src" href="https://github.com/workweave/router">github.com — workweave/router ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48688700">news.ycombinator.com — Show HN ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Caliper: pass@k reliability testing for Claude Code and Codex skills</span><span class="em">edonadei · 29 Jun</span></div>
+    <p>Testing framework that runs an agent skill k times in isolated environments and reports a pass@k score, using YAML specs plus dual validation (LLM judge + Python assertions) and a baseline comparison against the bare agent. Works with Claude Code, Codex, Pi, and APIs.</p>
+    <p class="y">Skills silently break when models update; pass@k eval gives a repeatable way to catch regressions before shipping agent features — the missing test layer for anyone productionising Claude/Codex skills.</p>
+    <a class="src" href="https://github.com/edonadei/caliper">github.com — edonadei/caliper ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48709606">news.ycombinator.com — Show HN ↗</a>
   </article>
 
   <footer>
