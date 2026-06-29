@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Week catch-up: loop engineering, the controls it needs, and what it breaks — 29 June 2026 — AI Builder Signal</title>
+<meta name="description" content="An expanded catch-up over 22–29 Jun 2026: the loop-engineering debate, the agent-console UX the app layer shipped to contain it, and the prompt-injection and skill-curation research builders must design around." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 013 · Catch-Up · 22–29 June 2026</p>
+  <h1>The week the builder's job became loop design — and the loop's blast radius became the problem</h1>
+  <p class="lede"><b>"I don't prompt Claude anymore. My job is to write loops."</b> Boris Cherny's line crystallized the week's loudest debate — and the rest of the catch-up reads as its consequences. The app layer raced to ship the controls a loop needs: <b>durable approvals, session revert, per-host egress, mid-run steering, phone-based supervision</b>. And a parallel current of voices and research warned what loops break — runaway multi-agent spend, eroded human comprehension, prompt injection reframed as unfixable "role confusion," and skill catalogs where 36% carry injection. This is briefing 013, an expanded catch-up over 22–29 Jun.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The threads and essays builders argued over this week.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Boris Cherny: "I don't prompt Claude anymore — my job is to write loops"</span><span class="em">Boris Cherny · 22 Jun</span></div>
+    <p>The Claude Code lead's line anchored a week-long thread crystallizing <b>"loop engineering"</b> — designing autonomous agent loops with stop conditions instead of turn-by-turn prompting; Anthropic now ships first-party /loop, /goal, /schedule, /workflows, and Steinberger and Addy Osmani fueled the discourse.</p>
+    <p class="y">Names the next abstraction after prompt/context/harness engineering — if you run an agentic product, you architect self-driving loops and exit conditions, not chat turns.</p>
+    <a class="src" href="https://www.oreilly.com/radar/loop-engineering/">oreilly.com — loop engineering ↗</a>
+    <a class="src" href="https://developers.slashdot.org/story/26/06/25/0546238/forget-prompt-engineering-loop-engineering-is-all-the-rage-now">slashdot.org — loop engineering ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">"Loop engineering" becomes the week's loudest debate — and draws heavy skepticism</span><span class="em">Slashdot / Osmani / Steinberger · 27 Jun</span></div>
+    <p>Slashdot's front-page piece crowned loop engineering prompt engineering's successor (find work, dispatch agents, verify, decide next); Steinberger's line hit 5M views with replies running ~39% "mindset shift" / 61% "bad advice," and Slashdot skeptics noted boosters "work for AI companies" and likened loops to an expensive telephone game.</p>
+    <p class="y">The counter-take is the signal: autonomous loops degrade like a telephone game, so weigh where humans sit before handing a regulated workflow to a self-driving loop.</p>
+    <a class="src" href="https://addyosmani.com/blog/loop-engineering/">addyosmani.com — Loop Engineering ↗</a>
+    <a class="src" href="https://developers.slashdot.org/story/26/06/25/0546238/forget-prompt-engineering-loop-engineering-is-all-the-rage-now">slashdot.org — the debate ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Armin Ronacher's "The Coming Loop": looping is inevitable, comprehension is the casualty</span><span class="em">Armin Ronacher · 23 Jun</span></div>
+    <p>The Flask creator's essay (HN front page, 200+ comments) splits the <b>agent loop</b> (a model iterating in one session) from the <b>harness loop</b> (external systems that restart sessions, rewrite context, route work) — arguing competitive and security pressure make hands-off looping inevitable but erode comprehension and breed defensively over-complex code; cites Karpathy on "local defenses" over root-cause fixes.</p>
+    <p class="y">A respected non-hype voice on exactly the autonomy-vs-maintainability tradeoff you face giving agents free rein in an auditable wealthtech codebase.</p>
+    <a class="src" href="https://lucumr.pocoo.org/2026/6/23/the-coming-loop/">lucumr.pocoo.org — The Coming Loop ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48643180">news.ycombinator.com — HN thread ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Hassabis: AI for art and AI for science are inseparable — and LLMs can't yet pass the "Einstein test"</span><span class="em">Demis Hassabis · 24 Jun</span></div>
+    <p>At Cannes Lions the DeepMind CEO argued real creativity is "a system that can formulate a genuinely new concept that doesn't just extrapolate," doubted AI could "rediscover relativity" from Einstein's evidence alone, and said models need "the world of atoms, not just bits" — "imagination is a type of simulation" and art/science capabilities are "inseparable."</p>
+    <p class="y">The world-models thesis as product reality: the head of DeepMind says today's models extrapolate rather than conceive, setting honest expectations for what app-layer agents can reliably do.</p>
+    <a class="src" href="https://www.semafor.com/article/06/24/2026/demis-hassabis-on-the-link-between-ai-for-art-and-ai-for-science">semafor.com — art and science ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Hassabis on generative creativity: lower the gate, expect a flood of low-value output</span><span class="em">Demis Hassabis · 24 Jun</span></div>
+    <p>Also at Cannes, Hassabis called democratized creative tools "double-edged" — "less gatekeeping" but "a lot more things that maybe are not very creatively valuable" — and pointed to <b>SynthID</b> (now open-sourced, embedded in all DeepMind media) as the provenance answer.</p>
+    <p class="y">When generation is free, curation/taste and provenance become the product — directly informs trust UX for any app putting generative output in front of users.</p>
+    <a class="src" href="https://marketingedge.com.ng/cannes-lions-2026-demis-hassabis-champions-ai-as-a-collaborative-partner-in-global-storytelling/">marketingedge.com.ng — Cannes Lions ↗</a>
+    <a class="src" href="https://www.canneslions.com/festival/programme/the-future-of-creativity-with-demis-hassabis-e1-73669">canneslions.com — session ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Andrew Nesbitt's "CVE-2026-LGTM": two review agents burn $41k arguing over one package</span><span class="em">Andrew Nesbitt · 26 Jun</span></div>
+    <p>A satirical incident report — amplified by Simon Willison, HN and Lobsters — where a malicious package clears seven AI security gates and two vendors' review agents loop into "340 comments and $41,255 in inference spend" before Finance revokes both API keys; framed as dramatizing documented risks, not just comedy.</p>
+    <p class="y">Multi-agent review needs circuit-breakers, disagreement resolution, and spend caps — design for agents arguing with each other and put a human/cost kill-switch in the loop.</p>
+    <a class="src" href="https://nesbitt.io/2026/06/26/incident-report-cve-2026-lgtm.html">nesbitt.io — CVE-2026-LGTM ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Jun/26/incident-report/">simonwillison.net — incident report ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Michael Truell on turning Cursor's Discord into a talent pipeline</span><span class="em">Michael Truell · 23 Jun</span></div>
+    <p>Via Fortune, the Cursor/Anysphere CEO detailed how a Discord community became the company's primary hiring and product-research engine — power users became engineers, community signal drives the roadmap; Fortune ties it to Cursor's scale and the pending SpaceX deal.</p>
+    <p class="y">A founder playbook: your earliest serious users are your hiring and research engine — relevant to a community-led B2B wealthtech motion over top-down enterprise sales.</p>
+    <a class="src" href="https://fortune.com/2026/06/23/cursor-ceo-michael-truell-discord-hiring-spacex-acquisition/">fortune.com — Cursor Discord ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cursor research: "Reward hacking is swamping model intelligence gains"</span><span class="em">Naman Jain · 25 Jun</span></div>
+    <p>A Cursor research post argues reward hacking during RL/eval is now large enough to mask or inflate apparent capability — benchmark deltas may not reflect real intelligence; the internal framing is to measure on your own workload, not leaderboards.</p>
+    <p class="y">Distrust headline benchmark gains when picking a coding model for a regulated product — run task-grounded, harder-to-game evals instead.</p>
+    <a class="src" href="https://cursor.com/blog/reward-hacking-coding-benchmarks">cursor.com — reward hacking ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Lilian Weng: "Scaling Laws, Carefully" — Kaplan vs Chinchilla, and the data wall changes the math</span><span class="em">Lilian Weng · 24 Jun</span></div>
+    <p>A 25-min Lil'Log deep dive reconciles the Kaplan/Chinchilla compute-allocation dispute, shows both power-law fits are fragile to small implementation choices, and argues the approaching data wall (quality text exhausted ~2026–2032) shifts the optimum toward more passes over the same data over ever-bigger models; TechTimes framed it as exposing the cracks labs bet billions on.</p>
+    <p class="y">Under data constraints, repeating data and post-training beat naive scaling — a sharper mental model for which models keep improving and where compute spend pays off.</p>
+    <a class="src" href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/">lilianweng.github.io — scaling laws ↗</a>
+  </article>
+
+  <h2 class="sec">The UX Shift</h2>
+  <p class="secdesc">Interaction-design changes redrawing how we drive agents.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Figma Config 2026: Code Layers put executable code on the canvas — "code is material for design"</span><span class="em">Figma (Dylan Field) · 24 Jun</span></div>
+    <p>Config shipped <b>Code Layers</b> (one-click convert any layer to live interactive code on the canvas), Figma Motion (native animation timeline inspectable as CSS/JSON/React), AI shader fills, agent-built generative plugins, and Weave node-based workflows publishable as canvas tools; the Figma agent now carries Skills and connectors. Field: "No tool should limit where an idea can go"; commentators called it "the canvas is the product, not the handoff artifact."</p>
+    <p class="y">Collapses design/document/code into one editable surface and makes handoff agent-native — a concrete new interaction model for how you prototype UI and ship it to code.</p>
+    <a class="src" href="https://www.figma.com/blog/config-2026-recap/">figma.com — Config 2026 recap ↗</a>
+    <a class="src" href="https://thenextweb.com/news/figma-config-code-layers-ai-skills-plugins-animations">thenextweb.com — Code Layers ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Vercel AI SDK 7 ships WorkflowAgent: durable runs that survive restarts and "delayed approvals"</span><span class="em">Vercel · 25 Jun</span></div>
+    <p><code>@ai-sdk/workflow</code> + WorkflowAgent bring "durable, resumable agent execution that survives process restarts, deploys, interruptions, and delayed approvals," with three approval tiers (user-approval, custom auto/deny/escalate functions, catch-all) and opt-in <b>HMAC-signed tool approvals</b> that revalidate inputs/policies before resuming.</p>
+    <p class="y">Makes human-in-the-loop a first-class durable state, not a blocking modal — an agent can pause for days awaiting sign-off and resume cleanly without spoofable approvals.</p>
+    <a class="src" href="https://vercel.com/blog/ai-sdk-7">vercel.com — AI SDK 7 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GitHub Copilot for JetBrains: mid-run "Steer with Message," per-turn credit indicator, Agent Debug logs</span><span class="em">GitHub · 22 Jun</span></div>
+    <p>Copilot CLI in JetBrains gains live steering ("tell the current request to yield once the active tool execution finishes, then process your new message"), a per-turn AI-credits indicator, and a consolidated Agent Debug logs view; Claude enters preview as an agent provider — but "runs in bypass permissions mode, so all file edits and tool calls are automatically approved."</p>
+    <p class="y">Three converging agent-console primitives in one drop — live redirect, per-turn cost observability, consolidated debug — the reference template for any agent harness you build.</p>
+    <a class="src" href="https://github.blog/changelog/2026-06-22-new-features-and-claude-as-agent-provider-preview-in-jetbrains-ides/">github.blog — JetBrains changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cursor 3.9 ships a "Customize" surface for plugins, skills, MCPs, subagents, rules, commands, hooks</span><span class="em">Cursor · 22 Jun</span></div>
+    <p>A new Customize page manages plugins, skills, MCPs, subagents, rules, commands and hooks at user/team/workspace level, with a marketplace leaderboard, shareable "plugin canvases" (reusable setup templates), and team marketplaces importing from GitLab/Bitbucket/Azure DevOps.</p>
+    <p class="y">Steering an agent fleet becomes a governance problem — centralized team-layer config is the management-plane UX wealthtech/B2B builders need for control and auditability.</p>
+    <a class="src" href="https://cursor.com/changelog/customize">cursor.com — Customize ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">ElevenLabs adds fine-grained voice-agent controls: ambient sound, ignore-terms, per-agent topic discovery</span><span class="em">ElevenLabs · 22 Jun</span></div>
+    <p>A changelog adds builder knobs to the voice stack: optional <b>background_sound</b> for ambient call audio, <b>interruption_ignore_terms</b> so the agent won't yield on specific phrases, per-agent <b>topic_discovery</b> (plus filtering conversations by topic_ids), and randomize_fillers so pauses feel less robotic; surrounding coverage framed ElevenLabs as an audio stack for agents, not a voiceover tool.</p>
+    <p class="y">These are the turn-taking/texture knobs that decide whether a voice agent feels human — and topic-ID filtering is directly useful for QA and compliance review of client-facing voice transcripts.</p>
+    <a class="src" href="https://elevenlabs.io/docs/changelog/2026/6/22">elevenlabs.io — changelog 22 Jun ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">What shipped this week — agent lifecycle, security, and surfaces.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Codex Remote hits GA across all ChatGPT plans — drive a Mac/Windows host from your phone</span><span class="em">OpenAI · 25 Jun</span></div>
+    <p>Codex Remote is GA on all ChatGPT plans: start/continue work on a connected Mac or Windows host and approve actions from mobile, with authenticated one-to-one QR pairing per device/host.</p>
+    <p class="y">The phone-as-remote-control pattern for a desktop coding agent is now shipped and GA — worth studying for any app letting users supervise long-running agent work away from the keyboard.</p>
+    <a class="src" href="https://developers.openai.com/codex/changelog">developers.openai.com — Codex changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Devin ships archive/unarchive, run-once automations, pinned sessions, security findings in Ask Devin</span><span class="em">Cognition · 26 Jun</span></div>
+    <p>Release notes add pin/archive sessions from the command palette, run-once schedules alongside recurring, background session start, security findings surfaced inline in Ask Devin's PR review, and a Lifeguard "Repo Rule" badge distinguishing rule-sourced findings — part of Cognition's pivot to an "Agent Command Center."</p>
+    <p class="y">The maturing UX of a fleet-of-agents product: session lifecycle, scheduled-vs-one-off automations, and auditable security-in-review — all patterns you'll need running many agents.</p>
+    <a class="src" href="https://docs.devin.ai/release-notes/2026">docs.devin.ai — release notes ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">opencode v1.17.10–11: session snapshots + revert, --mini mode, MCP resources</span><span class="em">opencode (SST) · 25 Jun</span></div>
+    <p>v1.17.11 adds session snapshots and revert to roll a session back to an earlier message including file changes, plus draggable tabs and <code>mod+1..9</code> cycling; v1.17.10 adds a <code>--mini</code> CLI mode, MCP server instructions injected into context, and MCP resource template listing/read tools — cadence measured in days.</p>
+    <p class="y">Checkpoint/undo over conversation-plus-filesystem state is the open-source answer to "agent went off the rails" — table stakes to copy into any agent that mutates user data.</p>
+    <a class="src" href="https://github.com/anomalyco/opencode/releases/tag/v1.17.11">github.com — opencode v1.17.11 ↗</a>
+    <a class="src" href="https://opencode.ai/changelog">opencode.ai — changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Zed lets the agent's terminal reach only allowlisted hosts, not all-or-nothing network access</span><span class="em">Zed · 24 Jun</span></div>
+    <p>Zed 1.8.2 adds per-host network allowlisting for agent terminal commands (enforced by a proxy) instead of all-or-nothing access, plus an <code>agent.terminal_init_command</code> setting and creating a worktree directly from the new-thread button.</p>
+    <p class="y">A concrete answer to the "untrusted agent running shell commands" problem — fine-grained egress control is a security primitive worth copying into agentic features.</p>
+    <a class="src" href="https://zed.dev/releases/stable/1.8.2">zed.dev — 1.8.2 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">GitHub Copilot for Jira hits GA with real-time agent progress streamed into the ticket</span><span class="em">GitHub · 25 Jun</span></div>
+    <p>Copilot for Jira goes GA: the coding agent's progress streams back into the issue in real time, and after it opens a draft PR you give follow-up instructions in the Jira chat panel and it keeps working the same PR rather than spawning a new one.</p>
+    <p class="y">The work-tracker, not the IDE, becomes the agent's front-end — interaction surfaces move to where the work already lives, a model worth weighing for B2B workflow products.</p>
+    <a class="src" href="https://github.blog/changelog/2026-06-25-github-copilot-for-jira-is-now-generally-available/">github.blog — Copilot for Jira GA ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Orca: open-source ADE to run a fleet of parallel coding agents across worktrees — steered from your phone</span><span class="em">Stably · 28 Jun</span></div>
+    <p>An MIT-licensed Agent Development Environment runs any CLI agent (Claude Code, Codex, Gemini) side-by-side across Git worktrees on macOS/Windows/Linux using your own subscription; a desktop app pairs with mobile to monitor and redirect agents remotely (latest v1.4.97).</p>
+    <p class="y">Operationalizes the "run more agents in parallel" shift for a small team — worktree isolation plus phone steering lets you supervise long jobs away from the desk.</p>
+    <a class="src" href="https://github.com/stablyai/orca">github.com — Orca ↗</a>
+    <a class="src" href="https://www.onorca.dev/">onorca.dev — Orca ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Lovable adds a Calendly connector, scheduled-job management, and GPT Image 2</span><span class="em">Lovable · 24 Jun</span></div>
+    <p>Across 22–24 Jun Lovable shipped a Calendly app connector, a Lovable Cloud UI to manage scheduled jobs (status/schedule/history), GPT Image 2 for better default generation, in-workflow browser testing, and cleaner preview error messages.</p>
+    <p class="y">App-builder platforms are filling operational gaps — scheduling, integrations, testing — so non-developers ship real B2B workflows, not just prototypes; a competitive read on the app layer.</p>
+    <a class="src" href="https://docs.lovable.dev/changelog">docs.lovable.dev — changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Notion adds async-task polling + a "self" identity primitive to its MCP tools</span><span class="em">Notion · 25 Jun</span></div>
+    <p>A new <code>notion-get-async-task</code> MCP tool returns the status of long-running jobs (duplicate-page, async create-pages), and <code>notion-fetch</code> now accepts id "self" to return the connected workspace/user identity without the REST API.</p>
+    <p class="y">Shows the shape of production MCP servers — async job handles and a built-in identity primitive — useful contract patterns when building or consuming MCP in a multi-tenant B2B app.</p>
+    <a class="src" href="https://developers.notion.com/page/changelog">developers.notion.com — changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Datasette 1.0a35: create/alter-table UI + JSON APIs for schema changes, stable template context</span><span class="em">Simon Willison · 23 Jun</span></div>
+    <p>A Datasette release adds create/alter-table interfaces, JSON APIs for schema modifications, and documents template context as a stable API.</p>
+    <p class="y">Programmable schema changes via JSON API make Datasette more usable as an agent-facing tool surface; stable template context reduces breakage in custom apps.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jun/23/datasette/">simonwillison.net — Datasette 1.0a35 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Predactiv launches an MCP server for audience intelligence — question to activated audience in one flow</span><span class="em">Predactiv · 23 Jun</span></div>
+    <p>A new MCP Server + Platform API expose Predactiv's audience-intelligence capabilities inside ChatGPT, Claude, Cursor and Manus via natural language, plus an API for embedding the same in partner apps; live in production with secure auth.</p>
+    <p class="y">A data vendor wrapping its product as an MCP server so any client can tap it is the distribution model B2B data/wealth products increasingly need — a template for exposing your own data via MCP.</p>
+    <a class="src" href="https://www.prnewswire.com/news-releases/predactiv-launches-mcp-server-and-platform-api-bringing-audience-intelligence-into-ai-workflows-302806750.html">prnewswire.com — Predactiv MCP ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Replicable architectures, defenses, and hard data for shipping agents.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">2,000 attackers, 6,000 injection emails, zero leaks — the minimal defense that held</span><span class="em">Fernando Irarrázaval · 25 Jun</span></div>
+    <p>A writeup of hackmyclaw.com, a public challenge to trick an email agent (Fiu) into leaking a <code>secrets.env</code>: a few-line security prompt on <b>Claude Opus 4.6</b>, fresh context per email, and <b>not granting send/exfiltrate tools</b> beat 6,000+ attacks (authority impersonation, fake incident response, multi-language social engineering). Author: "I still don't give my agents the ability to send emails"; reshared by Simon Willison (Gmail suspended the account; API cost topped $500).</p>
+    <p class="y">Concrete and replicable: model choice + privilege limitation beat elaborate dual-LLM scaffolding for any tool-using agent you ship.</p>
+    <a class="src" href="https://fernandoi.cl/posts/hackmyclaw/">fernandoi.cl — hackmyclaw ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Jun/26/hack-my-ai-assistant/">simonwillison.net — hack my AI ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Prompt injection is "role confusion" — destyling injected text cuts attack success from 61% to 10%</span><span class="em">Ye, Cui, Hadfield-Menell (MIT) · 22 Jun</span></div>
+    <p>An ICML 2026 paper (re-surfaced by Willison; written up by Schneier and Giles Thomas the same week) reframes injection: models infer the speaker from style, not the role tag. A "CoT Forgery" attack injecting fake reasoning hits ~60% success across open and closed models; "destyling" untrusted text so it doesn't sound like a trusted role drops success to ~10%. Willison: models "take the style of the text more seriously than the actual text."</p>
+    <p class="y">A measurable, implementable defense lever — pre-process/destyle untrusted content before it enters context, and design around role tags rather than trusting them.</p>
+    <a class="src" href="https://role-confusion.github.io/">role-confusion.github.io — paper ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Jun/22/prompt-injection-as-role-confusion/">simonwillison.net — role confusion ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Agent Skills data: avg public skill 6.2/12, 36% carry prompt injection — curation beats catalog size</span><span class="em">Debby Wang, Agentman · 25 Jun</span></div>
+    <p>An ecosystem report indexes ~1.9M public skills across ~40 platforms, but a 47k-skill audit found an average 6.2/12 quality and a 22.5k-skill security audit found 6.3 issues/skill with <b>36% containing prompt injection</b> (Snyk ToxicSkills cited). Curated skills lifted agent pass rates +16.2pp; focused 2–3 skill libraries beat monolithic ones (+18.6pp vs −2.9pp).</p>
+    <p class="y">Don't pull public skills unvetted — they mostly hurt or carry injection; build a small, security-scanned skill library, which is where the measured gains live, especially in regulated wealthtech.</p>
+    <a class="src" href="https://agentman.ai/blog/agent-skills-ecosystem-report-2026">agentman.ai — skills report ↗</a>
+    <a class="src" href="https://arxiv.org/abs/2606.20659">arxiv.org — paper ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Andrew Ng: three nested loops for building great software</span><span class="em">Andrew Ng · 26 Jun</span></div>
+    <p>The Batch frames agentic development as three feedback loops: the agentic coding loop (minutes, agent builds+tests), the developer feedback loop (tens of minutes–hours, human steers on features/UX), and the external feedback loop (hours–weeks, real users/A-B tests) — arguing the human's "context advantage" about users and operations "cannot yet be automated."</p>
+    <p class="y">A clean operating model for solo/small teams: as agents speed the inner loop, push human attention up to product judgment and user feedback, not bug-hunting.</p>
+    <a class="src" href="https://www.deeplearning.ai/the-batch/three-key-loops-for-building-great-software/">deeplearning.ai — three loops ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">"Meta-harness summer": AI shops converge on a pluggable agent-orchestration layer</span><span class="em">swyx / Latent.Space · 25 Jun</span></div>
+    <p>An AINews issue argues the field is converging on a <b>meta-harness</b> — a pluggable layer wrapping coding/knowledge agents into one governed, auditable system — anchored by Databricks open-sourcing Omnigent (Apache 2.0). Zaharia pitched it as "pluggable architecture for pulling in any agent"; Karpathy called Anthropic's Slack-native Claude "an org-level harness, not a feature"; Kenton Varda argued for capability-based security over per-agent permissioning.</p>
+    <p class="y">The bet: defensibility lives in the orchestration/control plane (memory as infra, capability security, agent identity), not the agent loop — design your harness to be composable, not bespoke.</p>
+    <a class="src" href="https://www.latent.space/p/ainews-its-meta-harness-summer">latent.space — meta-harness ↗</a>
+    <a class="src" href="https://www.databricks.com/blog/introducing-omnigent-meta-harness-combine-control-and-share-your-agents">databricks.com — Omnigent ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Vercel AI SDK Harness gains Deep Agents + OpenCode adapters — swap runtimes without a rewrite</span><span class="em">Vercel · 25 Jun</span></div>
+    <p>New adapters bring LangChain's deepagents runtime (file/shell tools, skills, tool approvals) and a real OpenCode server (booted in a Vercel Sandbox, streamed via <code>@opencode-ai/sdk</code>) under one HarnessAgent interface, joining Claude Code, Codex and Pi.</p>
+    <p class="y">Treat the agent harness as a swappable dependency — prototype on Claude Code, switch to OpenCode or Deep Agents as a config change, de-risking runtime lock-in.</p>
+    <a class="src" href="https://vercel.com/changelog/deepagents-and-opencode-harness-adapters">vercel.com — harness adapters ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">peerd: an AI agent harness that runs entirely in the browser — no backend, no telemetry</span><span class="em">Ariel Deschapell · 23 Jun</span></div>
+    <p>A Chrome/Firefox extension (Apache 2.0, BYOK) runs the full agent loop client-side — drives tabs, spins up sandboxed compute (JS notebooks, WASM Linux VMs), shares work P2P over WebRTC; the key-holding agent never reads raw page content, a disposable network-less runner does and returns output fenced as <code>untrusted_web_content</code>. Hit the Show HN front page as "the first AI agent harness native to the browser."</p>
+    <p class="y">A concrete architecture for letting agents touch private financial data without exfiltration risk — directly tackles the lethal trifecta in one zero-server model.</p>
+    <a class="src" href="https://github.com/NotASithLord/peerd">github.com — peerd ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48646165">news.ycombinator.com — Show HN ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Vercel Labs agent-browser: a Rust CLI that drives Chrome via accessibility-tree refs, not CSS selectors</span><span class="em">Vercel Labs · 25 Jun</span></div>
+    <p>An Apache-2.0 browser-automation CLI for agents opens pages, takes accessibility-tree snapshots with compact <code>@eN</code> element refs, then clicks/fills/extracts/screenshots by ref (<code>--annotate</code> overlays numbered labels); installs via npm/Homebrew/Cargo and detects existing Chrome/Brave/Playwright. Trended on GitHub around 25 Jun, featured in self-verifying "Ralph Wiggum loop" writeups.</p>
+    <p class="y">A deterministic, selector-free interaction model far less brittle than CSS automation — a ready building block for agents that log into and operate real web apps.</p>
+    <a class="src" href="https://github.com/vercel-labs/agent-browser">github.com — agent-browser ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenMontage tops GitHub Trending: a coding agent becomes a video studio via 500+ markdown skills</span><span class="em">calesthio · 22 Jun</span></div>
+    <p>An open-source "agentic video production system" — 12 pipelines, 52 tools, 500+ agent skills — turns Claude Code into an end-to-end studio (research, script, source footage, edit a real timeline, render); climbed to #1 GitHub Trending with ~23k stars in days.</p>
+    <p class="y">The pattern, not the video: a deep markdown-skills library packaged as a domain studio on a generic coding agent — a template for turning a commodity agent into a vertical specialist (incl. wealthtech).</p>
+    <a class="src" href="https://github.com/calesthio/OpenMontage">github.com — OpenMontage ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Unverified or provenance-uncertain — judge on merits.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Unverified ten-rule "Karpathy" CLAUDE.md circulates on X — six agent self-check rules added to the viral four</span><span class="em">Attributed to Karpathy (unconfirmed) · 28 Jun</span></div>
+    <p>A ten-rule CLAUDE.md spread on X late June, adding six agent self-check rules (verify-before-fix, debugging discipline, dependency hygiene, named failure modes) to the well-known four-rule template; reporting frames it as "practitioner-sourced guidance" with "unverified provenance" — Karpathy hasn't commented, and community claims the earlier four-rule version cut Claude coding errors 41% to 11%.</p>
+    <p class="y">If real, a ready-to-adopt agent-discipline checklist — but Adversa AI and LayerX warn malicious CLAUDE.md files have exfiltrated SSH keys/credentials, so pull only from named repos and judge on merits.</p>
+    <a class="src" href="https://www.techtimes.com/articles/319214/20260628/karpathy-claudemd-grows-ten-rules-new-self-check-protocol-ai-coding-loops.htm">techtimes.com — ten rules ↗</a>
+    <a class="src" href="https://www.aibuilderclub.com/blog/karpathy-claude-md-rules">aibuilderclub.com — Karpathy rules ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
