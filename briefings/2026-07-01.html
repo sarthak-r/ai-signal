@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cheap agents, run anywhere — the loop economics shift — 1 July 2026 — AI Builder Signal</title>
+<meta name="description" content="App-layer day framed by agent-loop economics — Raschka benchmarks local open-weight coding agents and finds Claude Code burns 2× the tokens of Codex, the World's Fair Day-3 keynote crowns 'Autoresearch', Sonnet 5 lands as the new Claude Code default at $2/$10, and Devin Local becomes default as Cascade sunsets today." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 015 · 01 July 2026</p>
+  <h1>Cheap agents, run anywhere: the loop economics shift</h1>
+  <p class="lede">Yes, <b>Claude Sonnet 5</b> dropped yesterday — but the model isn't the story, the <b>economics of running the loop</b> are. Three threads converge in the last 24 hours: Sonnet 5 lands as the new Claude Code default at <b>near-Opus agentic quality for $2/$10</b>; Sebastian Raschka publishes hard numbers showing a <b>30B open-weight model runs a usable local coding agent</b> — and that Claude Code burns <b>2× the tokens of Codex</b> for the same work; and Cognition flips <b>Devin Local</b> (30% more token-efficient) to default as Cascade sunsets today. Meanwhile the AI Engineer World's Fair Day-3 keynote crowns <b>"Autoresearch"</b> — the app layer's next frontier is agents that run their own research and eval loops. The lever a builder controls isn't which model; it's how cheaply and locally the loop runs.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Hard numbers on the agent loop — and where the field's attention is moving.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Raschka benchmarks local coding agents: a 30B open-weight model is the sweet spot — and Claude Code costs 2× Codex in tokens</span><span class="em">Raschka · late Jun</span></div>
+    <p>Sebastian Raschka ran open-weight LLMs through real harnesses (Qwen-Code, Codex CLI, Claude Code), everything 100% local. Findings: a <b>30B Mixture-of-Experts model</b> is the practical floor for solving hard tasks, hitting <b>~40 tok/sec on a Mac or DGX Spark</b> — comparable to GPT-5.5 on a Pro plan. And the harness itself is a cost lever: <b>Claude Code consumes roughly 2× the tokens of Codex</b> for the same task. What actually decides a local setup: inference speed, long-context behaviour, tool-call reliability, permissions, telemetry, and task-specific evals — not the leaderboard.</p>
+    <p class="y">This is the on-prem playbook for a regulated shop, quantified. A capable coding agent now fits on a workstation with no data leaving the building — and Raschka just handed you the selection checklist and a concrete token-cost delta between harnesses. Bench your own tasks; the 2× Claude-Code-vs-Codex gap is real money at scale.</p>
+    <a class="src" href="https://sebastianraschka.com/blog/2026/local-open-weight-llms-coding-harnesses.html">sebastianraschka.com — local coding harnesses ↗</a>
+    <a class="src" href="https://magazine.sebastianraschka.com/p/using-local-coding-agents">Ahead of AI — Using Local Coding Agents ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">The World's Fair crowns "Autoresearch": the app layer's next frontier is self-directed research + memory</span><span class="em">AI Engineer · 1 Jul</span></div>
+    <p>Day 3 of the AI Engineer World's Fair (Moscone, SF) leads with an <b>"Autoresearch"</b> keynote — agents that run their own research and evaluation loops — alongside 12 parallel tracks (Context Engineering, Memory, World Models, Design Engineering, Robotics). It extends the week's arc: after "Software Factories" (Day 1) and ahead of "Harness Engineering" (Day 4), the field's attention keeps climbing the abstraction stack, from writing code to orchestrating agents that research, remember, and verify autonomously.</p>
+    <p class="y">The conference is a leading indicator of where builder effort (and hiring) flows next: not a bigger model, but the research/memory/eval loop wrapped around it. If your product roadmap still treats "the model" as the moat, this is the signal to re-point it at the loop.</p>
+    <a class="src" href="https://www.ai.engineer/worldsfair/2026">ai.engineer — World's Fair 2026 ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The frontier drop that earns its place on cost — plus the tooling around it.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Sonnet 5 is the new Claude Code default: near-Opus agentic quality at $2/$10</span><span class="em">Anthropic · 30 Jun</span></div>
+    <p>Anthropic shipped <b>Claude Sonnet 5</b> — "the most agentic Sonnet yet" — and made it the default in Claude Code and across Free/Pro. It posts <b>63.2% on agentic coding</b> (vs Opus 4.8's 69.2%, Sonnet 4.6's 58.1%) with a <b>1M-token context window</b>, and launches at <b>$2/M input, $10/M output through 31 Aug</b> (then $3/$15). The pitch is autonomy-per-dollar: multi-step tasks that "used to stall halfway" now finish end-to-end at a fraction of Opus cost.</p>
+    <p class="y">The one frontier item that changes a builder's roadmap, because it changes the bill. If you run agents in production, re-run your eval set on Sonnet 5 before Opus renews — near-Opus agentic quality at roughly a third of the price resets your cost model for the whole loop. Lock in the intro pricing while it lasts.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com — Introducing Claude Sonnet 5 ↗</a>
+    <a class="src" href="https://techcrunch.com/2026/06/30/anthropic-launches-claude-sonnet-5-as-a-cheaper-way-to-run-agents/">techcrunch.com — cheaper agents ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code build: org default models, /rewind, clickable attachments, steadier background agents</span><span class="em">Anthropic · 30 Jun</span></div>
+    <p>Alongside the model, Claude Code shipped a governance-and-reliability update: admins can now set an <b>org (or role) default model</b> shown in <code>/model</code>; sessions get <b>readable names</b> and <b>clickable file attachments</b>; background workers killed by a daemon restart <b>auto-resume</b> from where they left off; plus <code>/rewind</code>, a <b>sandbox.credentials</b> setting to block sandboxed commands from reading secrets, and broad MCP/OAuth resilience fixes.</p>
+    <p class="y">The org-default-model + credential-blocking controls are exactly the guardrails a compliance-bound team needs before letting agents run unattended — you can now standardise the model and fence off secrets at the org level. Auto-resuming background agents also make long unattended runs survivable.</p>
+    <a class="src" href="https://releasebot.io/updates/anthropic/claude-code">releasebot.io — Claude Code updates ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Two deadlines that land today.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Devin Local becomes default today — Cascade sunsets 1 July</span><span class="em">Cognition · 1 Jul</span></div>
+    <p>Cognition's migration window closes today: the legacy <b>Cascade</b> agent is retired and <b>Devin Local</b> — rewritten from scratch in Rust — becomes the default in Devin Desktop (ex-Windsurf). Cognition claims it's <b>up to 30% more token-efficient</b> and adds <b>subagents</b>, so a single task can fan out to parallel sub-sessions coordinated back to one agent. Devin Desktop also runs Codex, Claude Agent, and OpenCode side-by-side via the open <b>Agent Client Protocol</b>.</p>
+    <p class="y">If any of your scripts or workflows still call Cascade by name, they break after today — swap to Devin Local. The bigger read: subagents + a 30% token cut is the same loop-economics story as everything else this week, now default in a mainstream IDE.</p>
+    <a class="src" href="https://devin.ai/blog/windsurf-is-now-devin-desktop/">devin.ai — Windsurf is now Devin Desktop ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">APRA CPS 230 is now in force — the AI-vendor compliance deadline has passed</span><span class="em">Australia · regulatory</span></div>
+    <p>The <b>1 July 2026</b> deadline flagged yesterday has landed: under APRA's CPS 230 (Operational Risk Management), regulated AU entities must have material service-provider arrangements — including <b>AI/LLM vendor contracts</b> — brought into compliance. Existing AFS-licensee obligations (best-interests duty, accountability for AI-generated outputs) now apply with full force.</p>
+    <p class="y">This is no longer a countdown — it's live. If you operate in AU financial services and haven't checked your Anthropic/OpenAI/Google terms against CPS 230's operational-risk and continuity requirements, that's now an overdue item, not a planning one.</p>
+    <a class="src" href="https://www.nortonrosefulbright.com/en/inside-fintech/blog/2026/03/australian-financial-services-providers-navigating-regulatory-compliance-in-the-use-of-ai">nortonrosefulbright.com — CPS 230 compliance ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
