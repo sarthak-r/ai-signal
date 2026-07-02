@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Harness Engineering closes the week — the loop is the product — 2 July 2026 — AI Builder Signal</title>
+<meta name="description" content="The AI Engineer World's Fair ends on a 'Harness Engineering' keynote — capping a week where the harness around the model, not the model, is the app layer's story. Willison ships agents that record video proof of their own work, Cursor puts the agent loop in your pocket, Notion opens an External Agents API, and MCP's biggest-ever spec revision lands 28 July." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 016 · 02 July 2026</p>
+  <h1>Harness Engineering closes the week: the loop is the product</h1>
+  <p class="lede">The AI Engineer World's Fair ends today on a <b>"Harness Engineering"</b> keynote — the tidiest possible bookend to a week whose real subject was never a model. The arc ran <b>Software Factories → Autoresearch → Harness Engineering</b>: from writing code, to agents that run their own research loops, to the discipline of engineering the harness wrapped around the model. Everything else in the last 48 hours rhymes with it. Simon Willison ships a tool that lets an agent <b>record video proof of its own work</b> — and argues the tool's own <code>--help</code> should teach the agent to use it. Cursor puts the <b>agent loop in your pocket</b>, letting you steer a desktop run from a phone and push sessions to the cloud. Notion opens an <b>External Agents API</b> to orchestrate multiple agent types in one workspace. And the biggest MCP spec revision since launch lands <b>28 July</b>, rebuilding how every agent connects to tools. The model is settled; the harness is where the work — and the moat — now lives.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Where the field's attention landed as the week closed.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">The World's Fair closes on "Harness Engineering" — the harness, not the model, was the week's throughline</span><span class="em">AI Engineer · 2 Jul</span></div>
+    <p>Day 4 of the AI Engineer World's Fair (Moscone West, SF) leads with a <b>Harness Engineering</b> keynote and runs 10 parallel tracks including <b>AI in Finance</b>, <b>Local AI</b>, <b>Agentic Engineering</b>, and <b>Inference</b>. It caps the week's climb up the abstraction stack — Software Factories (Day 1), Autoresearch (Day 3), and now the explicit framing that the <b>harness</b> — the loop, tools, memory, permissions, and evals around a model — is its own engineering discipline. All talks hit the AI Engineer YouTube channel free after today.</p>
+    <p class="y">The conference is a leading indicator of where builder effort and hiring flow next — and for two years running the answer has moved further from "pick a model" toward "engineer the loop." If your roadmap still treats the model as the differentiator, the whole week just told you otherwise. Watch the Harness Engineering and AI-in-Finance recordings specifically.</p>
+    <a class="src" href="https://www.ai.engineer/worldsfair/2026">ai.engineer — World's Fair 2026 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Willison: give an agent a camera — <code>shot-scraper video</code> lets agents record proof their work runs</span><span class="em">Simon Willison · 30 Jun</span></div>
+    <p>Simon Willison shipped <b><code>shot-scraper video</code></b>: an agent writes a YAML "storyboard" (start command, URL, viewport, scenes of clicks/fills/waits), and Playwright drives the browser and encodes a video. The point isn't screenshots — it's that a coding agent can now <b>produce a video demo proving a feature actually works</b>, closing the "it says it's done, but does it run?" gap. Willison's sharper meta-point: the tool's <code>--help</code> is written to be complete enough that an agent learns the tool unaided — <b>"bundling a SKILL.md directly inside the tool."</b></p>
+    <p class="y">Two build patterns in one. First: <b>agent self-verification</b> — wire visual proof into the agent's own loop instead of trusting its self-report. Second: <b>docs-as-skill</b> — design your CLIs and internal tools so their help output teaches an agent to drive them, and you stop hand-writing integration glue for every new agent.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jun/30/shot-scraper-video/">simonwillison.net — shot-scraper video ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">App-layer products that put the loop somewhere new.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Cursor for iOS: launch, watch, and steer the agent loop from your phone</span><span class="em">Cursor · 29 Jun</span></div>
+    <p>Cursor 3.9 puts <b>Cursor for iOS</b> into public beta on all paid plans. You can launch cloud agents from the phone, <b>remote-control an agent already running on your desktop</b>, and <b>move a session from local to cloud</b> so it keeps running with the laptop closed — with Live Activities for status and push notifications when an agent finishes or needs input. A same-week update also lets orgs configure <b>Team MCP servers once</b> and distribute them across cloud agents, the IDE, and CLI.</p>
+    <p class="y">This is "run anywhere" made literal: the agent loop detaches from the workstation and becomes ambient — kick off a long run, walk away, nudge it from your pocket. For a small team, async/mobile steering is real leverage on wall-clock throughput. The Team-MCP distribution is the governance half — one place to standardise which tools agents can touch.</p>
+    <a class="src" href="https://cursor.com/changelog">cursor.com — changelog (3.9) ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Notion opens an External Agents API — the workspace as a multi-agent host</span><span class="em">Notion · late Jun</span></div>
+    <p>Notion's developer platform now exposes an <b>External Agents API (alpha)</b> to orchestrate multiple agent types inside one workspace, alongside hosted <b>Workers</b>, webhook triggers, and database sync. It added <b>async markdown</b> create/update for large pages (with polling tools) on 29 Jun, opened single-database queries to Business-plan AI users, and reports Notion-MCP database create/update is now <b>91% more token-efficient</b>. Its curated agent library ships setup checklists and starter prompts from Ramp, Clay, and Vercel.</p>
+    <p class="y">If your product lives next to a knowledge base, this is the pattern to copy: the workspace becomes the substrate where several agents (yours and third parties') coordinate over shared docs and data. The token-efficiency gains matter directly — the same MCP operation at a fraction of the tokens is margin you keep.</p>
+    <a class="src" href="https://releasebot.io/updates/notion">releasebot.io — Notion updates ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A deadline that will touch every agent you ship — and where the front office is heading.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">MCP's biggest revision since launch ships 28 July — sessions gone, OAuth 2.1 in</span><span class="em">MCP · deadline</span></div>
+    <p>The <b>MCP 2026-07-28</b> spec (RC out since 21 May) is the largest protocol change since launch. It <b>removes the session model entirely</b> — the <code>initialize</code> handshake and <code>Mcp-Session-Id</code> are gone, so servers run stateless behind plain round-robin load balancers — replaces upfront capability negotiation with a <code>server/discover</code> method, and rebuilds auth on <b>OAuth 2.1 + OpenID Connect</b> (servers become RFC 9728 resource servers; mandatory issuer verification to stop token mix-up). <b>Roots, sampling, and logging</b> are dropped from core.</p>
+    <p class="y">If you run or consume any MCP server in production, this is a migration, not a version bump — plan for it before 28 July. The upside is real: stateless servers are far easier to scale, and the OAuth 2.1 alignment is what finally makes MCP defensible in a compliance-bound shop. Audit your servers for session-state assumptions now.</p>
+    <a class="src" href="https://workos.com/blog/mcp-2026-spec-agent-authentication">workos.com — MCP 2026 spec &amp; auth ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">AI moves to the front office in wealthtech — multi-agent advisor copilots go mainstream</span><span class="em">Wealthtech · AU-relevant</span></div>
+    <p>The World's Fair carrying a dedicated <b>AI in Finance</b> track this year tracks a broader shift analysts flag for 2026: AI moving from advisers' <b>back office to the front</b>, concentrated on discrete high-value use cases — meeting prep, meeting summaries, automated task creation. Vendors like Flanks have shipped <b>multi-agent "wealth intelligence" copilots</b> that let an adviser interrogate multi-custodian portfolios in natural language and get instant, contextualised analysis.</p>
+    <p class="y">This is your competitive weather, not just news. The bar for an AU advisory product is rising toward natural-language portfolio interrogation and agentic meeting-prep — and the multi-agent-over-shared-client-data pattern (see Notion above) is exactly how these are built. Note where they draw the line on autonomy: analysis and prep, not execution — which is also the defensible posture under best-interests duty and CPS 230.</p>
+    <a class="src" href="https://www.financial-planning.com/list/10-experts-predict-whats-next-for-ai-in-wealthtech-in-2026">financial-planning.com — wealthtech 2026 ↗</a>
+    <a class="src" href="https://fintech.global/2026/03/25/flanks-launches-ai-financial-advisor-for-wealth-managers/">fintech.global — Flanks AI adviser ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
