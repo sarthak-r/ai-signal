@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Understanding is the new bottleneck — 3 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Geoffrey Litt reframes the week: now that agents self-verify, the human bottleneck is no longer 'did it run?' but 'do I still understand what it built?' — and he ships techniques for it. Willison has an agent tune its own prompts with DSPy, Claude Code opens draft PRs on its own, MCP Apps put server-rendered UI inside the host, and Sonnet 5's new tokenizer quietly inflates your token bill." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 017 · 03 July 2026</p>
+  <h1>Understanding is the new bottleneck</h1>
+  <p class="lede">Yesterday the story was <b>self-verification</b> — Willison's agents recording video proof their work runs, the World's Fair closing on Harness Engineering. Today Geoffrey Litt supplies the sequel and the sharper question. If agents now verify their own output, "did it run?" stops being the human's job — so the real bottleneck moves one level up: <b>do I still understand what the agent built well enough to steer the next change?</b> Litt calls understanding, not verification, the new constraint on iterative work, and ships concrete techniques — explainer docs gated by <b>quizzes that act as a speed regulator</b> on the agent loop. The rest of the day rhymes: Willison has an agent <b>tune its own prompts with DSPy</b> and publishes the coding loop as a tiny readable library; Claude Code's background agents now <b>open their own draft PRs</b>; MCP Apps put <b>server-rendered UI inside the host</b>; and Sonnet 5's new tokenizer quietly inflates your bill. The model is settled — now the fight is keeping a human in the loop who still knows what's going on.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The question the field moved to once agents started checking their own work.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Geoffrey Litt: "understanding is the new bottleneck" — and quizzes are how you throttle the agent</span><span class="em">Geoffrey Litt · 2 Jul</span></div>
+    <p>Litt (Ink &amp; Switch) argues the point of understanding AI-written code was never mainly to <b>verify</b> it — agents increasingly self-verify — but to stay a real <b>participant</b> in an iterative project: without conceptual fluency you can't direct the next evolution, and "cognitive debt" compounds. His fixes are concrete: <b>code explainer docs</b> that teach intuition before showing a "literate diff" (prose-ordered, not alphabetical), <b>micro-worlds</b> you can step through like Papert's Mathland, and — the sharp one — <b>embedded quizzes</b>: "I won't send code to others until I can pass the quiz." The quiz is "a speed regulator" that stops the AI loop outpacing human comprehension. The frame: <b>augment, not just automate</b>.</p>
+    <p class="y">This is the missing half of the self-verification story from yesterday. Wire proof-of-work into the agent loop, yes — but also wire proof-of-<i>understanding</i> into the human's. For a small team shipping fast, a comprehension gate (an explainer + quiz before merge) is a cheap governance primitive that keeps someone accountable actually able to reason about the system. In a compliance-bound domain, "the human understood it" is not optional — it's the audit trail.</p>
+    <a class="src" href="https://www.geoffreylitt.com/2026/07/02/understanding-is-the-new-bottleneck.html">geoffreylitt.com — understanding is the new bottleneck ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Willison: point an agent at DSPy and let it tune its own SQL prompts</span><span class="em">Simon Willison · 2 Jul</span></div>
+    <p>Willison had <b>Claude Fable 5</b> install DSPy against Datasette Agent and hunt for prompt improvements — evaluated with cheap GPT-4.1 mini/nano as the judges. It surfaced a real bug: the schema listing gave only <b>table names</b>, and prompt advice to avoid redundant <code>describe_table</code> calls pushed the agent to <b>guess column names</b> and spiral into error-retry loops. Fix: put column names in the schema listing, or soften the advice. The agent found and diagnosed its own prompt regression.</p>
+    <p class="y">Prompt engineering becomes an <b>eval-driven, agent-run</b> loop rather than hand-tuning by vibes. The reusable move: give an agent your eval harness (DSPy or similar) plus a cheap judge model and let it propose prompt/context changes against a scored benchmark. The bug is also a lesson — "don't call the extra tool" advice that saves tokens can cost far more in retry loops. Measure the loop, not the single call.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/2/dspy-datasette-agent-prompts/">simonwillison.net — DSPy + Datasette Agent ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">App-layer changes that shorten the distance between "agent done" and "work landed."</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Code 2.1.198: background agents open their own draft PRs; Chrome goes GA</span><span class="em">Claude Code · 2 Jul</span></div>
+    <p>The v2.1.198 release makes <b>Claude in Chrome generally available</b> and, more consequentially for throughput, has <b>background agents open a draft PR automatically</b> when they finish code work — plus <code>Notification</code> hooks that fire <code>agent_needs_input</code> / <code>agent_completed</code> so a finished or stuck run pings you. It also ships a <code>/dataviz</code> skill (chart/dashboard design guidance with a runnable colour-palette validator) and better model inheritance for subagents.</p>
+    <p class="y">The draft-PR-on-completion closes the last manual step in the async loop: an agent now delivers its work as a reviewable PR you pick up whenever, rather than a session you must babysit to harvest. Combined with completion notifications, this is the "kick it off, walk away, review later" pattern made real inside the tool — and the PR is exactly where Litt's explainer-doc-and-quiz gate belongs.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com — changelog (2.1.198) ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">SquidHub: multiplayer rooms where a team and its agents share one context, one turn at a time</span><span class="em">SquidHub · Product Hunt</span></div>
+    <p>SquidHub puts a whole team and their AI agents ("Squids") in <b>shared real-time rooms</b> — one shared context to brainstorm, plan and build, instead of everyone copy-pasting between private chats. The design choice worth stealing: <b>turn-taking</b> — one agent speaks per turn, so disagreement plays out as a conversation with trade-offs surfaced, not a wall of competing pop-ups, and teammates make the final call. Bring hosted Claude or your own Claude/GPT/Grok key.</p>
+    <p class="y">"Multiplayer agents" is graduating from demo to product category. The interesting primitive isn't the shared room — it's <b>turn-taking as a UX for disagreement</b>: a clean answer to the "five agents, five contradictory answers" problem that kills group agent UX. If your product has multiple humans acting on shared AI output, watch how the reversible-vs-approval line and turn order get drawn here.</p>
+    <a class="src" href="https://www.producthunt.com/products/squidhub">producthunt.com — SquidHub ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two primitives worth reading closely — one for UI, one for the loop itself.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">MCP Apps: servers ship interactive UI, not just text — through the same consent path as a tool call</span><span class="em">MCP · spec</span></div>
+    <p>Beyond the stateless core and OAuth flagged yesterday, the 2026-07-28 spec adds <b>MCP Apps</b>: servers deliver <b>server-rendered HTML in sandboxed iframes</b>, using pre-declared UI templates the host can cache and security-review up front — and every UI-initiated action "goes through the same audit and consent path as a direct tool call." Paired with the <b>Tasks extension</b>, where a <code>tools/call</code> returns a task handle the client drives via <code>tasks/get</code> / <code>update</code> / <code>cancel</code> for long-running work.</p>
+    <p class="y">This is <b>generative UI with a governance model attached</b> — a tool can hand back a real interface (a form, a chart, an approval widget) instead of a wall of text, and it inherits the host's permission and audit rails for free. For anything where a raw text agent response is too lossy — reviewing a plan, confirming a transaction, steering a projection — MCP Apps is the emerging surface. Design tools to return UI, not just JSON.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io — 2026-07-28 RC ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Willison's <code>llm-coding-agent</code>: the whole Claude Code–style loop in six tools you can read</span><span class="em">Simon Willison · 2 Jul</span></div>
+    <p>Willison released <b><code>llm-coding-agent 0.1a0</code></b> — a minimal coding agent on his LLM library with just <b>six tools</b> (read/write files, run commands with a timeout, search, pattern-match). It was itself built agent-first: Claude wrote the spec, then implemented it via TDD across multiple commits, and the result can autonomously build things like a Swift ASCII-art CLI. The point isn't a Cursor rival — it's a legible reference for what the loop actually is.</p>
+    <p class="y">If the harness is the product, you need to <b>understand</b> the harness (per Litt above) — and a readable six-tool implementation is the fastest way to internalise that a "coding agent" is a small tool set in a loop, not magic. Fork it to prototype a domain agent, or read it to demystify what your vendor's agent is doing under the hood before you build governance around it.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/2/llm-coding-agent/">simonwillison.net — llm-coding-agent 0.1a0 ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A cost signal hiding inside the model you just switched to.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Sonnet 5's new tokenizer inflates token counts up to 1.35× — your bill is not just the sticker price</span><span class="em">Cost · migration</span></div>
+    <p>Migrating to Sonnet 5 (now the Claude Code default at promotional <b>$2/$10</b> per Mtok through 31 Aug) carries three breaking changes worth budgeting for: the new tokenizer generates <b>1.0–1.35× more tokens</b> for the same text, adaptive thinking now <b>defaults to "high" effort</b>, and temperature/sampling parameters are <b>removed</b>. The headline per-token price dropped; effective cost per task may not.</p>
+    <p class="y">Re-run your own cost benchmarks before trusting the $2/$10 sticker — a 35% token-count inflation plus thinking-on-by-default can erase the per-token savings on agentic workloads that already burn tokens in loops (see yesterday's Raschka finding that Claude Code uses ~2× the tokens of Codex). If you priced a feature or a customer tier on the old numbers, re-model it. And if you depended on temperature for output diversity, that lever is gone — rework it into prompting.</p>
+    <a class="src" href="https://www.buildfastwithai.com/blogs/ai-news-today-july-1-2026">buildfastwithai.com — Sonnet 5 migration notes ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
