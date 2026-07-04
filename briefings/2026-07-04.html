@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Delegate the judgment, gate the action — 4 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Willison's sequel to 'understanding is the new bottleneck': stop hard-coding agent workflows and push judgment — including which model to delegate to — into the agent itself. On the same day Claude Code flips its default permission mode to Manual, so the human keeps the veto on what touches the world. Meanwhile MCP tooling grew up overnight — a 'Vercel for MCP', a 'Wireshark for MCP', and Gemini opening MCP as a desktop extension point — and AUSTRAC's Tranche 2 AML/CTF obligations went live for Australian advisers on 1 July." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 018 · 04 July 2026</p>
+  <h1>Delegate the judgment, gate the action</h1>
+  <p class="lede">Yesterday Litt moved the bottleneck up a level — from "did it run?" to "do I still understand it?" Today the field works out the division of labour that follows. Simon Willison's answer: stop hard-coding agent workflows ("only test larger features," "don't call the extra tool") and instead <b>push judgment into the agent</b> — including <b>which model to delegate to</b>, letting the main loop spin trivial edits down to Haiku and keep Sonnet for real work. His report: more shipped, allowance shrinking slower. On the <i>same day</i>, Claude Code flips its default permission mode to <b>Manual</b> — the agent gets more judgment about <i>how</i>, the human keeps the veto on <i>what touches the world</i>. That's the shape of the settled pattern: delegate the judgment, gate the action. Underneath it, the plumbing grew up overnight — a <b>"Vercel for MCP"</b>, a <b>"Wireshark for MCP"</b>, and Gemini opening MCP as a desktop extension point — while Jim Fan open-sources agents that compound a <b>skill library instead of retraining weights</b>. And for the Australian desk: <b>AUSTRAC's Tranche 2</b> AML/CTF obligations went live for advisers on 1 July.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Where the judgment goes — and what the durable artifact actually is.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Willison: stop scripting the agent's workflow — tell it to use its own judgment, including which model to use</span><span class="em">Simon Willison · 3 Jul</span></div>
+    <p>Distilling a Claude Code team fireside (Cat Wu, Thariq Shihipar) plus a Jesse Vincent tip, Willison argues brittle rules like "only use automated testing for larger features" underperform simply telling the agent to <b>apply its own judgment</b> about when to test. The sharper move: let the main loop decide <b>which model to delegate each subtask to</b> — Sonnet for substantive work, Haiku for trivial edits — preserving high-level reasoning while cutting spend. His concrete result: "I'm getting a <i>ton</i> of work done and my [model] allowance is shrinking less quickly than before."</p>
+    <p class="y">This is a testable prompt pattern, not a vibe: replace workflow if-statements with a judgment instruction and an explicit model-routing budget the agent controls. It fuses two threads this briefing has tracked — cheap subagents (015/016) and Litt's "stay a participant" (017) — into one adoptable technique. Try it: give your agent a stated policy ("delegate mechanical edits to the cheap model, escalate reasoning to the strong one") and measure allowance burn per task, not per call.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/3/judgement/">simonwillison.net — Judgement ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Jim Fan / NVIDIA GEAR: ASPIRE — agents that compound a skill library instead of retraining weights</span><span class="em">Jim Fan · 1 Jul</span></div>
+    <p>NVIDIA GEAR open-sourced <b>ASPIRE</b>, and Fan's framing is the builder-relevant part: the loop shifts "from gradient descent to skill refinement," and the durable artifact changes from model weights to a <b>continuously growing, reusable skill library</b>. A robot records execution traces, diagnoses its own failures, repairs its programs, and distills them into skills — dual-arm handover success climbed <b>20% → 92%</b>, and long-horizon performance keeps rising as the library grows. His line: "when the robot completes its 100th task, it finally isn't as clueless as when it completed its first."</p>
+    <p class="y">The "skills/memory are the compounding asset, not the weights" thesis, made concrete and open. It's robotics, but the pattern maps straight onto software agents — Claude/Cursor "skills," reusable tool playbooks, distilled failure fixes. If your agent solves the same class of problem twice and learns nothing between runs, the missing primitive is a skill store, not a bigger model. Design for accumulation.</p>
+    <a class="src" href="https://research.nvidia.com/labs/gear/aspire/">research.nvidia.com — ASPIRE ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">MCP grew up overnight — hosting, a new distribution surface — plus the harness that keeps the human in control.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Manufact (YC S25): "Vercel for MCP" — connect a repo, get a live production MCP URL</span><span class="em">Manufact · Launch HN</span></div>
+    <p>A Launch HN for an <b>MCP vertical cloud</b>: deploy, iterate, test, and monitor MCP Apps and servers in production. Connect a GitHub app, pick a repo, it auto-detects the framework and hands you a <b>live MCP URL</b> — from the team behind the open-source <code>mcp-use</code> SDKs and inspector. The missing production layer (hosting, observability, store submission) that builders have been hand-rolling.</p>
+    <p class="y">Yesterday MCP Apps put server-rendered UI inside the host; today the deploy story catches up. As MCP becomes the default way agents reach tools, a managed hosting layer means you can ship a server as a product surface without owning the ops. If you're exposing your app's capabilities to agents, this is the "git push and it's live" path — evaluate it before you build MCP infra yourself.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=48762862">news.ycombinator.com — Launch HN: Manufact ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Gemini Spark for Mac: an agent on your local files — and MCP as a desktop extension point</span><span class="em">Google · 1–2 Jul</span></div>
+    <p>Google's autonomous Gemini agent lands as a native macOS app that works on <b>local files</b> (organize folders, rename docs, extract info), tracks topics in real time, and — the builder-relevant bit — ships <b>MCP support</b> so devs can wire in custom MCP servers beyond Google's partner list. Each task runs in a fresh isolated ephemeral Cloud VM behind an Agent Gateway. Beta, AI Ultra ($99/mo), US.</p>
+    <p class="y">A mainstream consumer AI app opening MCP as a desktop extension point is a <b>new distribution surface</b>: the same server you host on Manufact can now target Gemini users directly, not just Claude/Cursor. MCP is consolidating into the cross-vendor tool bus — build your integration once and it reaches multiple hosts. The local-file agent capability also resets the bar for what a desktop assistant is expected to do.</p>
+    <a class="src" href="https://appleinsider.com/articles/26/07/01/googles-gemini-spark-for-macos-will-work-on-your-local-mac-files">appleinsider.com — Gemini Spark for macOS ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code 2.1.200: default permission mode becomes "Manual"; question dialogs no longer auto-continue</span><span class="em">Claude Code · 3 Jul</span></div>
+    <p>The v2.1.200 release renames the <b>default permission mode to "Manual"</b> across CLI, VS Code and JetBrains, and makes <code>AskUserQuestion</code> dialogs <b>no longer auto-continue</b> by default (opt into an idle timeout via <code>/config</code>) — plus a large batch of background-agent daemon fixes (stale <code>daemon.lock</code> recovery, roster corruption, sessions surviving sleep/wake). The follow-up 2.1.201 stops Sonnet 5 sessions using a mid-conversation system role for harness reminders.</p>
+    <p class="y">The counterweight to Willison above: give the agent more judgment about <i>how</i> it works, but move the default toward <b>human-gated action</b>, not auto-approval. "Manual by default, escalate on ambiguity" is now the reference UX from the tool most of your engineers use — and it's the exact posture to copy when shipping advice-automation agents into a best-interests-duty environment. Also: if you run Claude Code in background loops, the auto-continue change is a real behaviour shift — check your automations didn't silently stall.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com — changelog (2.1.200 / .201) ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">One tool to see what your agent is actually doing — and one map of what already exists.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">mcpsnoop: "Wireshark for MCP" — watch every request between an agent and its servers</span><span class="em">Show HN · 3 Jul</span></div>
+    <p>A single-binary Go TUI that sits transparently between an AI client (Claude Desktop, Cursor, Claude Code) and its MCP servers, showing every JSON-RPC request/response live: color-coded frames, <b>hung-call detection with timers</b>, filtering by tool/status/direction, capability-handshake inspection, and <b>replay</b> of captured calls against a fresh server. Install via <code>go install</code>, Homebrew, or prebuilt binary.</p>
+    <p class="y">MCP debugging today is guesswork from logs, and the official Inspector is a separate client, not the real pipe. This shows the actual exchange — exactly what you need when a tool silently isn't called or a request hangs. This is the observability half of the "steer and debug the agent" question: you can't govern a tool loop you can't see. Keep it in the kit alongside Manufact and Spark — the MCP stack now has hosting, distribution, and a debugger.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=48777144">news.ycombinator.com — Show HN: mcpsnoop ↗</a>
+    <a class="src" href="https://github.com/kerlenton/mcpsnoop">github.com — kerlenton/mcpsnoop ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Open Source AI Gap Map: a machine-readable census of 421 open-source AI products</span><span class="em">Current AI · via Willison · 3 Jul</span></div>
+    <p>Current AI (nonprofit) released the <b>Open Source AI Gap Map</b>, indexing <b>421 open-source AI products</b> in depth — 266 tools/libraries, 85 models, 50 datasets, 20 hardware projects — from 228 organizations across 14 categories over three stack layers. The underlying data (1,184 YAML files tracking 16,185 GitHub repos) is MIT-licensed on GitHub. Willison surfaced and summarized it.</p>
+    <p class="y">A structured, open dataset of what open-source building blocks actually exist and where the gaps are — rare, versus the usual vendor listicle. Use it for buy-vs-build and dependency calls: before you pay for a component or write one, check whether an MIT-licensed block already covers it. The map is queryable, so it's a starting point for an internal "what can we adopt" audit, not just a browse.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/3/open-source-ai-gap-map/">simonwillison.net — Open Source AI Gap Map ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A compliance surface that just went live for your buyer — and this week's deprecation calendar.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">AUSTRAC Tranche 2: full AML/CTF obligations went live for financial advisers on 1 July</span><span class="em">AUSTRAC · 1 Jul</span></div>
+    <p>From <b>1 July 2026</b>, "Tranche 2" entities — financial advisers, accountants, conveyancers, real estate agents, lawyers — must comply with full AML/CTF obligations: a Part A/Part B program, a management-level compliance officer, <b>customer due diligence before providing a designated service</b>, and suspicious-matter reporting. Enrolment with AUSTRAC was due by 29 June. The obligations are now in force, not pending.</p>
+    <p class="y">A hard compliance surface directly adjacent to your buyer, triggered this week. Advice practices now need KYC/beneficial-owner checks, ongoing monitoring, and SMR workflows baked into their process — a concrete document-automation / compliance-AI wedge (automated CDD, PEP screening, SMR drafting) with a legal deadline that has <i>already passed</i>. Demand is live now. If your product touches client onboarding, "AUSTRAC-ready CDD" is a feature to name explicitly this quarter.</p>
+    <a class="src" href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/professional-designated-services">austrac.gov.au — newly regulated professional services ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Deprecation calendar: Claude 3.5 Haiku retires 5 Jul; premium "included" models converting to metered credits</span><span class="em">Cost · deprecation</span></div>
+    <p>Two dates worth pinning this week: <b>Claude 3.5 Haiku shuts down 5 July</b> (deprecation opened 5 Jan), so any production path still calling that model ID — cheap classification, routing, doc pre-processing — breaks in a day. Separately, the pattern to budget around: providers are converting <b>"included" premium models into metered usage credits</b> (Anthropic's Fable 5 moves to metered pricing after a short grace window), so per-seat access is quietly becoming per-token.</p>
+    <p class="y">Action, not FYI: grep your codebase for <code>claude-3-5-haiku</code> and repoint to a current small model before tomorrow. Then re-model any workflow leaning on an "included" premium tier on <b>usage-based</b> assumptions — the flat-subscription framing is eroding, and a loop-heavy agentic workload can blow past a per-seat mental model fast. Budget the loop, not the sticker.</p>
+    <a class="src" href="https://docs.claude.com/en/docs/about-claude/model-deprecations">docs.claude.com — model deprecations ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
