@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verify the agent with another agent — 5 July 2026 — AI Builder Signal</title>
+<meta name="description" content="The week's builder signal: stop trusting a single model's output — cross-check it. Simon Willison itemizes a real agent-built library release ($149.25, 37 prompts) where the agent caught a data-loss bug and a second model, GPT-5.5, audited Claude's work and found two more. Armin Ronacher shows the newest Claude models (Opus 4.8, Sonnet 5) silently invent fields on custom edit-tool schemas because they're overfit to Claude Code's own edit tool — strict mode is the fix. Claude Code's Agent Teams productizes adversarial 'scientific-debate' investigation, and a Show HN cluster is all about porting context between Claude Code and Codex. For the Australian desk: buy-side compliance AI crosses from pilot to practice, and the 74%-use / 39%-policy governance gap is the wedge." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 019 · 05 July 2026</p>
+  <h1>Verify the agent with another agent</h1>
+  <p class="lede">Yesterday the field settled on <i>delegate the judgment, gate the action</i>. Today the practitioners add the missing discipline: <b>don't trust a single model's output — cross-check it.</b> Simon Willison publishes the rarest thing in this whole discourse — an <b>itemized receipt</b>: $149.25 to ship a real library release candidate (37 prompts, 34 commits) in which the agent caught a genuine <b>data-loss bug</b>, and — the load-bearing move — he had a <i>second</i> model, GPT-5.5, audit Claude's code and surface two more. Armin Ronacher supplies the cautionary flip side: the newest Claude models (<b>Opus 4.8, Sonnet 5</b>) now silently <b>invent fields</b> on custom edit-tool schemas because they're overfit to Claude Code's own edit tool — better model, worse tool-calling — and <code>strict</code> mode is the fix. Claude Code's <b>Agent Teams</b> productizes exactly this instinct, spawning adversarial teammates to disprove each other's theories, while a Show HN cluster works on <b>porting context between Claude Code and Codex</b>. For the Australian desk: buy-side compliance AI just crossed from pilot to practice, and the governance gap — <b>74% of advice practices use AI, 39% have a usage policy</b> — is the wedge.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">A real costed build with a second model checking the first — and why "newer" isn't "safer" for your tools.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Willison ships a library RC with an agent — and posts the full receipt: $149.25, a caught data-loss bug, a cross-model audit</span><span class="em">Simon Willison · 5 Jul</span></div>
+    <p>An end-to-end, itemized accounting of shipping <code>sqlite-utils 4.0rc2</code> mostly by agent: <b>37 prompts, 34 commits, +1,321/−190 across 30 files over ~30 days, $149.25 total API cost</b>. The agent surfaced <b>five release-blockers, including a real data-loss bug</b> — <code>delete_where()</code> never committed, leaving an open transaction that poisoned later writes ("the delete, row 50, and table <code>u</code> are all gone" on reopen). The sharp practice: he ran <b>cross-model review</b> — had GPT-5.5 audit Claude Fable's code, which turned up <b>two more P1 issues</b> where <code>db.query()</code> violated its documented guarantees. His lesson: <i>harder</i> tasks suit agents best — the 10–15 min churn frees you to do other work (he directed this from a parade, on his phone).</p>
+    <p class="y">This is the concrete benchmark the discourse has lacked: ~$150 and 37 prompts to ship a real RC, with hard evidence that agents catch bugs humans miss <i>and</i> that a second model catches what the first one ships. Two directly copyable practices: dedicated cheap review-subagents, and <b>cross-model auditing as a QA gate</b> — don't let the model that wrote the code be the only one that reviews it. Budget the loop by the task, not the call, and always have a different model mark the homework.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/5/sqlite-utils-fable/">simonwillison.net — sqlite-utils 4.0rc2 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Ronacher: "Better Models, Worse Tools" — Opus 4.8 &amp; Sonnet 5 regress on custom edit schemas because they're overfit to Claude Code's edit tool</span><span class="em">Armin Ronacher · 4 Jul</span></div>
+    <p>A counterintuitive, actionable regression. When Ronacher points the newest Claude models at Pi's nested <code>edits[]</code> edit-tool schema, they get <code>oldText</code>/<code>newText</code> right but <b>fabricate fields that don't exist</b> — <code>requireUnique</code>, <code>oldText2</code>, <code>type</code>, <code>id</code>, <code>matchCase</code>, <code>forceMatchCount</code> and more. Older models (including <b>Opus 4.5</b>) handled the same schema fine. His diagnosis: RL training on Claude Code's <i>flat</i> <code>file_path</code>/<code>old_string</code>/<code>new_string</code> edit tool gave the newer models a strong prior that "fights you harder" on a differently-shaped third-party schema. The fix that worked: Anthropic's <code>strict</code> mode (constrained decoding), which permits only valid keys.</p>
+    <p class="y">A blunt warning for anyone building a coding harness or any custom tool contract: <b>SOTA is not monotonically better at <i>your</i> schema.</b> Upgrading the model can quietly break tool-calling you'd tuned on the previous version. Two takeaways: turn on <code>strict</code> / structured-output enforcement for every tool, and add a per-model tool-calling regression test to your eval suite — "the model got smarter" is exactly when to re-check the plumbing. Ronacher's open question — should harnesses ship model-matched tool variants? — is worth watching.</p>
+    <a class="src" href="https://lucumr.pocoo.org/2026/7/4/better-models-worse-tools/">lucumr.pocoo.org — Better Models, Worse Tools ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">The "check it with another agent" instinct, productized — plus the week's fixation on moving context between tools.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Code Agent Teams: teammates that message each other and argue toward the answer — "scientific debate," productized</span><span class="em">Claude Code · v2.1.199</span></div>
+    <p>Now documented and still being refined this week (through v2.1.199), <b>Agent Teams</b> is the sharpest departure from subagents: teammates are full independent sessions that <b>message each other directly</b> via a mailbox and <b>self-claim from a shared, file-locked task list</b> — no main agent as intermediary. The reference pattern is adversarial: <i>"Spawn 5 teammates to investigate different hypotheses. Have them talk to each other to try to disprove each other's theories, like a scientific debate. Update the findings doc with whatever consensus emerges."</i> The docs are candid about cost — each teammate is a separate context window, tokens scale linearly, start with 3–5. Enable with <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>.</p>
+    <p class="y">This is Willison's cross-model audit and Litt's "stay a participant" turned into a UX primitive: the answer that survives teammates <i>actively trying to refute each other</i> is far likelier to be the real root cause than one agent's first plausible theory. The anti-anchoring structure is the point. For a builder, it's both a tool to adopt (parallel PR review by lens, competing-hypothesis debugging) and a pattern to copy in your own product — verification by adversarial multiplicity, not by trusting one pass.</p>
+    <a class="src" href="https://code.claude.com/docs/en/agent-teams">code.claude.com — Orchestrate teams of Claude Code sessions ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Show HN cluster: portable context between Claude Code and Codex — the "/resume that works across tools"</span><span class="em">Show HN · this week</span></div>
+    <p>A clear theme in the week's Show HN launches: <b>context portability across agent tools</b>. <code>ctx</code> bills itself as "a <code>/resume</code> that works across Claude Code and Codex" — a local context manager with workstreams, transcript binding, and branching. Contextify keeps a private, searchable timeline of every Claude Code and Codex session (built after the founder learned Claude Code deletes transcripts after 30 days); <code>continues</code> finds your existing sessions across tools and generates a structured handoff so you resume elsewhere without starting cold. All local-first, all about not losing state when you switch agents.</p>
+    <p class="y">The app-layer energy this week isn't new model wrappers — it's <b>glue between agents</b>. If your team runs more than one coding agent (and most now do), context is the thing that keeps falling on the floor at the handoff. These are worth trialling as connective tissue, and the pattern is a signal: as multi-tool, multi-agent workflows normalize, <b>durable, portable context is becoming its own product category</b> — a place to build if you're looking for one.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=47836740">news.ycombinator.com — Show HN: Ctx ↗</a>
+    <a class="src" href="https://contextify.sh/">contextify.sh ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The proactive-agent pattern tops the launch board.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Vida hits #1 on Product Hunt: an always-on agent that acts before you ask</span><span class="em">Product Hunt · 4 Jul</span></div>
+    <p>"Clone yourself. Let AI do the work before you ask." Vida took the <b>#1 daily spot on 4 July</b> as an always-on personal agent that learns how you work, holds memory of what matters, and <b>acts proactively</b> rather than waiting for a prompt — the ambient/anticipatory end of the assistant spectrum, not the chat-box end.</p>
+    <p class="y">Signal, not a must-adopt: the launch board is rewarding <b>proactivity + persistent memory</b> as the differentiator, not raw capability. For anyone designing assistant UX, the bar is shifting from "answers well when asked" to "surfaces the right thing unprompted." Worth a look as a reference implementation of the memory-plus-initiative pattern — and a prompt to ask where in your own product an agent could act one step ahead of the user.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/4">producthunt.com — 4 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">The compliance-AI thesis just got validated for your market — plus two cost dates landing this week.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Buy-side compliance AI crosses pilot → practice — and the Australian governance gap is the wedge</span><span class="em">Wealthtech · 3 Jul</span></div>
+    <p>A 3 July fintech.global analysis (drawing on ACA Group compliance leaders) marks AI moving <b>from pilots into routine buy-side compliance</b>: comms surveillance, policy monitoring, trade analysis, reconciliations, exception identification, large-scale data review. The stated framing — value is now "less in cost savings, more in efficiency, scalability, speed and analytical depth," gated by <b>governance</b> (risk assessments, accountability, output explainability), not raw model capability. Against the Australian backdrop: ASIC gives AI <b>no carve-outs</b> (best-interest and record-keeping duties apply however advice is produced), yet Adviser Ratings finds <b>74% of practices now use AI while only 39% have a compliant-use policy</b>.</p>
+    <p class="y">The differentiator in advice-tech has shifted from "can AI do the task" to "<b>can you evidence the governance around it</b>" — exactly what ASIC/APRA now expect (AI-use inventory, ownership, human-in-loop on high-risk, audit trail). That 74%/39% split is your market-sizing line: a large installed base already using AI with no defensible policy layer. Build the governance and observability <i>into</i> the product — "auditable by design, best-interests-safe" is a nameable feature, not a disclaimer.</p>
+    <a class="src" href="https://fintech.global/2026/07/03/ai-moves-from-pilot-to-practice-in-buy-side-compliance/">fintech.global — pilot to practice ↗</a>
+    <a class="src" href="https://www.ifa.com.au/ai-advice-reliance-raises-risk-concerns-as-reform-delays-persist/">ifa.com.au — AI advice &amp; reform delays ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cost calendar: Claude 3.5 Haiku retires today (5 Jul); Claude Max price rises 7 Jul</span><span class="em">Cost · deprecation</span></div>
+    <p>Two dates to pin. <b>Claude 3.5 Haiku shuts down today, 5 July</b> — any production path still calling that model ID (cheap classification, routing, doc pre-processing) breaks now, so repoint to a current small model. And in Willison's cost write-up above he notes he built under <b>Claude Max before its 7 July price increase</b> — the subscription tier most builders lean on gets more expensive in two days.</p>
+    <p class="y">Action, not FYI: grep for <code>claude-3-5-haiku</code> and cut over before it 404s, then re-check any workflow whose economics assume the <i>old</i> Claude Max price. The broader pattern this briefing keeps flagging — flat-subscription framing eroding toward per-token — means a loop-heavy agentic workload can blow past a per-seat mental model fast. Model your spend on the loop, and re-run the math after every pricing change.</p>
+    <a class="src" href="https://docs.claude.com/en/docs/about-claude/model-deprecations">docs.claude.com — model deprecations ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
