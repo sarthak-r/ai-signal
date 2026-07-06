@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verification becomes infrastructure — 6 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Yesterday's discipline — verify the agent with another agent — got cast in concrete today. The 5 July launch wave is almost entirely about making agents prove and measure themselves: TryCase gives coding agents disposable Linux sandboxes so they return verified code instead of 'run it and hope'; CircleChat runs an LLM judge on every deliverable before a task can close; Codacy's Verity gates each change with a second model plus a repo-committed memory. The Show HN front page piles on — contextrot measures where your Claude Code degrades from its own session log, Aletheia is an uncertainty loop that will answer INCONCLUSIVE, peek-cli gives CLI agents least-privilege browser vision. For the Australian desk: fresh FNZ data pegs Australia as the most AI-receptive advice market on earth, and the one with the fastest payback." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 020 · 06 July 2026</p>
+  <h1>Verification becomes infrastructure</h1>
+  <p class="lede">Yesterday's discipline — <i>verify the agent with another agent</i> — got cast in concrete today. The 5 July launch wave is almost entirely about making agents <b>prove and measure themselves</b>, and it's shipping as tooling you install, not advice you follow. <b>TryCase</b> hands coding agents disposable Linux sandboxes so they return <i>verified</i> code instead of "run it and hope." <b>CircleChat</b> runs an LLM judge on every deliverable before a task can close. Codacy's <b>Verity</b> gates each change with a <i>second</i> model plus a repo-committed memory. The Show HN front page piles on: <b>contextrot</b> measures where your own Claude Code degrades from its session log, <b>Aletheia</b> is an uncertainty loop that will answer <code>INCONCLUSIVE</code>, and <b>peek-cli</b> gives CLI agents least-privilege browser vision. One quiet through-line for a wealthtech builder: the safest place to run an agent is one that can <b>evidence its own work</b>. And for the AU desk — fresh FNZ data pegs Australia as the most AI-receptive advice market on earth, and the one that pays back fastest.</p>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The 5 July launch board is a single theme: give the agent a way to prove it worked.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">TryCase: disposable Linux sandboxes so coding agents return verified code, not "run it and hope"</span><span class="em">Product Hunt · 5 Jul</span></div>
+    <p>A coding agent gets a <b>throwaway Linux desktop</b> — terminal and browser control — to run your app and exercise it <i>like a user</i>, then hands back <b>screenshots, screen recordings, logs and artifacts</b> alongside the diff before the environment is destroyed. The pitch names the exact gap it closes: teams on Cursor and Claude Code who admit "we just run it and hope." Wire it in via CLI so the agent's answer is <i>"here's the change and here's the proof it works,"</i> not a claim you have to check by hand.</p>
+    <p class="y">This is the verification thesis turned into plumbing. The bottleneck the whole week has circled — <b>who confirms the agent's output is real</b> — moves from your keyboard into an ephemeral proving-ground the agent drives itself. For anything shipping agent-written code into a regulated product, "the agent captured a recording of the feature working" is exactly the audit artifact you want by default. Copyable even if you don't adopt it: make <i>run-and-capture-evidence</i> a required step in your own agent loop, not an optional one.</p>
+    <a class="src" href="https://www.trycase.dev/">trycase.dev ↗</a>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/5">producthunt.com — 5 Jul leaderboard ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">CircleChat: a Slack-shaped workspace where an LLM judge signs off every task before it can close</span><span class="em">Product Hunt · 5 Jul</span></div>
+    <p>Set a goal; a team of agents breaks it into <b>kanban tasks</b>, self-claims the work, and reports in channels you can read — with two gates baked in: an <b>LLM judge verifies every deliverable before a task is allowed to close</b>, and anything risky waits for your approval. Humans and agents are first-class members of the same channels reading the same history. From <b>$29 for a team, or self-host free under MIT</b> with your own model keys.</p>
+    <p class="y">Two patterns worth stealing regardless of the product. First, the <b>done-gate</b>: a task can't move to done until a separate model certifies the output — "output instead of chatter," structurally enforced, not hoped for. Second, <b>human approval as a first-class state on risky actions</b> — the same gate-the-action instinct from earlier this week, now a workflow primitive. If you're building multi-agent features, an org-chart-with-a-judge is a more shippable mental model than free-running swarms.</p>
+    <a class="src" href="https://circlechat.co/">circlechat.co ↗</a>
+    <a class="src" href="https://github.com/tashfeenahmed/circlechat">github.com — tashfeenahmed/circlechat ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Codacy's Verity: a pre-commit gate that lets a different model block or auto-repair agent code — and remembers every call</span><span class="em">Show HN · 5 Jul</span></div>
+    <p>An "adversarial review" layer for coding agents: before a change is committed, a <b>separate model plus deterministic analysis</b> reviews it against security, quality and intent — code either passes or is <b>blocked with specific findings and auto-repair suggestions</b>. Two things make it more than a linter: every decision writes to an <b>editable Markdown knowledge base committed to your repo</b>, so later sessions start with accumulated context; and it tracks <b>token spend per model, session and run</b> across your agent fleet. Free public beta, works with Claude Code.</p>
+    <p class="y">Verity productizes Willison's "have a second model mark the homework" as a <i>gate that sits in front of commit</i> — you don't have to remember to run the cross-model review; the pipeline won't let code through without it. The compounding repo-memory is the sharper idea: the gate gets smarter about <i>your</i> codebase over time instead of re-deriving standards each session. For a compliance-sensitive shop, an in-repo, human-editable record of what was checked and why is close to an audit trail for free.</p>
+    <a class="src" href="https://verity.md">verity.md ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">peek-cli: least-privilege browser vision for CLI coding agents — screenshots only, no DOM, no injection</span><span class="em">Show HN · 5 Jul</span></div>
+    <p>Gives Claude Code, Codex and Copilot the ability to <b>see a rendered browser tab</b> — a Chrome extension streams screenshots over a local WebSocket to the agent. The design choice is the point: the agent can request <i>a screenshot and nothing else</i> — it never touches the DOM, can't inject scripts, and can't take actions. Chrome Web Store-approved, installed as a skill/plugin per agent.</p>
+    <p class="y">The interesting move is <b>least-privilege perception</b>: most "give the agent a browser" tools hand over full control; peek-cli closes the "the agent can't see what it built" gap while deliberately withholding the ability to <i>do</i> anything. That's a reusable safety pattern — grant an agent the narrowest capability that solves the task (look, don't touch) rather than the broadest. Handy immediately for front-end work where the agent keeps editing CSS blind.</p>
+    <a class="src" href="https://github.com/puffinsoft/peek-cli">github.com — puffinsoft/peek-cli ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two Show HN tools turn "is my agent OK?" from a vibe into a measurement — and the whole front page is now agent self-instrumentation.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">contextrot: measure exactly where your Claude Code degrades — from its own session log, with confidence intervals</span><span class="em">Show HN · 5 Jul</span></div>
+    <p>Instead of guessing when to <code>/compact</code>, contextrot reads your <b>local session transcripts</b> and extracts <b>five independent failure signals per step</b> — edit failures, retry loops, re-reads of already-seen files, self-corrections ("let me fix that"), and tool errors — then correlates each with <b>context fill at that moment</b>. It plots a <b>rot curve</b> with <b>Wilson 95% confidence intervals</b>, controls for the confound that hard steps come later, and returns one of four verdicts (<i>context rot detected / edge rot / no measurable rot / not enough data</i>). Zero network calls — fully local.</p>
+    <p class="y">This is the empirical answer to the "context rot" everyone's been asserting since briefing 017: it tells you <b>your project's actual degradation threshold</b>, not a rule of thumb. Two concrete uses — set your compaction/hand-off trigger from data rather than superstition, and add the same signals (retry loops, re-reads, self-corrections) as a <b>health metric on your own agent</b> in production. When an agentic feature silently gets worse, this is the shape of the dashboard that catches it.</p>
+    <a class="src" href="https://github.com/Priyanshu-byte-coder/contextrot">github.com — contextrot ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Aletheia: an agent that tracks its own uncertainty and will answer "INCONCLUSIVE"</span><span class="em">Show HN · 5 Jul</span></div>
+    <p>A verification agent for Claude Code and Codex built as an explicit <b>belief → act → observe → update loop</b> (a POMDP): it forms a belief about what's true, picks the <b>single search most likely to reduce uncertainty</b>, and — the load-bearing rule — <b>contradictions lower its confidence</b> rather than being explained away. It stops only on a <b>dual gate</b> (enough confidence <i>and</i> settled uncertainty), tracks independent unknowns separately to dodge halo reasoning, and will return a calibrated <code>INCONCLUSIVE</code> with its evidence chain when the case isn't earned.</p>
+    <p class="y">The design principle matters more than the repo: an <b>honest "I don't know" is a feature</b>, and calibration beats a confident guess. For financial-advisory AI this is the whole ballgame — the failure mode that hurts a client and a licensee isn't "the model declined," it's "the model was confidently wrong." Building a <i>stated-confidence, contradictions-count-against, refuses-when-unsure</i> loop into any recommendation surface is directly best-interests-aligned. And note the wider signal: nearly the entire 5 Jul Show HN front page — contextrot, Aletheia, Verity, plus context-bridge and guided-review tools — is <b>agent observability and governance</b>. That's where the app-layer oxygen is right now.</p>
+    <a class="src" href="https://github.com/nsankar/Aletheia">github.com — nsankar/Aletheia ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Fresh FNZ data reframes your home market as the global tailwind — plus a cost date that lands tomorrow.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Australia is the most AI-receptive advice market on earth — and the fastest to pay back, per new FNZ data</span><span class="em">Wealthtech · AU</span></div>
+    <p>An FNZ survey of <b>500 firms globally</b> finds Australian appetite runs ahead of the world on both demand and returns: <b>74% of Australian clients are open to using AI</b> vs <b>64% globally</b>, and <b>~75% of Australian firms recouped their AI investment within two years</b> vs <b>62% globally</b>. FNZ is explicitly using <b>Australian advisers as the pilot market</b> for its Advisor AI before global rollout, citing higher-than-average openness. Set this against the standing governance gap this desk keeps flagging — <b>74% of AU advice practices use AI, only 39% have a compliant-use policy</b>.</p>
+    <p class="y">Read together, these are your market thesis in two numbers: <b>the most willing buyers and the fastest payback sit in your backyard</b>, and a majority of them are already using AI <i>without</i> a defensible policy layer. That's demand pull plus an unmet compliance need — the exact wedge for an AU wealthtech product that ships governance and evidence <i>inside</i> the tool. The launches above (a done-gate, an in-repo audit memory, a refuses-when-unsure loop) are the raw materials; "auditable, best-interests-safe by design" is the positioning.</p>
+    <a class="src" href="https://www.moneymanagement.com.au/fnz-taps-into-ai-fever-among-aussie-advisers/">moneymanagement.com.au — FNZ taps AI fever ↗</a>
+    <a class="src" href="https://www.fnz.com/news/fnz-launches-advisor-ai">fnz.com — Advisor AI ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cost date: Claude Max price rise lands tomorrow, 7 Jul — and cost-per-token is now a shipped feature</span><span class="em">Cost · pricing</span></div>
+    <p>The subscription tier most builders lean on, <b>Claude Max, gets more expensive tomorrow (7 July)</b> — Willison flagged he built his $149.25 release <i>under the old price</i>. Meanwhile, note what both Verity and contextrot ship as first-class features: <b>token spend per model, session and run</b>. Cost observability is quietly becoming table stakes for agent tooling.</p>
+    <p class="y">Action, not FYI: re-run the math on any workflow whose economics assume the <i>old</i> Max price before the loop-heavy jobs you kicked off keep charging at the new one. The broader pattern — flat-subscription framing eroding toward per-token — is why the new tools instrument spend by default. If your own agent product doesn't surface cost per run yet, the market just told you it's expected.</p>
+    <a class="src" href="https://docs.claude.com/en/docs/about-claude/pricing">docs.claude.com — pricing ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
