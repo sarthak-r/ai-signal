@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Build the tools for the agent, not the human — 7 July 2026 — AI Builder Signal</title>
+<meta name="description" content="After a week spent making agents verify themselves, today's app layer moves the frame: rebuild the tooling so the agent is the primary user. AnySearch topped Product Hunt with 'a search tool for agents, not a search box' — one API that hands agents filtered, de-duplicated, structured results across finance, legal and research verticals. Plannotator lets you annotate a diff before it's a PR and pipes the notes straight into the agent session. CodeMote puts a CLI agent's approval prompts on your phone. Edgee's Claude Code Compressor cuts token spend ~50% by routing and compressing. Willison ships sqlite-utils 4.0rc3 on a Fable-5-plus-GPT-5.5 pairing — and the Fable 5 subscription window he built it under closes tonight." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 021 · 07 July 2026</p>
+  <h1>Build the tools for the agent, not the human</h1>
+  <p class="lede">The week's subject was making agents <i>verify</i> themselves. Today the app layer turns the frame one more click: rebuild the tools so the <b>agent is the primary user</b>, not the person watching it. <b>AnySearch</b> topped Product Hunt with a pitch that says it out loud — "a search tool for agents, not a search box" — one API that hands an agent filtered, de-duplicated, structured results across finance, legal and research verticals instead of ten scraped pages. <b>Plannotator</b> lets you annotate a diff <i>before</i> it's a PR and pipes the notes straight into the agent session. <b>CodeMote</b> moves a CLI agent's approval prompts onto your phone. <b>Edgee's Claude Code Compressor</b> ships token-cost reduction as a product. And Simon Willison lands <b>sqlite-utils 4.0rc3</b> on a Fable-5-plus-GPT-5.5 pairing — under a Fable 5 subscription window that closes tonight. That last one is the only hard date, and it's on your calendar today.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">One builder, one running experiment: shipping a mature library with two models and a fixed budget, out loud.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Simon Willison ships sqlite-utils 4.0rc3 on a two-model split — Fable 5 for muscle, GPT-5.5 for a second opinion</span><span class="em">Blog · 6 Jul</span></div>
+    <p>Willison pushed the third release candidate of a <b>16-year-old library</b>, working the issue-and-PR backlog "with a combination of <b>Claude Fable 5 and GPT-5.5</b>." The headline feature is genuinely fiddly — introspecting and creating <b>compound foreign keys</b>, plus aligning with SQLite's case-insensitive column naming, a change that "touched a bunch of different places at once." It's the continuation of the receipt he's been publishing all week: rc2 was <b>mostly written by Fable at ~$149.25</b>, and his working rule is to delegate <i>implementation</i> to a lower-power model in a subagent while judgment, review and synthesis stay in the main loop.</p>
+    <p class="y">This is the most honest agentic-coding artifact going: not a demo repo but a <b>widely-depended-on library</b> getting real, breaking, schema-level work done by agents in public, with the dollar figure attached. The transferable lesson isn't "agents can code" — it's the <b>two-model discipline</b>: one model does the work, a <i>different</i> one reviews, and the human owns the merge. For a small team shipping a regulated product, that's a staffing model you can copy this week — and note the load-bearing dependency in it, Fable 5, is exactly the access that changes tonight (see Radar).</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/6/sqlite-utils/">simonwillison.net — sqlite-utils 4.0rc3 ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Today's launches share one design choice: the consumer is a model, so the interface is built for a model.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">AnySearch: "a search tool for agents, not a search box" — tops Product Hunt with structured search built for models to read</span><span class="em">Product Hunt · 6 Jul</span></div>
+    <p>The #1 launch of the day (455 upvotes). Instead of returning ranked links for a human to skim, AnySearch gives an agent <b>filtered, de-duplicated, structured results searched across trusted sources in parallel</b> — through a single unified API, so you don't wire up a dozen data interfaces yourself. It spans <b>vertical corpora — finance, legal, academic research, cybersecurity, corporate intelligence</b> — connects via <b>Skill, MCP, or API</b>, ships <b>1,000 free calls/day</b>, and claims 76.4% accuracy across three retrieval benchmarks (leading FreshQA at 80%).</p>
+    <p class="y">This is the "build for the agent" thesis as a shipped primitive: a retrieval layer whose <b>output shape is designed for a model's context window</b>, not a person's eyeballs — de-duped and structured so you're not burning tokens making the agent parse SERP noise. For a wealthtech build it's pointed: <b>finance and legal verticals behind one MCP endpoint</b> is exactly the grounding an advice agent needs, and "structured, cited, de-duplicated" is the raw material for a best-interests-defensible answer. Worth a spike against your current RAG stack on the free tier before you keep hand-rolling web search.</p>
+    <a class="src" href="https://www.producthunt.com/products/anysearch">producthunt.com — AnySearch ↗</a>
+    <a class="src" href="https://www.anysearch.com/">anysearch.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Edgee Claude Code Compressor V2: token compression + model routing as a drop-in ~50% cost cut</span><span class="em">Product Hunt · 6 Jul</span></div>
+    <p>Developer infrastructure that sits under Claude Code and <b>reduces LLM spend up to 50%</b> by compressing context tokens and <b>routing each call to an appropriately-sized model</b> rather than sending everything to the frontier tier. Launched at 179 upvotes on the 6 Jul board.</p>
+    <p class="y">Same instinct as Willison's lower-power-subagent rule, but productized as a proxy you install instead of a habit you maintain — the routing decision moves out of your prompts and into the pipeline. With Fable's subscription economics shifting tonight, a layer that <b>auto-downshifts models and trims context</b> is timely, not incremental. If your agent product's margins live and die on token spend, cost-routing is becoming a component you buy, not a discipline you hope your team remembers.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/6">producthunt.com — 6 Jul leaderboard ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">AirKaren: an agent that runs customer-service disputes end to end — files claims, calls support lines, fills the forms</span><span class="em">Product Hunt · 6 Jul</span></div>
+    <p>A consumer-facing autonomous agent (185 upvotes) that takes a grievance and <b>works it to resolution without a human in the loop</b>: opening claims, phoning support lines, and completing the paperwork on your behalf.</p>
+    <p class="y">Skip the consumer framing and read the architecture: this is a <b>vertical agent that operates external systems by phone and form</b>, not just chat — the "agent takes real-world actions against third parties" pattern, shipped. The relevant question for a B2B build is where the <b>approval gate</b> sits when an agent transacts on a client's behalf; AirKaren runs open-loop, which is exactly the boundary a regulated advice product would draw differently. A useful reference for what "agent does the whole errand" looks like — and where you'd insert the human.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/6">producthunt.com — 6 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two ships and a Product Hunt through-line, all circling the same move: put the human where they steer best — the review, the approval, the surface they already use.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Plannotator: annotate the diff before it's a PR — and the notes go straight into the agent's next turn</span><span class="em">Show HN · 6 Jul</span></div>
+    <p>A local diff viewer for <b>git, jj and Perforce</b> that shows committed, uncommitted and untracked changes together, so you can <b>review the whole change while it's still on your machine</b>. You select ranges and leave comments, concerns or suggested edits; hit send and <b>everything exports as Markdown anchored to exact files and lines, straight into your agent session</b> (Claude, Codex, OpenCode). The core viewer is manual; the AI layer is optional. <b>MIT / Apache-2.0, free, fully local.</b></p>
+    <p class="y">This is a clean answer to "how do I steer an agent mid-build without typing paragraphs into a chat box." The interaction unit becomes a <b>line-anchored annotation</b> — the same gesture as a human code review — and it feeds the loop <i>before</i> a PR exists, closing the tail where agents drift. Two things to steal even if you don't adopt it: <b>review-before-PR</b> as a stage in your own agent flow, and <b>Markdown-anchored-to-lines</b> as the format for handing structured human feedback back to a model. Reviewing the agent's work is becoming the primary human interface; this is what that interface looks like.</p>
+    <a class="src" href="https://plannotator.ai/code-review/">plannotator.ai ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">CodeMote: your CLI agent's approval prompts, on your phone — live terminals and encrypted notifications</span><span class="em">Product Hunt · 6 Jul</span></div>
+    <p>An iPhone remote for CLI coding agents (143 upvotes): <b>live terminal views, approval notifications, and encrypted connections</b>, so you can watch and <b>approve or deny an agent's risky steps from your pocket</b> while it runs on your machine.</p>
+    <p class="y">The <i>gate-the-action</i> instinct this desk flagged on 4 Jul, made ambient: the human veto no longer requires sitting at the terminal. The pattern worth naming is <b>asynchronous approval</b> — the agent runs long, pauses at the risky step, and pings a human who's elsewhere. For any agent that touches money, records or client data, "it waited for a phone tap before doing the dangerous thing" is a control you can describe to a compliance officer. Build the pause-and-notify boundary into your agent; the delivery channel (phone, Slack, email) is a detail.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/6">producthunt.com — 6 Jul leaderboard ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">The week's Product Hunt through-line: don't ship a new app — graft onto a surface the user already touches</span><span class="em">Pattern · Product Hunt</span></div>
+    <p>Across the recent boards, the AI launches that land aren't standalone destinations — they <b>embed where attention already is</b>: <b>Typeahead 2.0</b> (on-device autocomplete inside every Mac text field, 328 upvotes today), Dune Keypad and Wispr Flow (next to the keyboard / dictation everywhere), Databox MCP (data piped into Claude), and CodeMote (into your phone's notifications). None ask the user to open a new tab.</p>
+    <p class="y">"Ship a new app" is the slow path; "graft onto the surface they already use" is the fast one — and it's a distribution decision, not a UI one. For an AU wealthtech tool the read is concrete: the win is <b>inside the adviser's existing workflow</b> — their CRM, their doc editor, their inbox — not a separate AI portal they have to remember to visit. Meet the user (and the agent) where they already are; the surface is the strategy.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/6">producthunt.com — 6 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">One cost deadline that lands today, and a free frontier-class model you can try this fortnight.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Fable 5's subscription window closes tonight — from tomorrow it's metered credits at API rates</span><span class="em">Cost · today</span></div>
+    <p>Through <b>today, 7 July</b>, Claude Fable 5 is included in <b>Pro, Max, Team and select Enterprise plans</b> for up to 50% of weekly usage limits. From <b>8 July</b>, Fable 5 stops drawing on your plan and bills through <b>metered usage credits at standard API rates — $10 / 1M input, $50 / 1M output</b> (enabled and capped in Settings → Usage). Direct API pricing is unchanged; this is a <b>subscription-access</b> shift only. Anthropic says it aims to fold Fable back into subscriptions "as capacity allows."</p>
+    <p class="y">This is the hard date on the page. Any loop-heavy workflow you've been running on Fable <i>inside</i> a subscription — Willison's sqlite-utils build being the public example — gets a <b>real per-token bill starting tomorrow</b>. Two moves today: cap Fable usage-credit spend before it can run away, and re-check which jobs actually need Fable versus a cheaper tier (the cost-routing tools above exist for exactly this). Flat-subscription economics keep eroding toward metered; price your agent workflows as if per-token is the default, because for your priciest model it now is.</p>
+    <a class="src" href="https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5">platform.claude.com — Fable 5 ↗</a>
+    <a class="src" href="https://codersera.com/blog/claude-fable-5-usage-credits-july-2026/">codersera.com — what changes after 7 Jul ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Tencent Hy3: a 295B open MoE that rivals 2–5× larger models — free on OpenRouter through 21 July</span><span class="em">Model · 6 Jul</span></div>
+    <p>Tencent released <b>Hy3</b>, a <b>295B-parameter Mixture-of-Experts</b> model with a <b>256K context window</b> that, per its release, "outperforms similar-size models and rivals flagship open-source models with 2–5× the parameters." It's <b>free on OpenRouter through 21 July</b>.</p>
+    <p class="y">Filed under Radar, not headline — a frontier-lab model drop is commodity news. But the <b>free two-week window</b> makes it actionable: an evening's work to route a non-critical, high-volume task (classification, extraction, first-draft summarisation) at Hy3 and read the quality-vs-cost tradeoff against your paid tier — with no commitment. Given the Fable cost change above, cheap-capable open weights are worth a real benchmark this fortnight, not a bookmark.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/6/hy3/">simonwillison.net — Hy3 ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
