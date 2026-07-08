@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rent the model, own the agent — 8 July 2026 — AI Builder Signal</title>
+<meta name="description" content="The day Fable 5 flips from subscription-included to metered credits is the day 'which model, at what price, for which task' stops being abstract. Guillermo Rauch argues the model should be a swappable module, not a platform marriage — Vercel now pushes >1T tokens/day, half its 6M daily deploys agent-triggered, and production teams pick by price/performance. Willison ships sqlite-utils 4.0 with three different frontier models each doing a different job — Fable 5 found 4 release blockers, GPT-5.5 and Opus 4.8 wrote the docs. Rowboat makes agent memory a local Markdown graph you can read; OfficeCLI hands agents a single binary for Word/Excel/PowerPoint; Halo hash-chains every agent action into a tamper-evident log. Own the harness, the memory, the evidence — rent the intelligence." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 022 · 08 July 2026</p>
+  <h1>Rent the model, own the agent</h1>
+  <p class="lede">Today is the day the "closes tonight" from yesterday actually closes: <b>Claude Fable 5 flips from subscription-included to metered credits at API rates</b>. That turns "which model, at what price, for which task" from a background thought into a line item — and the app layer spent the last 48h answering it the same way. Guillermo Rauch argues the model should be a <b>swappable module, not a platform marriage</b>, with Vercel now pushing &gt;1T tokens/day and half its 6M daily deploys agent-triggered. Simon Willison ships <b>sqlite-utils 4.0 using three different frontier models</b>, each doing a different job. And the tools that landed all defend the same boundary: <b>Rowboat</b> makes agent memory a local Markdown graph you can read and edit; <b>OfficeCLI</b> hands agents one binary for Word/Excel/PowerPoint; <b>Halo</b> hash-chains every agent action into a tamper-evident log. The pattern: own the harness, the memory, and the evidence — rent the intelligence, and price it per task.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Two builders converging on one 2026 stance: model choice is a per-task, price/performance decision made inside your harness — not a fixed bet on one lab.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Guillermo Rauch: decouple the model from the agent — "every piece is plug and play"</span><span class="em">TechCrunch · 6 Jul</span></div>
+    <p>Vercel's CEO frames the central architecture decision of 2026 as "whether the model and the agent are going to be coupled," and comes down hard against lock-in: "You can use OpenAI, you can use Anthropic, or you can use Gemini... every piece is plug and play." His production argument is blunt — "when you're optimizing for production, you start looking at a price/performance" — and names <b>Gemini, DeepSeek and GLM-5.2</b> as models teams increasingly route to on cost. The scale behind the claim: Vercel now sees <b>6M deployments/day, ~50% triggered by coding agents, and &gt;1 trillion tokens/day</b> through its AI gateway.</p>
+    <p class="y">This is the strongest data-backed case yet against betting your product on a single lab — and it lands the same morning Fable 5 goes metered (see Radar), which is exactly the price/performance pressure Rauch describes. The build takeaway: put a <b>model gateway / router</b> between your agent and any one provider so swapping tiers is a config change, not a rewrite. For a regulated AU wealthtech stack there's a second dividend — a decoupled model layer is what lets you route sensitive tasks to a compliant or self-hosted model without re-architecting the agent around it.</p>
+    <a class="src" href="https://techcrunch.com/2026/07/06/vercel-ceo-guillermo-rauch-on-the-fight-to-split-off-models-from-agents/">techcrunch.com — Rauch on splitting models from agents ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Simon Willison ships sqlite-utils 4.0 — three frontier models, three different jobs</span><span class="em">Blog · 7 Jul</span></div>
+    <p>The 16-year-old library hits 4.0 (schema migrations, savepoint-based nested <code>db.atomic()</code>, compound foreign keys). The build-value payload is the division of labour: reviewing the release candidate, <b>Fable 5 wrote 12 test scripts and found 4 release-blocking bugs plus 10 more issues</b>; GPT-5.5 wrote 5 scripts with lighter findings; and the upgrade guide and release notes were drafted by <b>Fable 5, Opus 4.8 and GPT-5.5</b> together. Willison's verdict: "There's no doubt in my mind that sqlite-utils 4.0 is a significantly higher-quality release than if I had built it without the assistance of the latest frontier models."</p>
+    <p class="y">A concrete continuation of Rauch's thesis in one repo: different models did <b>QA, a second opinion, and documentation</b> — the value was in matching each to its job, not picking one winner. Note what the agents did here isn't writing features, it's <b>release engineering</b> — finding blockers a solo maintainer would ship past. That's the transferable move for a small team: run a lower-power model as an adversarial release-blocker pass before you cut, and let the human own the merge.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/7/sqlite-utils-4/">simonwillison.net — sqlite-utils 4.0 ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Three ships, one boundary: keep the model swappable, but own the parts around it — the memory, the file I/O, the proof of work.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Rowboat: a local-first coworker whose memory is a Markdown graph you can read, edit, or delete</span><span class="em">Show HN · 6 Jul</span></div>
+    <p>An open-source (<b>Apache-2.0</b>) desktop alternative to Claude Desktop / Cowork that indexes your email, meeting notes and browsing into a <b>knowledge graph stored as plain Markdown files</b>, which every "work surface" (inbox, notes, browser, parallel coding) reads for context. It runs on <b>any LLM, including local models via Ollama or LM Studio</b> — no cloud memory silo. ~94 points on Show HN.</p>
+    <p class="y">The interesting part isn't the app, it's the <b>memory model</b>: agent working memory as inspectable, hand-editable Markdown rather than an opaque vector store you can't audit. For any product where a human must be able to see and correct what the agent "knows" — a client file, an advice history — that's the right default, and it's forkable today. Steal the pattern even if you don't ship the app: <b>make the agent's memory a document, not a database</b>.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=48819808">news.ycombinator.com — Show HN: Rowboat ↗</a>
+    <a class="src" href="https://github.com/rowboatlabs/rowboat">github.com/rowboatlabs/rowboat ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OfficeCLI: one binary that lets an agent read, edit and render Word/Excel/PowerPoint</span><span class="em">GitHub · 6–7 Jul</span></div>
+    <p>An <b>Apache-2.0</b>, self-contained binary (embedded .NET, no Microsoft Office install) giving agents a command line over <b>.docx, .xlsx and .pptx</b> — <b>350+ Excel functions</b>, a native OOXML pivot engine, and an HTML/PNG render mode that closes the <b>render → look → fix</b> loop. It auto-detects Claude Code, Cursor, VS Code and Copilot for skill install, and a resident mode keeps documents in memory over named pipes. Cross-platform, free.</p>
+    <p class="y">Document manipulation is a real gap in agent tooling, and this fills it deterministically — the agent edits a real spreadsheet and can <b>screenshot the result to verify its own work</b>, instead of hallucinating cell math. For a wealthtech build this is directly on-target: SoAs, fact-find spreadsheets and client letters are Office files, and a self-hosted binary means the documents never leave your machine. Spike it against whatever brittle python-docx glue you're maintaining.</p>
+    <a class="src" href="https://github.com/iOfficeAI/OfficeCLI">github.com/iOfficeAI/OfficeCLI ↗</a>
+    <a class="src" href="https://winbuzzer.com/2026/07/07/officecli-gives-ai-agents-a-command-line-for-office-files-xcxwbn/">winbuzzer.com — coverage ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Badge tops Product Hunt: agents that collect peer reviews to generate proof of work</span><span class="em">Product Hunt · 7 Jul</span></div>
+    <p>The #1 launch of the day (256 upvotes): a layer where AI agents <b>gather peer reviews of their output to produce verifiable evidence a task was actually done</b> — attestation for agent work, rather than "it said it finished."</p>
+    <p class="y">Read past the product to the primitive: as more work is delegated to agents, <b>"prove it happened, and prove it was any good"</b> becomes its own market — and it's the same instinct as Halo below, one shipped as UX, one as infrastructure. For anything with a compliance surface, an agent that emits a reviewable evidence trail alongside its output is worth more than one that's marginally more capable but opaque. Design the receipt, not just the result.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/7">producthunt.com — 7 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two shapes worth stealing: make an agent's actions provable after the fact, and invoke the agent from the surface the team already lives in.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Halo: hash-chain every agent action into a tamper-evident log anyone can verify</span><span class="em">Show HN · 7 Jul</span></div>
+    <p>~4,300 lines of Python (<b>Apache-2.0</b>) that wraps your agent entrypoint and records every <b>tool call, model call, data access and approval</b> as one entry in an <b>append-only, hash-chained <code>.jsonl</code></b> log — delete a single line and the verification report catches it. The framing is sharp: give an agent the same prompt 50 times and you get 50 slightly different runs, so <b>the only thing worth auditing is what actually happened at runtime</b>. Cited hook: a 2026 survey where 88% of enterprises hit an agent security incident but only 21% had any runtime visibility.</p>
+    <p class="y">This is the "verification becomes infrastructure" thread from last week made concrete and dependency-free — an audit trail you can hand a regulator that <b>proves what the agent did without trusting the vendor who ran it</b>. The pattern to internalise: for consequential agents, log at the <b>action boundary</b> (tool/model/data/approval), append-only, hash-chained — so "what did the agent do to this client's file?" has a cryptographic answer. Iress ships the tamer version of the same idea below (an audit trail on every CRM write); Halo is the primitive.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=48818098">news.ycombinator.com — Show HN: Halo ↗</a>
+    <a class="src" href="https://github.com/bkuan001/halo-record">github.com/bkuan001/halo-record ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Ogment: "your AI coworker, in Slack — just tag @O" — the mention as agent invocation</span><span class="em">Product Hunt · 7 Jul</span></div>
+    <p>A Slack-native agent (125 upvotes) invoked the way you already ping a colleague: <b>@-mention it in the channel and it takes the action</b> — no new app, no context switch, the agent lives where the conversation already is.</p>
+    <p class="y">The pattern worth naming is <b>invocation-in-place</b>: the agent's entry point is a gesture the team already makes (a mention, a reply, a reaction), not a destination they have to visit. It's the same "graft onto an existing surface" move this desk flagged last week, applied to <i>triggering</i> the agent rather than just embedding it. For an adviser tool, the read is concrete — the agent should be summonable from inside the CRM thread or the email, not a separate portal someone has to remember exists.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/7">producthunt.com — 7 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">The Fable cost change is now live, one wealthtech integration sets the AU bar, and a UK regulator maps the exact perimeter your product sits on.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Fable 5 is now metered — the subscription window closed, per-token billing starts today</span><span class="em">Cost · today</span></div>
+    <p>As flagged yesterday: from <b>8 July</b>, Claude Fable 5 stops drawing on Pro/Max/Team/Enterprise plan limits and bills through <b>metered usage credits at standard API rates — $10 / 1M input, $50 / 1M output</b> (enabled and capped in Settings → Usage). <b>Sonnet 5 ($2/$10 intro) and Opus 4.8 ($5/$25) remain subscription-included</b>. Direct API pricing is unchanged; this is a subscription-access shift only.</p>
+    <p class="y">The abstract question is now a bill. Any loop-heavy workflow you ran on Fable inside a subscription — Willison's sqlite-utils build is the public example — has a real per-token cost as of this morning. Two moves today: <b>cap the Fable usage-credit ceiling</b> before a runaway loop finds it, and audit which jobs genuinely need Fable versus Sonnet 5 or a cheaper open weight. This is precisely the price/performance routing Rauch described — the market just made it non-optional for your priciest tier.</p>
+    <a class="src" href="https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5">platform.claude.com — Fable 5 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Iress + PlannerPal: AI advice inside Xplan — 400-field write-back, adviser reviews before sync, full audit trail</span><span class="em">Wealthtech · 6 Jul</span></div>
+    <p>Advisers on <b>Iress Xplan</b> can now launch PlannerPal's AI workflows via <b>single sign-on</b> (no re-auth) directly from the CRM. Its Xplan CRM Updater <b>reads meeting transcripts and documents to flag changes across ~400 fields of the standard fact find</b>, which the adviser reviews before anything syncs back — with a <b>complete audit trail on every amendment</b> — plus AI meeting summaries, document drafting and a data-completeness dashboard.</p>
+    <p class="y">Xplan is a dominant adviser platform in Australia, so this sets the local bar directly, and it's the exact <b>propose-then-approve-then-log</b> shape a regulated advice agent needs: the AI drafts field changes, the adviser signs off, the record keeps a trail. Note it lives <i>inside</i> the CRM via SSO, not as a separate app — the "invocation-in-place" pattern from Build Patterns, shipped in your own vertical. This is both a competitive reference and a validated template for "agent updates the system-of-record, human owns the commit."</p>
+    <a class="src" href="https://fintech.global/2026/07/06/iress-and-plannerpal-deepen-ai-advice-workflow-tie-up/">fintech.global — Iress + PlannerPal ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">FCA publishes the Mills Review — where AI "guidance" becomes regulated "advice," and who's accountable for an agent</span><span class="em">Regulatory · 6 Jul</span></div>
+    <p>The Sheldon Mills-led review of AI and the future of retail financial services lands with 7 priority recommendations — several squarely on advice: <b>secure the regulatory perimeter as AI blurs the advice/guidance boundary</b>, clarify <b>authorization and accountability for AI agents</b> ("agentic finance foundations"), scale the FCA AI Lab, and stand up a government-backed public AI financial-guidance service.</p>
+    <p class="y">UK, not AU — but it's the most substantive regulator-commissioned treatment yet of the precise question a financial-advice AI product sits on: when does AI-delivered guidance cross into regulated advice, and who is accountable for what an agent does. ASIC watches the FCA closely, so treat this as a <b>design-constraints document</b> for where the AU perimeter debate is heading — and note the throughline with the tools above: the regulator's answer to "prove the agent acted properly" is exactly what Halo and Iress's audit trail produce.</p>
+    <a class="src" href="https://www.fca.org.uk/publication/corporate/the-mills-review.pdf">fca.org.uk — the Mills Review (PDF) ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
