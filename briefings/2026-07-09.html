@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fix the process, not the code — 9 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Jarred Sumner rewrote Bun from Zig to Rust in 11 days with 64 concurrent Claude agents — 6,502 commits, ~$165k in tokens — and the thing that made it mergeable wasn't the model, it was the harness: a language-independent TypeScript test suite with 1.38M assertions, blind adversarial reviewers told to 'assume the code is wrong,' and a rule to fix the process that generates the code instead of hand-patching the output. Kenton Varda bans AI-written PR descriptions for omitting the framing a reviewer needs. Auto compiles the deterministic parts of agent runs into verified WASM so nothing is figured out twice (6.4x cheaper). OpenAI's GPT-Live puts a fast full-duplex voice in front and delegates hard reasoning to GPT-5.5 behind. The pattern: pin the determinism and the verification, rent the reasoning." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 023 · 09 July 2026</p>
+  <h1>Fix the process, not the code</h1>
+  <p class="lede">The best build story of the last 48h isn't a model — it's a harness. Jarred Sumner rewrote the <b>Bun runtime from Zig to Rust in 11 days</b> with 64 concurrent Claude agents, and his own verdict on why a million lines of LLM-generated code were safe to merge names three things, none of them the model: a <b>language-independent test suite with 1.38M assertions</b>, blind reviewers told to "assume the code is wrong," and a rule to <b>fix the process that generates the code, not the code itself</b>. The rest of the day rhymes: Kenton Varda <b>bans AI-written PR descriptions</b> for stating what the code does while omitting why; <b>Auto</b> compiles the deterministic slices of an agent run into verified WASM so nothing is solved twice; and OpenAI's <b>GPT-Live</b> fronts a fast full-duplex voice and delegates the hard reasoning to a frontier model behind it. The through-line for a builder: the model is rented and interchangeable — <b>the verification harness and the deterministic core are the assets you own</b>.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Two practitioners on the same point from opposite ends: the value isn't the AI's output, it's the scaffold you build to trust — or reject — it.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Jarred Sumner ships Bun rewritten Zig→Rust by 64 agents — and credits the test suite, not the model</span><span class="em">Bun blog · 8 Jul</span></div>
+    <p>Bun's creator details the port: <b>11 days, 6,502 commits, ~1M lines, ~$165,000 in tokens</b> (5.9B input / 690M output), run as Claude Code dynamic workflows with <b>64 concurrent agents across 4 git worktrees</b> on pre-release Fable 5. What made it mergeable was verification, not generation: Bun's test suite is written in TypeScript, so it's <b>runtime-independent — 1,386,826 <code>expect()</code> calls across 60,624 tests, zero skipped</b>. Each implementer agent got two <b>blind reviewer agents</b> handed only the diff and told to "assume the code is wrong" — catching a use-after-free, a negative-timespec bug, and an eager-eval panic before merge. Sumner's summary: "a language-independent test suite with a million assertions, adversarial code review, and when something does go wrong, fixing the process that generates the code instead of hand-fixing the code."</p>
+    <p class="y">This is the most complete public proof yet that <b>agent-scale codegen is gated by your verification harness, not your model choice</b> — the model was interchangeable; the million-assertion oracle and the blind adversarial reviewers were the moat. The transferable moves for a small team: (1) invest in <b>tests that don't depend on the code under test</b> so agents can't game them; (2) run review as a <b>separate agent that only sees the diff and is told to break it</b>; (3) when an agent produces bad code, <b>patch the workflow, not the output</b> — otherwise you're doing the work by hand. For a regulated stack this is the template for trusting generated change at all: the oracle is the control.</p>
+    <a class="src" href="https://bun.com/blog/bun-in-rust">bun.com — Bun in Rust ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Jul/8/">simonwillison.net — Willison's notes ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Kenton Varda declares a moratorium on AI-written PR and commit descriptions</span><span class="em">Willison / X · 8 Jul</span></div>
+    <p>Cloudflare's principal engineer (Cap'n Proto, Workers) banned AI-generated change descriptions from his team: "AI was writing change descriptions that were <b>worse than useless</b> to me as I tried to review PRs: outlining details of the code that could easily be seen by looking at the code, but <b>omitting the higher-level framing</b> needed to understand broadly what the code is doing." Simon Willison surfaced and endorsed the take.</p>
+    <p class="y">A sharp counter to the reflex of automating every artifact: the PR description is a <b>human-to-human interface</b>, and its whole job is the <i>why</i> — the framing a model can't infer from the diff and the reviewer most needs. The rule for your own tooling: let agents draft the mechanical stuff (changelog lines, test scaffolds), but keep <b>intent-carrying prose</b> — PR framing, advice rationale, client-facing "here's what changed and why" — human-authored or human-rewritten. Pairs directly with the Bun item: a reviewer who's told to break the code still needs a human to explain what it was <i>for</i>.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/8/kenton-varda/">simonwillison.net — Kenton Varda quote ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Two app-layer ships that both move the interaction off the desktop — one into full-duplex voice, one onto the phone with the work still running.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">OpenAI ships GPT-Live: full-duplex voice that talks while it listens, and delegates the hard part</span><span class="em">OpenAI · 8 Jul</span></div>
+    <p>A new voice family (<b>GPT-Live-1</b> and <b>-mini</b>) replacing the aging GPT-4o voice mode, rolling out in ChatGPT on iOS/Android/web. The architecture is the story: it's <b>full-duplex</b> — it can listen and speak simultaneously, backchannel with "mhmm," and let you talk over it — and for anything needing web search or real reasoning it <b>delegates to GPT-5.5 in the background</b> and folds the result back into the conversation while it keeps the flow going. Willison, after an hour-long walking conversation, called it "very impressive" and the first version usable as a real brainstorming partner.</p>
+    <p class="y">The pattern to steal isn't the voice, it's the <b>two-tier "conversational front / reasoning back"</b> split: a fast, cheap, always-responsive model owns the interaction loop and dispatches to an expensive frontier model only for the queries that need it — the same price/performance routing this desk has been tracking, applied to <i>latency</i> rather than cost. For any real-time surface (a voice adviser intake, a live chat co-pilot) this is the shape: never make the user wait on the smart model; keep a fast one talking and stream the deep answer in when it lands.</p>
+    <a class="src" href="https://openai.com/index/introducing-gpt-live/">openai.com — Introducing GPT-Live ↗</a>
+    <a class="src" href="https://techcrunch.com/2026/07/08/openai-releases-new-voice-models-for-more-natural-live-conversations/">techcrunch.com — coverage ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Cowork comes to mobile and web — start a task at your desk, watch it finish from your phone</span><span class="em">Anthropic · 7 Jul</span></div>
+    <p>Anthropic is rolling Cowork (its autonomous work agent) off the desktop onto <b>iPhone, iPad, Android and claude.ai</b>, in beta on paid plans starting with Max. Three capabilities matter: <b>cross-device continuity</b> (kick off a task at your desk, monitor from your phone), <b>background execution</b> ("close the laptop and head to your meeting; Claude keeps going"), and <b>mobile approval notifications</b> — the agent pings your phone when it hits a decision only a human should make.</p>
+    <p class="y">This is <b>ambient, asynchronous agent work</b> made a first-class UX: the human isn't babysitting a terminal, they're getting pinged for the approvals that matter and otherwise letting it run. That "propose → notify → approve on mobile" loop is exactly the interaction model a regulated advice agent wants — the adviser signs off from wherever they are, and the long-running work (drafting, data reconciliation) doesn't block on their attention. Note the primitive underneath is the same as Bun's blind reviewer and Varda's moratorium: <b>keep the human on the decisions, automate the toil around them.</b></p>
+    <a class="src" href="https://9to5mac.com/2026/07/07/anthropic-expanding-claude-cowork-to-mobile-and-web-details-here/">9to5mac.com — Cowork on mobile ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">One primitive worth internalising: capture the deterministic part of an agent's work once, verify it, and never pay the model to redo it.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Auto: compile the deterministic slices of an agent run into verified WASM — "nothing is figured out twice"</span><span class="em">GitHub · 8 Jul</span></div>
+    <p>An open-source "AGI compiler" that <b>records agent behaviour at runtime, extracts the parts that are secretly deterministic, and compiles them to sandboxed WebAssembly</b>. It runs tiered: a fast compiled path for familiar inputs, a <b>frontier-model fallback for novel ones</b> — which then triggers recompilation, so the system ratchets. Reported result on a test stream: marginal cost dropped from <b>~59 µ$ to ~2 µ$ per task (6.4x cheaper)</b> at steady state. Compiled artifacts are capability-confined (<b>zero WASM imports; the loader refuses anything else</b>), and each ships a manifest of measured eval scores, cost bounds and latency — not estimates. Runtime guarding uses conformal prediction to decide compiled-vs-model per input.</p>
+    <p class="y">The idea is bigger than the repo: <b>most "agent" workflows are mostly deterministic with a few genuinely fuzzy steps</b> — so paying a frontier model to re-derive the deterministic 90% every run is pure waste. Capture it once, verify it against a contract, and serve it from cheap sandboxed code with the model as fallback. That's the cost thread and the verification thread fused: you get <b>cheaper, faster, and auditable</b> at once, because the hot path is now inspectable code with a capability boundary instead of an opaque model call. Worth a spike on any high-volume, mostly-repetitive agent loop you're running today.</p>
+    <a class="src" href="https://github.com/RightNow-AI/auto">github.com/RightNow-AI/auto ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">One cost deadline slipped in your favour; one protocol deadline is a hard migration ~3 weeks out.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Correction: Fable 5 stays subscription-included through 12 July, not 8 July</span><span class="em">Cost · update</span></div>
+    <p>Yesterday's briefing flagged Claude Fable 5 flipping to metered usage-credit billing on 8 July. Anthropic's Cowork-mobile rollout post now states <b>Fable 5 access remains available on all paid plans through 12 July</b> — the subscription window was extended, not closed. Metered pricing at API rates ($10/$50 per Mtok) still lands after that; Sonnet 5 ($2/$10) and Opus 4.8 ($5/$25) stay subscription-included.</p>
+    <p class="y">You have four more days of subscription-rate Fable on loop-heavy jobs — Bun-style agent-scale runs are the ones that will feel the bill hardest. Use the window to <b>instrument which jobs actually need Fable</b> versus a cheaper tier, and set your usage-credit ceiling before the 12th so a runaway workflow doesn't discover it for you. This is exactly the per-task routing the app layer has spent the week arguing for — the deadline just moved, not the logic.</p>
+    <a class="src" href="https://9to5mac.com/2026/07/07/anthropic-expanding-claude-cowork-to-mobile-and-web-details-here/">9to5mac.com — Cowork post (Fable date) ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">MCP spec 2026-07-28 final lands in ~3 weeks — a breaking, stateless rewrite of the transport</span><span class="em">Protocol · deadline 28 Jul</span></div>
+    <p>The Model Context Protocol's next spec (release candidate out, <b>final on 28 July</b>) is its largest revision since launch and <b>breaks from 2025-11-25</b>. Headline changes: a <b>stateless core</b> — the <code>initialize</code> handshake and <code>Mcp-Session-Id</code> header are gone, so any request can hit any server instance behind a plain round-robin load balancer; <b>MCP Apps</b>, letting servers ship interactive HTML rendered in a sandboxed iframe; <b>Tasks</b> graduating to an official extension for long-running work (<code>tasks/get</code>, <code>tasks/update</code>, <code>tasks/cancel</code>); and OAuth/OIDC-aligned auth with mandatory <code>iss</code> validation.</p>
+    <p class="y">If you run or consume MCP servers, this is a real migration, not a version bump — transport code and auth both change. The upside is significant: <b>stateless routing kills sticky-session infrastructure</b>, and the Tasks extension gives you a standard way to model the long-running, approval-gated agent work the ships above all rely on. Put the 28 July cutover on the calendar now and audit which of your servers carry session state today.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io — 2026-07-28 RC ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
