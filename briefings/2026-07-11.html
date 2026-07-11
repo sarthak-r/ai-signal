@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hooks into the agent's head — 11 July 2026 — AI Builder Signal</title>
+<meta name="description" content="The week's thread — the gate matters more than the model — got two concrete moves. Cursor 3.11 turns the agent's own conversation (prompts, responses, thinking, subagents) into a programmable surface: new cloud-agent hooks (beforeSubmitPrompt, afterAgentThought, subagentStart, stop) let you observe and steer reasoning mid-run to build self-correcting loops. Mollick names the human half: prompting tricks are dead, the durable skill is writing the spec and checking the output. Notion's Ship OS makes the whole feedback→PR loop agent-native. Radar: Meta drops a price floor — Muse Spark 1.1 at $1.25/$4.25 per Mtok, a quarter of Anthropic/OpenAI — and Claude Fable 5 flips from subscription-included to metered TOMORROW (12 Jul)." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 025 · 11 July 2026</p>
+  <h1>Hooks into the agent's head</h1>
+  <p class="lede">The week's running thread — <b>the gate matters more than the model</b> — got its most concrete app-layer expression today. Cursor 3.11 makes the agent's own conversation a <b>programmable surface</b>: new cloud-agent hooks fire on <code>beforeSubmitPrompt</code>, <code>afterAgentThought</code>, <code>subagentStart</code>, <code>stop</code> — so you can observe and steer reasoning <i>mid-run</i> to build self-correcting loops, not just diff the final commit. Ethan Mollick names the human half of the same shift: <b>prompting tricks are dead</b>; the durable skill is writing the spec and checking the output. Notion's <b>Ship OS</b> makes the whole feedback→PR loop agent-native. And the price war got a floor — Meta's <b>Muse Spark 1.1</b> API lands at a quarter of Anthropic/OpenAI rates. Radar: <b>Claude Fable 5 flips from subscription-included to metered tomorrow</b>.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The human skill that the day's tooling assumes you already have — and why the clever-prompt era is over.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Mollick: "specs, not tricks" — the leverage is defining the job and checking the output, not clever prompting</span><span class="em">oneusefulthing · 7 Jul</span></div>
+    <p>Mollick's argument, backed by Wharton's controlled studies across 2024–2026 frontier models: <b>prompt-trick effects have gone weak and contingent</b> — format matters less than content, and the model "rewards legible requirements, not prompt aesthetics." Stop treating the LLM as a spellbook; treat it as a <b>literal, capable executor that needs management</b> — explicit goals, output definitions, quality bars, tests. His framing: if your org lives in PRDs, write a PRD; if it runs on SOPs, use SOPs. The returns have moved upstack — to spec quality, context assembly, tool access, and evaluation loops.</p>
+    <p class="y">This is the human counterpart to every harness and gate the app layer shipped this week. The Cursor hooks below give you machine-checked control of an agent's <i>execution</i>; Mollick's point is that they're worthless without a <b>legible spec to check against</b> — the reviewer, human or automated, needs a contract. For a regulated-advice product the lesson is literal: your moat isn't a clever system prompt, it's the <b>written definition of a correct advice document and the tests that enforce it</b>. Write the spec you should have written anyway; the agent loop just made skipping it fatal.</p>
+    <a class="src" href="https://explainx.ai/blog/ethan-mollick-wharton-prompting-science-specs-not-tricks-2026">explainx.ai — Mollick, prompting tricks over ↗</a>
+    <a class="src" href="https://www.oneusefulthing.org/">oneusefulthing.org ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The day's real app-layer moves: a programmable window into the agent's reasoning, and an agent-native product loop.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Cursor 3.11: cloud-agent hooks turn the agent's prompts, thoughts and subagents into a programmable surface</span><span class="em">cursor.com · 10 Jul</span></div>
+    <p>Cursor 3.11 already hooked tool execution and file/shell work; the new release adds hooks around <b>the agent conversation itself</b> — <code>beforeSubmitPrompt</code>, <code>afterAgentResponse</code>, <code>afterAgentThought</code>, <code>subagentStart</code>, <code>stop</code>, compaction, turn completion. The stated purpose: "observe output and reasoning, control subagents, and <b>build self-correcting loops</b> with cloud agents." Shipping alongside: <b>side chats</b> (<code>/side</code>, <code>/btw</code>) that branch off the main thread with shared context and can be re-merged, searchable agent transcripts (Cmd+K), and cloud agents that can drive their own computer to produce a demo artifact of their work.</p>
+    <p class="y">This is the verification-as-infrastructure thread turned into an API. Until now, gating an agent meant checking its <i>output</i> — a diff, a commit, a completion flag. Hooks on <code>afterAgentThought</code> and <code>subagentStart</code> let you inspect and interrupt the <b>reasoning and the fan-out as they happen</b>: kill a subagent that's off-spec, inject a check before a prompt is submitted, halt on a policy trip. That's the machine-checked contract Mollick's spec needs, wired into the loop. If you run coding agents at any volume, the build to prioritise is the <b>hook layer that enforces your spec mid-run</b> — not another model wrapper. And note the pattern generalises: any agent product you ship should expose the equivalent observe-and-steer surface, because that's what a reviewer (or a regulator) will demand.</p>
+    <a class="src" href="https://cursor.com/changelog">cursor.com — 3.11 changelog ↗</a>
+    <a class="src" href="https://cursor.com/docs/hooks">cursor.com/docs/hooks ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Ship OS by Notion: the feedback→PR loop becomes an agent-orchestration surface, humans keep the judgment calls</span><span class="em">Notion · 10 Jul</span></div>
+    <p>Notion's "agent-native way to ship software" runs the whole product cycle inside Notion — <b>from customer feedback to a merged PR</b> — with agents doing triage, routing and summarising while the team makes the judgment calls. It builds on Notion's July run of external-agent support and the Notion Agents mobile app, folding intake, spec and delivery into one orchestrated workspace rather than a ticket tracker plus five disconnected tools.</p>
+    <p class="y">The bet worth testing: the <b>PM/eng coordination layer — feedback, triage, spec, PR — is now an agent surface, not a Jira board</b>. The design decision that matters is where the human line sits: agents absorb the routine routing and summarising; people own the calls that carry accountability. That's exactly the split a regulated workflow needs — automate the reconciliation and drafting, keep the sign-off human and logged. Run one real intake-to-PR loop through it and measure how much routine coordination actually offloads before you rebuild your own.</p>
+    <a class="src" href="https://www.notion.com/product/ship-os">notion.com — Ship OS ↗</a>
+    <a class="src" href="https://x.com/NotionHQ/status/2075249002208227743">x.com/NotionHQ — announcement ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Compressed: Codex moves into the ChatGPT desktop app, with a granular <code>writes</code> approval mode</span><span class="em">OpenAI · 9 Jul</span></div>
+    <p>For the record: OpenAI embedded <b>Codex directly in the ChatGPT desktop app</b> (macOS + Windows) — inline code/markdown editing, GitHub PR review in a sidebar, multi-repo project support, GPT-5.6 powering Computer Use — and shipped CLI 0.144.x adding a <b><code>writes</code> app-approval mode</b> and improved MCP auth. Codex stops being a separate tab and lives where you already chat.</p>
+    <p class="y">The builder-relevant primitive isn't the desktop integration, it's the <b>granular <code>writes</code> approval mode</b>: controlled, scoped write access for an agent run is the same capability-boundary idea as Cursor's hooks, one layer down. The direction is unmistakable across every tool this week — <b>the interesting surface is the permission and observation layer wrapped around the agent</b>, not the agent itself. Everything else here (which tab Codex lives in) is a config detail.</p>
+    <a class="src" href="https://learn.chatgpt.com/docs/changelog">learn.chatgpt.com — Codex changelog ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">One own-the-stack alternative to closed agent builders, and a threat model you have to test before you ship persistent memory.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Sim v0.7.27: a self-hostable, open-source agent workspace — build the whole stack, don't rent it</span><span class="em">GitHub · 9 Jul</span></div>
+    <p>Open-source (~29K stars) workspace to build, deploy and orchestrate agents either by chat — a "Mothership" that scaffolds workflows, tables and knowledge bases from a description — or a visual ReactFlow canvas, with 1,000+ integrations plus built-in tables, files, scheduling and KB. It topped Product Hunt's 10 July board.</p>
+    <p class="y">The pattern is the counter-move to this week's closed agent-builder launches: <b>a self-hostable stack you own end to end</b>, which for a wealthtech shop is the difference between data leaving your boundary and not. If you're weighing a hosted agent-builder SaaS against building, Sim is the reference for what "own it" now costs — multi-agent workflows with memory, scheduling and tables out of the box. Worth a spike before you commit client data to someone else's orchestrator.</p>
+    <a class="src" href="https://github.com/simstudioai/sim">github.com/simstudioai/sim ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">FARMA: agents can be attacked through their remembered <i>reasoning</i>, not just their facts</span><span class="em">arXiv · 6 Jul</span></div>
+    <p>New work (arXiv:2607.05029) on <b>forged-reasoning attacks against LLM agent memory</b>: instead of poisoning stored facts, the attack poisons the agent's <b>remembered reasoning traces</b>, so a future run retrieves and trusts a manipulated line of thought — plus a set of defenses to test against. It pairs with recent memory-sycophancy benchmarks probing when an agent should reject its own stored "memory" as evidence.</p>
+    <p class="y">If you're shipping any agent with persistent memory — and an advice assistant that remembers a client across sessions is exactly that — this is a threat model you have to design against before launch. The uncomfortable implication: <b>your memory store is now an attack surface with the authority of the model's own past reasoning</b>, and naive "just remember everything" architectures inherit that risk silently. Add memory provenance and a scope/trust check to your retrieval path, and treat stored reasoning as untrusted input, not gospel.</p>
+    <a class="src" href="https://arxiv.org/abs/2607.05029">arxiv.org — FARMA ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A new price floor for agent workloads, and a cost deadline that lands tomorrow.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Meta's Muse Spark 1.1 opens a paid API at a quarter of Anthropic/OpenAI rates — an SDK-swap you can A/B today</span><span class="em">Meta · 9–10 Jul</span></div>
+    <p>Meta put its agentic/coding model behind a public paid API (US preview) at <b>$1.25 in / $4.25 out per Mtok</b> — roughly a quarter of Opus 4.8 ($5/$25) and below Sonnet 5 ($2/$10) — with a 1M-token context and $20 free credits; Zuckerberg pitched it on X as "a strong agentic and coding model at a very low price." Coverage reports drop-in compatibility with the OpenAI SDK (Chat Completions + Responses) and Anthropic Messages format via an endpoint swap. Meta's first time charging for model access.</p>
+    <p class="y">This is a genuine <b>price floor for agent and coding workloads</b>, and the SDK-compat claim means the test is nearly free — change base URL and model string, run your real jobs, compare total tokens billed and quality. That's precisely the cost-per-completed-task routing this briefing has argued for all week, now with a cheaper tier to route <i>to</i>. Two cautions: full parameter docs aren't published yet, so verify the compat fine print, and a US-preview model with no system card is not a procurement basis for a compliance-sensitive path — benchmark it on your held-out tasks before it touches client data.</p>
+    <a class="src" href="https://qz.com/meta-muse-spark-api-developers-paid-anthropic-openai-070926">qz.com — Muse Spark paid API ↗</a>
+    <a class="src" href="https://www.ghacks.net/2026/07/10/meta-launches-muse-spark-1-1-in-us-public-preview-with-lower-cost-pricing-for-coding-agents/">ghacks.net — pricing detail ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Deadlines: Fable 5 flips to metered <b>tomorrow</b> (12 Jul); Opus 4.7 fast-mode retires 24 Jul; MCP spec 28 Jul</span><span class="em">Migration · 12 / 24 / 28 Jul</span></div>
+    <p>Three dates on the calendar. <b>Claude Fable 5 leaves subscription-included billing on 12 July</b> — after that it meters at API rates ($10/$50 per Mtok), while Sonnet 5 ($2/$10) and Opus 4.8 ($5/$25) stay subscription-included. <b>Opus 4.7 "fast mode" is deprecated 24 July</b> (already gone on 4.6). And the breaking <b>MCP 2026-07-28 spec</b> — stateless core, no <code>initialize</code> handshake, MCP Apps, the Tasks extension — lands 28 July.</p>
+    <p class="y">Tomorrow is the one that bites: any loop-heavy, Fable-on-default workflow becomes a metered line item overnight, so <b>set your usage-credit ceiling and confirm which jobs actually need Fable versus Sonnet/Opus before you sleep tonight</b> — a runaway agent shouldn't discover the new pricing for you. The other two are further out but real migrations, not version bumps: pin explicit model IDs off any <code>-latest</code> alias, and audit which of your MCP servers carry session state before the 28th.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io — 2026-07-28 RC ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
