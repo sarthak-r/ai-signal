@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Delete the context file — 12 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Theo Browne's just-published AIE closing keynote makes the sharpest version of the week's argument: delete your CLAUDE.md / AGENT.md. His case, backed by an ETH Zurich study across SWE-bench and 138 real repos, is that hand-maintained context files are silent tech debt — LLM-generated ones cut task success 2-3% while raising cost 20%+, and even developer-written files barely help. It's the mirror of yesterday's Mollick point: stop maintaining prompt artifacts, invest in specs and evals. The app layer is already building that assumption in — Claude Code v2.1.207 pushes classifier-generated headlines and colored state into the agent view so you watch reasoning, not raw tool logs, and ships a reflection dashboard that turns accumulated memory into a product surface. Radar: Claude Fable 5 flips from subscription-included to metered today." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 026 · 12 July 2026</p>
+  <h1>Delete the context file</h1>
+  <p class="lede">Theo Browne's AIE closing keynote — video published this weekend — makes the sharpest version of the week's running argument: <b>delete your <code>CLAUDE.md</code> / <code>AGENT.md</code></b>. His case, backed by an ETH Zurich study across SWE-bench and 138 real repos, is that hand-maintained context files are <b>silent tech debt</b> — LLM-generated ones actually <i>lower</i> task success 2–3% while adding 20%+ cost, and even developer-written files barely help. It's the mirror of yesterday's Mollick point: stop polishing prompt artifacts, invest the effort in specs and evals. The app layer is already building that assumption in — <b>Claude Code v2.1.207</b> pushes classifier-written headlines and colored state into the agent view so you watch <i>reasoning</i>, not raw tool logs, and Anthropic's new <b>reflection dashboard</b> turns accumulated memory into a product surface. Radar: <b>Claude Fable 5 flips from subscription-included to metered today</b>.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The contrarian take that closes the week's thread — and the data underneath it.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Theo Browne: "delete your CLAUDE.md / AGENT.md" — context files are tech debt that produces no stack trace</span><span class="em">t3.gg / AIE keynote · 11 Jul</span></div>
+    <p>Browne's AIE closing keynote (video out this weekend) argues most builders are accruing <b>invisible prompt debt</b>: system instructions and <code>AGENT.md</code> files decay silently when the underlying model updates — no error, no CI failure, just subtly worse output weeks later. His own team's <code>AGENT.md</code> stayed labelled "Codex-first" for months after they'd switched to Claude, quietly steering bad architectural patterns. The blunt prescription: <b>stop maintaining bespoke context files; lean on third-party-maintained tooling and check outputs instead</b>. His proof is empirical, not vibes — see the study below.</p>
+    <p class="y">This is the same arrow as Mollick's "specs, not tricks" from yesterday, pointed at a concrete artifact you almost certainly maintain. The uncomfortable read for a regulated-advice product: <b>if your compliance logic lives in a hand-tended markdown prompt, it is rotting on a schedule you can't see</b>, and the next silent model bump can change how your assistant reasons about best-interest duty with zero signal. The durable place for that logic is a <b>versioned spec plus an eval suite that fails loudly</b> — not a context file you assume is helping. Audit what's actually in yours, and measure whether it earns its tokens.</p>
+    <a class="src" href="https://x.com/theo/status/2025900730847232409">x.com/theo — "I have a study to prove it" ↗</a>
+    <a class="src" href="https://www.youtube.com/watch?v=GcNu6wrLTJc">youtube — Delete your CLAUDE.md ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">The eval behind the argument, and memory turned into a product surface.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">The ETH Zurich context-file study: don't assume your <code>AGENTS.md</code> helps — measure it</span><span class="em">arXiv · 2602.11988</span></div>
+    <p>"Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" tested Claude Code (Sonnet), Codex (GPT-5.x) and Qwen Code across SWE-bench Lite (300 tasks) and a 138-repo AgentBench with <i>real</i> developer-written context files, in three variants: none, auto-generated, and human-maintained. Result: <b>auto-generated files reduced success ~0.5pt (SWE-bench) to 2–3pt (AgentBench) while raising inference cost 20–23%</b> — the agent takes more steps and reasons longer. Human-written files added only ~4pt on AgentBench, still at ~20% more cost.</p>
+    <p class="y">The pattern to adopt is the <b>ablation itself</b>: treat every context file as a hypothesis and A/B it against no-file on your own task suite before you trust it. Most builders have never checked whether their <code>CLAUDE.md</code> is net-positive — this is a one-afternoon eval that could cut a fifth of your agent spend and <i>improve</i> quality. It also reframes context engineering away from "write more guidance" toward "keep only what measurably pays for its tokens" — the discipline you'll want anyway once every agent run is a billed line item.</p>
+    <a class="src" href="https://arxiv.org/abs/2602.11988">arxiv.org/abs/2602.11988 ↗</a>
+    <a class="src" href="https://www.heise.de/en/background/AGENTS-md-Helpful-agent-briefing-or-token-hog-11245317.html">heise — methodology writeup ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude's reflection dashboard: persistent memory becomes a surface you can query about yourself</span><span class="em">Anthropic · 9 Jul</span></div>
+    <p>Anthropic shipped a beta <b>reflection dashboard</b> (web + desktop, Free/Pro/Max) that reads your accumulated memory and surfaces the topics you spent time on, your most active day and peak hour, and "observations about how you work" across 1/3/6/12-month windows, plus quiet-hours and break controls. It requires Memory on and excludes incognito chats and connected-tool data.</p>
+    <p class="y">Set the wellness framing aside — the builder signal is the <b>interaction paradigm</b>: once an agent holds durable memory, that memory itself becomes a queryable product surface, not just silent context injected into prompts. For an advice assistant that remembers a client across sessions, the analogue is obvious and valuable — a <b>"what has this client told us, and when" reflection view</b> that turns the memory store into an auditable, user-facing artifact. That's also the honest counter-pressure to the memory-poisoning threat model from earlier this week: a memory you can <i>inspect</i> is a memory you can govern.</p>
+    <a class="src" href="https://releasebot.io/updates/anthropic">releasebot — Anthropic updates ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The observability-into-the-agent trend, shipped into the tool you probably use daily.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code v2.1.207: agent view shows classifier-written headlines and colored state, not raw tool text</span><span class="em">code.claude.com · 11 Jul</span></div>
+    <p>The v2.1.206–207 run made <b>auto mode the default on Bedrock, Vertex AI and Foundry</b> (with Bedrock moving to Opus 4.8), and reworked the agent view: <b>classifier-generated headlines and colored state words</b> replace raw tool logs so you read <i>what the agent is doing</i> at a glance. Also landed: <code>/doctor</code> that diagnoses and fixes setup, <code>/cd</code> path suggestions, a confirmation prompt before entering git worktrees outside the project dir, and fixes for freezes during long streaming responses.</p>
+    <p class="y">This is the same move as Cursor's mid-run hooks from yesterday, one notch more consumer: the interesting surface keeps being the <b>observation layer wrapped around the agent</b>, not the model. A classifier that summarizes each step into a legible headline is exactly the primitive you'd want in your own product's run view — the difference between an operator (or auditor) who can follow an agent and one staring at a wall of tool JSON. If you ship agent runs to non-engineers, <b>build the human-readable trace, not the log dump</b>; the frontier tools are all converging on it.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com — changelog ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A cost cliff that lands today, and the AU governance baseline that's now in force.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Today: Claude Fable 5 leaves subscription-included billing and meters at API rates</span><span class="em">Migration · 12 Jul</span></div>
+    <p>The deadline flagged yesterday is now live. <b>Fable 5 meters at $10/$50 per Mtok from today</b>, while Sonnet 5 ($2/$10) and Opus 4.8 ($5/$25) stay subscription-included. Separately, the temporary <b>+50% Claude Code weekly-limit boost expires tomorrow (13 Jul)</b>, and Opus 4.7 fast-mode retires 24 Jul.</p>
+    <p class="y">Any loop-heavy workflow that defaulted to Fable is now a metered line item — <b>set a usage-credit ceiling and confirm which jobs genuinely need Fable versus Sonnet/Opus before your next agent run</b>. Pair it with the ETH finding above: trimming a bloated context file and right-sizing the model are the two cheapest levers on agent spend, and today is the day the second one starts showing up on the bill.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com — changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">AU baseline: CPS 230 AI-vendor-contract deadline has passed; APRA + ASIC governance expectations now the floor</span><span class="em">APRA / ASIC · in force</span></div>
+    <p>For the wealthtech founder: the <b>CPS 230 obligation to have AI-vendor contracts compliant by 1 July 2026</b> is now past. It sits on top of APRA's 30 Apr AI-governance letter (formal frameworks, full-lifecycle ownership, an inventory of every AI use case, human accountability for high-risk decisions) and ASIC's 8 May cyber-resilience open letter. Where AI generates personal advice, the <b>best-interests duty applies regardless</b> and a human remains accountable for the outcome.</p>
+    <p class="y">None of this is new this week, but it's the standing bar your product is measured against — and it maps cleanly onto the day's build lessons. An <b>inventory of AI use cases</b> and <b>human accountability for high-risk decisions</b> is exactly what a reflection/audit view and a legible agent trace give you for free; a versioned advice spec with evals is how you evidence best-interests reasoning to a regulator. Treat the compliance checklist as a product spec, not a legal afterthought.</p>
+    <a class="src" href="https://www.nortonrosefulbright.com/en/inside-fintech/blog/2026/03/australian-financial-services-providers-navigating-regulatory-compliance-in-the-use-of-ai">nortonrosefulbright — AU AI compliance ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
