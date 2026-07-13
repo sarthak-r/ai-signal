@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keep a human on the hook — 13 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Simon Willison lands the week's accountability thread on a hard edge: an LLM agent can never be the directly responsible individual — the single human accountable for an outcome — quoting IBM's 1979 line, 'A computer can never be held accountable, therefore a computer must never make a management decision.' He calls the gap structural, not a capability you'll patch. It's the same boundary AU regulators draw around AI-generated advice, and the app layer is building the primitives: Ory hands coding agents scoped, auditable identities so every action traces to a person, while Terence Tao shows the other half — one expert steering one agent revived two decades of dead Java applets in an afternoon, and the agent caught two of his original bugs. Amplify-and-attribute, not replace. Radar: the Fable 5 cost cliff got deferred to 19 July, not triggered today." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 027 · 13 July 2026</p>
+  <h1>Keep a human on the hook</h1>
+  <p class="lede">Simon Willison lands the week's accountability thread on a hard edge: no matter how capable agents get, <b>an LLM can never be the "directly responsible individual"</b> — the single human accountable for an outcome. He quotes IBM's 1979 training slide, <i>"A computer can never be held accountable, therefore a computer must never make a management decision,"</i> and argues the gap is <b>structural, not a capability you'll patch</b>. It's the same boundary AU regulators already draw around AI-generated advice, and the app layer is quietly building the primitives for it — <b>Ory</b> hands coding agents scoped, auditable identities so every action traces to a person, while <b>Terence Tao</b> shows the other half of the frame: one expert steering one agent revived two decades of dead Java applets in an afternoon, and the agent caught two of his own original bugs. The theme is <b>amplify-and-attribute, not replace</b>. Radar: the Fable 5 cost cliff got <b>deferred to 19 July</b>, not triggered today.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The accountability boundary named — and a Fields Medalist showing what "amplify" actually looks like.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Simon Willison: an LLM agent can never be the "directly responsible individual"</span><span class="em">simonwillison.net · 12 Jul</span></div>
+    <p>Willison's post argues that however capable agents get, they can never hold the <b>DRI</b> role — the Apple-coined term for the one human ultimately accountable for a project's success or failure. His anchor is IBM's 1979 slide: <i>"A computer can never be held accountable, therefore a computer must never make a management decision."</i> The point isn't that agents can't <i>do</i> the work — it's that accountability is a property only a person can carry, so the DRI gap is a <b>permanent design constraint, not scaffolding you remove when the model improves</b>.</p>
+    <p class="y">This is the whole game for a regulated-advice product. Best-interests duty already assigns a <b>named human as accountable for any AI-generated advice</b> — the exact frame in yesterday's AU governance note. Design so every agent action attaches to a specific human DRI, not a diffuse "the system decided": that's simultaneously a compliance requirement and, per Willison, a boundary that will still hold when the models are far better than today's. Build the attribution in now; you won't be able to retrofit it as a feature later.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/12/directly-responsible-individuals/">simonwillison.net — Directly Responsible Individuals ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Terence Tao: a coding agent revived two decades of dead Java applets in an afternoon — and found two original bugs</span><span class="em">terrytao.wordpress.com · 11 Jul</span></div>
+    <p>The Fields Medalist's post (top of Hacker News on 12 Jul) recounts handing a coding agent ~two dozen mathematical-visualisation applets he'd written in Java since 1999 — long broken by browser changes — and getting <b>working JavaScript ports back in a few hours</b>. In the process the agent <b>surfaced two latent bugs in his original code</b>. A pre-alpha is live at <code>teorth.github.io/tao-web</code>.</p>
+    <p class="y">The signal isn't "AI writes code" — it's that the <b>economics of legacy maintenance just inverted</b>. Ports that were never worth a human's week are now an afternoon, and the agent doubles as a second reviewer catching bugs the original author missed. For any product sitting on years of accreted calculation logic — tax rules, projection engines, old spreadsheet models — <b>agent-assisted migration plus latent-bug detection is now a realistic maintenance play</b>, not a research demo. Note the shape from the HN thread: one expert steering one agent, not a swarm — human judgement is still the scarce input.</p>
+    <a class="src" href="https://terrytao.wordpress.com/2026/07/11/old-and-new-apps-via-modern-coding-agents/">terrytao.wordpress.com — Old and new apps ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48880170">news.ycombinator — discussion ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Identity for agents, and OpenAI rallying builders around the app, not the model.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Ory Agent DX: real OAuth/OIDC identity for coding agents via free Claude Code, Codex and Gemini CLI plugins</span><span class="em">Ory · this week</span></div>
+    <p>Open-source identity vendor Ory shipped <b>Agent DX</b>, plugging its identity stack into <b>Claude Code, OpenAI Codex and Gemini CLI</b> through free plugins — so an agent authenticates through scoped, revocable <b>OAuth/OIDC</b> flows instead of a pasted API key or shared secret.</p>
+    <p class="y">This is the app-layer answer to Willison's DRI point above: an agent acting under a <b>scoped, revocable, per-agent identity is one whose actions you can audit and attribute to a person or role</b> — where a shared key is a dead end for "who authorised this." For a wealthtech product where every write must trace to an accountable human, first-class agent identity is the primitive that makes that question answerable. Auth-for-agents is quietly becoming its own category; worth wiring in before your agent surface grows.</p>
+    <a class="src" href="https://www.ory.sh/">ory.sh — Agent DX ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI Build Week opens today — a global Codex build challenge, not a model drop</span><span class="em">openai.com · 13 Jul</span></div>
+    <p>Runs <b>13–21 Jul</b>, kicking off with a live opening session at 10am PDT today (Greg Brockman, Thibault Sottiaux, Corey Ching), <b>40+ events worldwide</b>, daily Discord office hours and OpenAI Academy sessions. The brief: ship a project built with <b>Codex on GPT-5.6</b>; prizes include cash, OpenAI credits and DevDay passes.</p>
+    <p class="y">The tell is what OpenAI chose to rally developers around — <b>Codex-the-app, not the model</b> — the same "app layer is the product" move the whole week has traced. If you're weighing Codex-in-ChatGPT-desktop for your stack, the office hours are a cheap way to pressure-test whether it fits your agent workflow before committing engineering time. Skip the hackathon glitz; use the week as free evaluation.</p>
+    <a class="src" href="https://openai.com/build-week/">openai.com — Build Week ↗</a>
+    <a class="src" href="https://x.com/OpenAIDevs/status/2075294038648148385">x.com/OpenAIDevs — announcement ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A deferred cost cliff, and the AU adoption-vs-governance gap that is your market.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Reversal: Claude Fable 5 stays subscription-included through 19 July, not metered today</span><span class="em">Anthropic · 12 Jul</span></div>
+    <p>Yesterday's briefing flagged Fable 5 flipping to metered API rates today. Anthropic instead <b>extended subscription-included access through 19 Jul</b>, citing compute constraints and uncertain demand. Willison's read (same 12 Jul post): OpenAI just <b>removed usage limits on GPT-5.6 Sol</b>, and <i>"OpenAI are winning users simply due to the uncertainty that surrounds Fable access"</i> — he urges Anthropic to make Fable permanent.</p>
+    <p class="y">The cliff is <b>deferred, not cancelled</b> — don't hard-migrate loop-heavy Fable jobs yet, but assume the meter is still coming and keep the model a swappable module (the week's recurring lesson). The strategic read: <b>access certainty is now a competitive axis</b>. A model whose availability you can't plan capacity around is one teams route away from regardless of quality — a reason to abstract the model behind your own routing layer rather than wire Fable in deep.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/12/directly-responsible-individuals/">simonwillison.net — 12 Jul notes ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">AU signal: ~74% of advisers now use AI, only ~39% have a compliance policy for it</span><span class="em">AU wealthtech · 2026</span></div>
+    <p>Australian reporting puts financial-adviser AI adoption around <b>74%</b> — client engagement, Statements of Advice, marketing — while only about <b>39% have any AI compliance policy</b>. That sits against a regulatory floor where ASIC, APRA and AUSTRAC hold that existing obligations apply in full to AI, and best-interests duty attaches to any AI-generated <i>personal</i> advice.</p>
+    <p class="y">That gap is your market and your risk in one number. The advisers using AI <b>without</b> a policy are the buyers for a tool that bakes governance in — audit trail, human sign-off, best-interests evidencing — the exact DRI discipline Willison describes and the attribution Ory's agent identity enables. <b>Sell the governance, not just the drafting speed</b>: it's the exposed half of the market, and "compliant by construction" is the wedge a generic drafting assistant can't match.</p>
+    <a class="src" href="https://enterprisemonkey.com.au/how-australian-financial-advisers-are-using-ai-while-meeting-asic-obligations-2026/">enterprisemonkey — advisers &amp; ASIC 2026 ↗</a>
+    <a class="src" href="https://www.nortonrosefulbright.com/en/inside-fintech/blog/2026/03/australian-financial-services-providers-navigating-regulatory-compliance-in-the-use-of-ai">nortonrosefulbright — AU AI compliance ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
