@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The guardrail is the product — 14 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Simon Willison's own Datasette hit its biggest week since 2018 — 37,022 lines added in seven days — coinciding with the Opus 4.8 / GPT-5.6 Sol / Fable 5 wave. Agentic coding has collapsed the cost of writing code, which is exactly why this week's sharpest app-layer ships are guardrails, not generators: dcg blocks an agent's destructive shell commands in sub-millisecond time across Claude Code, Codex, Cursor and Gemini CLI; the MCP 2026-07-28 spec release candidate lands in two weeks, going stateless with OAuth/OIDC-aligned auth and six breaking changes. And a new guardrail category for founders — GEO, controlling how ChatGPT, Claude and Perplexity describe your product — just went mainstream. When writing is free, the scarce work is the gate around it." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 028 · 14 July 2026</p>
+  <h1>The guardrail is the product</h1>
+  <p class="lede">Simon Willison's own Datasette just logged its <b>biggest week since 2018</b> — <b>37,022 lines added in seven days</b> — a spike he pins directly on the Opus 4.8 / GPT-5.6 Sol / Fable 5 wave. Agentic coding has <b>collapsed the cost of writing code</b>, and this week's sharpest app-layer ships are the corollary: not generators, but <b>guardrails</b>. <code>dcg</code> intercepts an agent's <code>rm -rf</code> or <code>DROP TABLE</code> in sub-millisecond time across every major coding agent; the <b>MCP 2026-07-28 spec</b> release candidate lands in two weeks — stateless core, OAuth/OIDC-aligned auth, six breaking changes. And a new guardrail category for founders — <b>GEO</b>, controlling how ChatGPT, Claude and Perplexity describe your product — just went mainstream. When writing is free, the scarce, valuable work is the gate around it.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">A hard number on what the new model wave did to one builder's output — and the trap inside it.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Simon Willison: Datasette's biggest week ever — 37,022 lines added — maps exactly onto the new model wave</span><span class="em">simonwillison.net · 13 Jul</span></div>
+    <p>Willison pulled GitHub's code-frequency chart for Datasette (running since 2018) and found a 2026 spike dwarfing everything before it: <b>37,022 additions and 9,528 deletions in a single week</b>. His read: <i>"The big spike in activity at the end aligns with Opus 4.8, GPT-5.5, Fable 5 and GPT-5.6 Sol."</i> Agentic coding didn't make him a better engineer — it multiplied his throughput.</p>
+    <p class="y">Line-count is a vanity metric, and that's the point: the model wave made <b>producing</b> code nearly free, so the constraint moved downstream to <b>reviewing, testing and owning</b> it. For a small team, plan capacity for the volume an agent-augmented dev now emits — a solo engineer can generate a week's worth of diff in an afternoon, and your review/QA/attribution surface has to absorb it. The scarce resource is no longer code; it's confidence that the code is right.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/13/datasette-code-frequency/">simonwillison.net — code-frequency chart ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The tools that ship this week guard the agent, not just drive it.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">dcg: a Rust safety hook that blocks an agent's destructive commands before they run — across every major coding agent</span><span class="em">GitHub · trending 13 Jul</span></div>
+    <p>Started as a Python script by Jeffrey Emanuel and ported to Rust by Darin Gordon, <code>destructive_command_guard</code> intercepts catastrophic commands — <code>rm -rf ./src</code>, <code>git reset --hard</code>, <code>DROP TABLE users</code> — <b>before</b> an agent executes them. It runs as a hook in Claude Code, Codex CLI, Copilot CLI, Gemini CLI and Cursor, claims <b>sub-millisecond SIMD-accelerated filtering</b>, ships 50+ modular security packs (databases, Docker, k8s, cloud), and distinguishes real commands from data (a grep result containing "rm -rf" won't trip it).</p>
+    <p class="y">This is Willison's throughput problem made concrete: the faster agents write and run, the more one bad command can wipe uncommitted work. A <b>deterministic pre-execution gate is cheaper insurance than any prompt-level "please be careful."</b> For a regulated-data product, the same pattern generalises — a policy hook that hard-blocks writes an agent should never make (mass deletes, un-approved sends) is the kind of "compliant by construction" primitive that turns agent adoption from a risk into a controllable one. Note the fail-safe default here is <i>allow</i> on analysis failure; for finance you'd want fail-<i>closed</i>.</p>
+    <a class="src" href="https://github.com/Dicklesworthstone/destructive_command_guard">github.com — destructive_command_guard ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">ruflo: multi-agent orchestration with adaptive memory and RAG, open-source</span><span class="em">GitHub · trending 13 Jul</span></div>
+    <p>Trending alongside dcg, <code>ruvnet/ruflo</code> packages multi-agent orchestration with <b>adaptive memory and built-in RAG</b> as a configurable runtime — the "harness, not model" pattern the ecosystem has converged on, where you wire up context policies, memory and agent hand-offs rather than writing the loop from scratch.</p>
+    <p class="y">Worth a look if you're standing up an agent surface and don't want to hand-roll memory + retrieval + orchestration. The broader signal for a builder: the <b>orchestration layer is commoditising into installable frameworks</b>, so your differentiation isn't the loop — it's the domain logic, the evals and the guardrails you bolt onto it. Evaluate these before building bespoke; the plumbing is increasingly a dependency, not a project.</p>
+    <a class="src" href="https://github.com/ruvnet/ruflo">github.com — ruflo ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">A new shape for search, and a small reproducibility trick worth stealing.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">JustVibe: a search box that generates a working app instead of returning links</span><span class="em">Product Hunt · 13 Jul</span></div>
+    <p>Launched on Product Hunt, JustVibe reframes the query box: type what you want and it <b>generates an application directly</b> rather than a page of blue links. It's a small demo, but it's a clean instance of the interaction pattern the app-builder wars are circling — the answer to a search is a <b>built artifact</b>, not a list of sources to go read.</p>
+    <p class="y">The pattern to notice, not the product: as generation gets cheap, "search → results → you build it" collapses into "intent → artifact." For any tool with a query surface, ask whether the right response is a <b>generated interface</b> (a filled form, a live projection, a mini-tool) instead of a document. In wealthtech that's the difference between returning a compliance article and returning the <b>pre-filled worksheet</b> — same query, far higher leverage, and a UX moat a link list can't match.</p>
+    <a class="src" href="https://www.producthunt.com/products/justvibe">producthunt.com — JustVibe ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Willison's uvx-in-CI cache trick: pin <code>UV_EXCLUDE_NEWER</code> into your cache key for reproducible agent runs</span><span class="em">til.simonwillison.net · 14 Jul</span></div>
+    <p>A one-page TIL: running <code>uvx</code> in GitHub Actions cache-friendly by folding <b><code>UV_EXCLUDE_NEWER</code> into the cache key</b> — pinning dependency resolution to a cutoff date so the same commit resolves to the same packages, and the cache actually hits instead of silently drifting.</p>
+    <p class="y">Small, but it's the exact discipline that keeps agent-heavy pipelines sane: <b>deterministic, time-pinned dependency resolution</b> means an agent (or CI) that ran green yesterday runs green today for the same input. As you let agents touch build and test infra, reproducibility stops being hygiene and becomes the thing that lets you trust a green check at all. Steal the pattern for any tool-running loop where "what version did it resolve?" matters.</p>
+    <a class="src" href="https://til.simonwillison.net/github-actions/uvx-github-actions-cache">til.simonwillison.net — uvx in GitHub Actions ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A protocol deadline two weeks out, and a marketing surface you don't yet control.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">MCP 2026-07-28 spec RC is out — stateless core, OAuth/OIDC auth, six breaking changes, live in two weeks</span><span class="em">modelcontextprotocol.io · this week</span></div>
+    <p>The release candidate and beta SDKs for the <b>2026-07-28 MCP spec</b> — the largest revision since launch — are published. The protocol goes <b>stateless</b>: <code>Mcp-Session-Id</code>, the initialize handshake and sticky routing are gone (client info now travels in <code>_meta</code> on every request); auth aligns to OAuth/OIDC; a missing-resource error changes from <code>-32002</code> to <code>-32602</code>; and Roots, Sampling and Logging are deprecated. Production servers have until <b>28 Jul</b> to comply.</p>
+    <p class="y">If you ship or consume MCP servers, this is a <b>hard, dated migration</b> — two weeks out. The upside is real: a stateless server drops behind a plain round-robin load balancer with no shared session store, and clients can cache <code>tools/list</code> for the server's <code>ttlMs</code>. Test against the beta SDKs now; the OAuth/OIDC alignment also dovetails with the agent-identity/attribution thread the week has been tracking — scoped auth is becoming table-stakes at the protocol layer, not just the app.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io — RC ↗</a>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/">blog — beta SDKs ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">GEO goes mainstream: whether ChatGPT, Claude and Perplexity recommend <i>you</i> is now a measurable, ownable surface</span><span class="em">GEO landscape · Jul 2026</span></div>
+    <p>Generative Engine Optimization — getting your brand cited inside AI answers — crossed from fringe to a real software category this month. Adobe shipped <b>Brand Visibility</b> (merging Semrush's 289M-prompt AI-search database with its LLM Optimizer), Semrush, Scrunch and CiteLens are live, and a self-serve "AI Visibility" tool landed on Product Hunt on 13 Jul. The question classic SEO can't answer: <b>when an AI assistant recommends a product in your category, is it recommending yours?</b></p>
+    <p class="y">For a founder selling into advisers, buyers increasingly ask ChatGPT or Perplexity "what's the best AI compliance tool for Australian financial advice?" long before they hit Google. That answer is now a <b>distribution channel you can measure and influence</b> — and one your competitors are already instrumenting. Baseline how the major models describe your product this week; if the assistants get your positioning wrong (or omit you), that's a demand leak no amount of paid search fixes. Own the answer, not just the ad.</p>
+    <a class="src" href="https://martechseries.com/predictive-ai/ai-platforms-machine-learning/generative-engine-optimization-goes-mainstream-the-2026-ai-visibility-landscape/">martechseries — GEO landscape ↗</a>
+    <a class="src" href="https://www.producthunt.com/products/ai-visibility">producthunt.com — AI Visibility ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
