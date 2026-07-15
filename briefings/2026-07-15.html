@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The bill you're not counting — 15 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Agentic speed is now free — but this week's signal is all about the hidden bills that come with it. Armin Ronacher warns the real cost of agent velocity is invisible: teams keep shipping after their shared understanding has quietly collapsed — 'the tower does not fall, and so we do not notice what was lost.' The token receipts back him up: a viral analysis shows Claude Code spends ~33k tokens before it reads your prompt (4.7x OpenCode's 7k); Ploy's production migration to GPT-5.6 lands 2.2x faster, 27% cheaper and uses half the output tokens — but only after untangling provider-specific tool-call quirks. Ship Log: Perplexity's Computer grows a self-improving memory graph (+25% correctness), and Claude Code's newest builds add auto-mode guardrails against destructive commands. Radar: GitHub Dependabot now waits 3 days before trusting a new release by default." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 029 · 15 July 2026</p>
+  <h1>The bill you're not counting</h1>
+  <p class="lede">Agentic speed is effectively free now — and this week's signal is the <b>hidden bills</b> that come attached. Armin Ronacher names the deepest one: agents strip out the friction that used to force teams to coordinate, so people keep shipping long after their <b>shared understanding of the system has quietly collapsed</b> — <i>"the tower does not fall, and so we do not notice what was lost."</i> The token receipts make the invisible visible: a viral teardown shows Claude Code burns <b>~33k tokens before it even reads your prompt</b> (4.7× OpenCode's 7k), while Ploy's production swap to GPT-5.6 came in <b>2.2× faster, 27% cheaper, half the output tokens</b> — but only after untangling provider-specific tool-call quirks. The corollary ships are disciplines, not generators: Perplexity's Computer grows a self-improving memory graph, Claude Code adds auto-mode guardrails against destructive commands, and GitHub Dependabot now <b>waits three days</b> before trusting a new release. Speed is cheap; the judgment around it is the work.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The sharpest warning of the week: what agent velocity quietly costs that no dashboard shows.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Armin Ronacher: agents keep the tower rising even after the shared language holding it up has collapsed</span><span class="em">lucumr.pocoo.org · 13 Jul</span></div>
+    <p>Ronacher (Flask, Sentry) reaches for Bruegel's Tower of Babel, but inverts the moral. At Babel, lost shared language <i>stopped</i> construction; with coding agents, construction <b>continues</b>. His thesis: <i>"The shared language of a software project is not English or Python but the common understanding of what its concepts mean"</i> — and <i>"agents remove much of that friction… none of us necessarily has to talk to the others."</i> Code compiles, tests pass, PRs merge, and the conceptual coherence rots underneath, unnoticed because <i>"the tower does not fall."</i></p>
+    <p class="y">This is the exact downstream cost of the throughput spike Willison flagged last week — velocity up, coordination optional, decay invisible. For a small team letting agents fan out across a codebase, the failure mode isn't a broken build; it's <b>five locally-correct changes that no longer share a mental model</b>. The counter-investment is deliberate: enforced review that checks <i>intent</i> not just diffs, living architecture docs, and naming/concept discipline agents must conform to. Treat shared understanding as a resource agents spend, and budget for refilling it.</p>
+    <a class="src" href="https://lucumr.pocoo.org/2026/7/13/the-tower-keeps-rising/">lucumr.pocoo.org — The Tower Keeps Rising ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Two ships that add the missing discipline — compounding memory, and a gate on destructive actions.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Perplexity Computer grows "Brain": a self-improving memory graph across your sessions, files and connectors</span><span class="em">Perplexity · 13 Jul</span></div>
+    <p>Perplexity's agent surface, Computer, shipped <b>Brain</b> — a private context graph it builds across your sessions, connectors, files and past decisions, so it learns from prior tasks instead of starting cold. Perplexity's own testing claims <b>+25% answer correctness, +16% recall and −13% cost</b>. The same drop adds <b>mid-task orchestrator switching</b> (change the planning model between turns without restarting), Opus 4.8 Fast Mode, Fable 5 routing subtasks, and one-click publish of Computer-built sites to custom domains via Vercel.</p>
+    <p class="y">The number that matters is <b>−13% cost from memory</b>: persistent context is the direct antidote to the token-waste theme running through this whole briefing — an agent that remembers doesn't re-pay to rediscover. The pattern to steal for any client-facing tool: memory isn't a feature bolted on, it's a <b>compounding asset that lowers marginal cost per task</b>. For a wealthtech product, a per-client context graph — prior goals, constraints, decisions — is exactly the moat that makes the tenth interaction cheaper and sharper than the first. Note the flip side: a memory graph over client financials is a governance surface you must be able to inspect and purge.</p>
+    <a class="src" href="https://releasebot.io/updates/perplexity-ai">releasebot — Perplexity updates ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code 2.1.208–2.1.210: auto-mode guardrails, worktree isolation fixes, and an injection guard on the <code>ultracode</code> trigger</span><span class="em">code.claude.com · 14 Jul</span></div>
+    <p>Three same-day releases lean hard into safety. <b>2.1.210</b> adds auto-mode blocking for destructive actions and stops a hook-timeout being misreported as a user rejection; <b>2.1.208</b> ships opt-in screen-reader mode and <code>CLAUDE_CODE_PROCESS_WRAPPER</code> for corporate launchers. Two fixes stand out for anyone running agents unattended: worktree-isolated subagents no longer run git-mutating commands against the <b>main</b> repo, and the <code>ultracode</code> keyword opt-in <b>no longer fires on non-human input</b> — webhook payloads and relayed PR comments. Startup now warns you to prefer <code>Edit(path)</code>/<code>Read(path)</code> over the broader <code>Write</code>/<code>Glob</code> permission rules.</p>
+    <p class="y">The <code>ultracode</code>-on-webhook fix is a quiet <b>prompt-injection patch</b>: a trigger word that fires from relayed external content is an attack surface, and scoping it to human input is the right instinct. The worktree fix is the more expensive lesson — <b>isolation that silently leaks is worse than no isolation</b>, because you trusted it. If you run agents against real repos or data, audit that your sandbox boundaries actually hold under subagents and background jobs, and default your highest-blast-radius permissions (writes, deletes, sends) to explicit-approval, not auto.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com — changelog ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two hard-numbers reports that turn "agents are expensive" from a feeling into a measurement.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Ploy migrates a production agent to GPT-5.6: 2.2× faster, 27% cheaper, half the output tokens — after fixing what portability actually breaks</span><span class="em">ploy.ai · 14 Jul</span></div>
+    <p>Ploy's agent builds and edits live marketing sites — it plans a page, reads the repo, writes components, screenshots its own work and decides when it's done. Swapping <b>Claude Opus 4.8 → GPT-5.6 Sol</b> delivered <b>2.2× faster completion, 27% lower cost, ~half the output tokens</b>, and tighter code (one matched page: 2,508-char CSS with 45 variables vs Opus's 17,957 chars / 174 variables). But the migration <b>exposed provider-specific assumptions everywhere</b>: GPT-5.6 sends all 25 tool parameters on every call, filling unused ones with plausible junk (<code>offset: 0</code>, <code>siteId: "0000…"</code>), which silently broke their file-reads until caught.</p>
+    <p class="y">Two builder lessons. First, <b>model migration is now a measurable ROI decision, not a rewrite you avoid</b> — but only if you have evals to prove the swap actually improved cost/latency/quality on <i>your</i> tasks, not a benchmark's. Second, and more durable: <b>your tool layer must be defensive against how each provider fills arguments.</b> Validate and reject implausible tool-call params (a zeroed UUID, a default offset) rather than trusting them — that's the difference between a portable agent and one welded to a single vendor's quirks. The capability-overhang gap swyx keeps naming is only harvestable if you can switch models cheaply.</p>
+    <a class="src" href="https://ploy.ai/blog/migrating-a-production-ai-agent-to-gpt-5-6">ploy.ai — migrating to GPT-5.6 ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48882716">HN discussion ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">The tool-description tax: Claude Code sends ~33k tokens before your prompt; OpenCode sends ~7k</span><span class="em">Hacker News · 13 Jul</span></div>
+    <p>A widely-shared teardown measured the cold-start overhead of coding agents. Asked only to "print OK," <b>Claude Code sent ~32,800 tokens</b> in the first request vs OpenCode's ~6,900 — a <b>4.7× gap</b>. The bulk is tool descriptions (~24k tokens for 27 tools) plus a ~6.5k system prompt. With MCP servers and config loaded, the initial payload balloons to <b>~75k tokens — ~37% of a 200k context window consumed before reading a line of your code</b>. Prompt caching cuts the dollar cost of resending, but not the context <i>space</i> those tokens permanently occupy.</p>
+    <p class="y">This is the token version of Ronacher's invisible cost: overhead you're not looking at until it degrades performance. The build takeaway is <b>tool and context hygiene as a first-class concern</b> — every MCP server and tool you wire in taxes <i>every</i> turn's context budget and pushes the model toward the lossy middle of its window (the "context rot" effect). Audit what your agent loads at cold start; gate rarely-used tools behind lazy/scoped loading rather than mounting all of them globally. Fewer, sharper tools beat a kitchen sink — for cost and for accuracy.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=48883275">HN — 33k vs 7k tokens ↗</a>
+    <a class="src" href="https://systima.ai/blog/claude-code-vs-opencode-token-overhead">systima — full analysis ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A supply-chain default that quietly changes how fast new code reaches you.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">GitHub Dependabot now waits 3 days before opening a version-update PR — a default cooldown against supply-chain attacks</span><span class="em">github.blog · 14 Jul</span></div>
+    <p>Dependabot version updates now <b>default to a three-day cooldown</b>: it holds off opening an update PR until a new release has sat on its registry for at least 72 hours. GitHub's reasoning is blunt — <i>"new releases are a common entry point for supply chain attacks where a compromised or broken version can reach your dependency updates before maintainers and the community have caught it."</i> Security updates still open immediately; the cooldown applies only to version bumps, and you can tune or disable it via the <code>cooldown</code> option in <code>.github/dependabot.yml</code>.</p>
+    <p class="y">This is the same instinct as the day's other guardrails, applied to dependencies: <b>a deliberate pause is cheap insurance against trusting something too fast.</b> The pattern generalises to agent-driven pipelines — a fresh package (or a freshly-generated config an agent wants to install) is at its <b>most dangerous in its first hours</b>, before anyone's vetted it. If you let agents touch dependencies or CI, adopt the same posture: quarantine-then-trust, not trust-then-discover. For a regulated fintech stack, a mandatory soak window on new third-party code is the kind of control an auditor will thank you for.</p>
+    <a class="src" href="https://github.blog/changelog/2026-07-14-dependabot-version-updates-introduce-default-package-cooldown/">github.blog — Dependabot cooldown ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
