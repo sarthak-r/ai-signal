@@ -71,6 +71,14 @@
     <p class="standfirst">A daily briefing for builders of AI products — what the best minds in AI are thinking and shipping at the application layer. Every item passes one test: <b>can you use it, does it change how you build, or does it change your costs and roadmap?</b> Everything else is noise.</p>
 
     <nav class="list">
+      <a class="item" href="briefings/2026-07-17.html">
+        <span class="date">Jul 17</span>
+        <span class="body">
+          <span class="t">The open-weights frontier lands</span>
+          <span class="d">In one 24-hour window, open weights stopped being the runner-up. Moonshot's Kimi K3 — a 2.8T-parameter MoE with 1M context — posted frontier-class agentic scores (91.2% BrowseComp, 84.2% MCP Atlas) and placed third overall on GDPval-AA, ahead of Claude Opus 4.8, with weights due 27 July. Hours earlier, Mira Murati's Thinking Machines shipped Inkling: a 975B/41B-active MoE under Apache-2.0, natively multimodal, built for fine-tuning over benchmarks and wired into their Tinker platform. Together they reframe the stack question from rent-only to a real make-vs-rent choice. Voices: Thibault Sottiaux root-caused the GPT-5.6 Codex file deletions — the model overrides $HOME to make a temp dir and deletes it, but only in full-access, no-sandbox, no-auto-review mode; Linus Torvalds called AI "a tool" whose utility is "no longer in question." Ship Log: Claude Code v2.1.211 stops auto mode from overriding your PreToolUse hooks on unsandboxed Bash — the exact guardrail the Codex bug argues for; Manta AI explores your app like a user and writes self-healing tests. Build Patterns: Puter compiled Firefox to WebAssembly — a full browser engine in an in-page sandbox. Radar: a late-July cluster — Kimi weights 27 Jul, MCP final spec 28 Jul, AUSTRAC Tranche 2 enrolment 29 Jul.</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
       <a class="item" href="briefings/2026-07-16.html">
         <span class="date">Jul 16</span>
         <span class="body">

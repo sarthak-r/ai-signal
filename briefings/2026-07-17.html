@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The open-weights frontier lands — 17 July 2026 — AI Builder Signal</title>
+<meta name="description" content="In one 24-hour window the open-weights frontier stopped being a runner-up. Moonshot's Kimi K3 (2.8T MoE, 1M context) posted frontier-class agentic scores — 91.2% BrowseComp, 84.2% MCP Atlas, third overall on GDPval-AA ahead of Claude Opus 4.8 — with weights due 27 July. Same day, Mira Murati's Thinking Machines shipped Inkling: a 975B/41B-active MoE under Apache-2.0, natively multimodal, fine-tune-first on Tinker. For a builder the make-vs-rent calculus just moved: agentic-grade intelligence you can self-host and customize. Voices: Thibault Sottiaux root-caused the GPT-5.6 Codex file deletions — the model overrides $HOME to make a temp dir and deletes it, but only in full-access, no-sandbox, no-auto-review mode; Linus Torvalds called AI 'a tool' whose utility is 'no longer in question.' Ship Log: Claude Code v2.1.211 stops auto mode from overriding your PreToolUse hooks on unsandboxed Bash; Manta AI explores your app like a user and writes self-healing tests. Build Patterns: Puter compiled Firefox to WASM — a full browser engine in an in-page sandbox. Radar: a late-July cluster — Kimi weights 27 Jul, MCP final spec 28 Jul, AUSTRAC Tranche 2 enrolment 29 Jul." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 031 · 17 July 2026</p>
+  <h1>The open-weights frontier lands</h1>
+  <p class="lede">In one 24-hour window, open weights stopped being the runner-up. Moonshot's <b>Kimi K3</b> — a 2.8T-parameter MoE with a 1M-token context — posted <b>frontier-class agentic scores</b>: 91.2% BrowseComp (best open-weight published), 84.2% MCP Atlas, and third overall on GDPval-AA <b>ahead of Claude Opus 4.8</b>, with full weights due 27 July. Hours earlier, Mira Murati's <b>Thinking Machines</b> shipped <b>Inkling</b>: a 975B / 41B-active MoE under <b>Apache-2.0</b>, natively multimodal, explicitly built for <i>customization over peak benchmarks</i> and wired into their Tinker fine-tuning platform. This is the item that clears the "compress frontier releases to a line" bar — because it isn't a benchmark race, it's a <b>make-vs-rent shift</b>. Agentic-grade intelligence you can self-host, fine-tune, and own is now a real option on the table, not a compromise. Running underneath, the week's permissions thread got its cleanest post-mortem: OpenAI's Thibault Sottiaux traced the GPT-5.6 Codex file deletions to a single mechanism — and Claude Code shipped the exact guardrail that maps to it.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The Codex-deletion post-mortem, and a notable shift in tone from the most-cited maintainer in open source.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Thibault Sottiaux root-causes the GPT-5.6 file deletions: the model overrides <code>$HOME</code> to make a temp dir — then deletes it</span><span class="em">x.com/thsottiaux · flagged 16 Jul</span></div>
+    <p>OpenAI's Codex lead published the mechanism behind the reports of GPT-5.6 wiping user files (Matt Shumer lost most of his Mac; Bruno Lemos lost a production database). It fires <b>only</b> when three defaults are off at once: <b>full-access mode on, sandboxing off, auto-review off</b>. In that state the model tries to redefine <code>$HOME</code> to point at a temporary directory, makes <i>"an honest mistake,"</i> and deletes the real <code>$HOME</code> instead. OpenAI's fixes are all harness-side: update the developer message, steer users into safer permission modes, add harness safeguards. Simon Willison re-surfaced it 16 July under the dry header "Bad Codex Bug."</p>
+    <p class="y">The lesson isn't "the model is bad" — it's that <b>destructive blast radius is a permissions-default problem, not a model-quality one</b>. A capable agent, handed unsandboxed full access with no review gate, will eventually do something catastrophic by honest error. If you ship an agent that can run shell or touch a filesystem, your <b>defaults are the product</b>: sandbox-on, review-on, and full-access as a deliberate, loud opt-in — not a setting a user can leave on and forget.</p>
+    <a class="src" href="https://x.com/thsottiaux/status/2077630111499882637">x.com/thsottiaux — file deletions ↗</a>
+    <a class="src" href="https://simonwillison.net/">simonwillison.net — Bad Codex Bug ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Linus Torvalds: "AI is a tool," and its utility in Linux development is "no longer in question"</span><span class="em">simonwillison.net · 16 Jul</span></div>
+    <p>The Linux creator — long the field's most quotable skeptic of hype — defended using AI in kernel work, framing it plainly as a tool whose usefulness he now takes as settled rather than something to argue about. Not a launch; a temperature reading. When the maintainer of the most consequential open-source project treats AI-assisted development as unremarkable table stakes, the "is this real" debate is effectively over among the people who ship.</p>
+    <p class="y">Useful cover for a specific internal conversation: if you're still fielding "should we even use this" from senior engineers, the frame has moved from <i>whether</i> to <b>with what guardrails</b> — which is exactly where the Codex post-mortem above says the real work is.</p>
+    <a class="src" href="https://simonwillison.net/">simonwillison.net — Linus Torvalds on AI ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Two open-weight frontier models on the same day — plus a testing agent and the guardrail fix that answers the Codex lesson.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Kimi K3: Moonshot's 2.8T open model posts frontier agentic scores — beats Opus 4.8 on GDPval, weights land 27 July</span><span class="em">kimi.com · 16 Jul</span></div>
+    <p>Kimi K3 is a <b>2.8-trillion-parameter MoE</b> with native vision and a 1M-token context — the largest open model announced to date. Launch numbers are the story: <b>91.2% BrowseComp</b> (best published open-weight), <b>84.2% MCP Atlas</b>, 93.5% GPQA Diamond, 88.3% Terminal-Bench 2.1. On GDPval-AA v2 (real tasks across 44 occupations) it scored <b>1,687 — third overall</b>, behind only Fable 5 Max and GPT-5.6 Sol Max and <b>ahead of Claude Opus 4.8</b>; second on the private AA-Briefcase long-horizon benchmark. Full weights are promised <b>27 July</b>.</p>
+    <p class="y">Agentic performance — browsing, tool-use, MCP orchestration — was the last thing open weights couldn't touch, and this closes most of the gap. For a builder that reframes the stack question: for agent workloads where per-token API bills or data-residency rules bite, a self-hosted K3 is now a <b>credible primary</b>, not a fallback. Wire your evals to run against it the day weights drop; the make-vs-rent number may have flipped for your use case.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/16/kimi-k3/">simonwillison.net — Kimi K3 ↗</a>
+    <a class="src" href="https://www.kimi.com/blog/kimi-k3">kimi.com — K3 announcement ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Thinking Machines ships Inkling: 975B Apache-2.0 MoE built to be fine-tuned, not just benchmarked</span><span class="em">thinkingmachines.ai · 15 Jul</span></div>
+    <p>Mira Murati's lab released <b>Inkling</b> — a <b>975B-total / 41B-active MoE</b>, 1M context, natively multimodal (text, image, audio), under a permissive <b>Apache-2.0</b> license. The positioning is the differentiator: it emphasizes <b>controllable thinking effort</b> (dial token spend against quality per call) and <i>customization over peak benchmark scores</i>, and ships hand-in-glove with <b>Tinker</b>, their fine-tuning platform (50% intro discount), plus day-one serving on Together, Fireworks and Modal.</p>
+    <p class="y">Where K3 is the raw-capability play, Inkling is the <b>ownership</b> play: an open base designed so a small team can fine-tune it on their own domain without standing up training infra. For a vertical product — say, one that needs a model steeped in a specific advice or compliance corpus — a fine-tune-first, permissively-licensed base with a managed tuning path is the shortest route to a model that's <i>yours</i>, not rented. The two releases together define the new open-weights menu: rent-grade capability (K3) or tunable ownership (Inkling).</p>
+    <a class="src" href="https://thinkingmachines.ai/news/introducing-inkling/">thinkingmachines.ai — Inkling ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code v2.1.211: auto mode can no longer override your <code>PreToolUse</code> hooks on unsandboxed Bash</span><span class="em">releasebot.io · 16 Jul</span></div>
+    <p>The 16 July build fixes a subtle but pointed bug: <b>auto mode was overriding <code>PreToolUse</code> hook decisions for unsandboxed Bash</b> — i.e., your own guardrail could be silently bypassed on exactly the highest-risk command class. Same release neutralizes bidirectional-override and other text-manipulation characters in permission previews relayed to chat channels, and adds a <code>--forward-subagent-text</code> flag to stream subagent reasoning into <code>stream-json</code>.</p>
+    <p class="y">Read this next to the Codex post-mortem: it's the same failure mode caught on the other side. A user-defined <code>PreToolUse</code> hook is the deterministic gate that stops a destructive command <i>before</i> it runs — and it's only trustworthy if no convenience mode can quietly outrank it. If your agent framework has an equivalent pre-execution hook, verify that <b>nothing — not an auto mode, not a batch flag — can override a user's block</b>. The guardrail that can be bypassed by a setting is not a guardrail.</p>
+    <a class="src" href="https://releasebot.io/updates/anthropic/claude-code">releasebot.io — Claude Code 2.1.211 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Manta AI: an autonomous testing agent that explores your app like a user and writes self-healing tests</span><span class="em">producthunt.com · 16 Jul</span></div>
+    <p>Manta AI (Product Hunt, 16 July) is an agent that <b>explores your app the way a real user would</b> — clicking through flows without a hand-written script — and generates <b>self-healing test cases</b> that adapt when the UI shifts, rather than breaking on every selector change. It sits in the same app-layer lane as the day's other launches (Paradigm's adaptive learning paths topped the board; Zro pitched zero-retention open-model inference).</p>
+    <p class="y">The durable pattern here is <b>tests as an emergent artifact of an agent using the product</b>, not a suite you author and then perpetually repair. Brittle E2E tests are one of the biggest taxes on shipping fast with AI-written code; an agent that discovers flows and keeps its own assertions green is aimed squarely at that tax. Worth a trial run against one real flow to judge whether the self-healing holds up under an actual redesign — that's where these tools usually earn or lose their keep.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/16">producthunt — 16 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">A full browser engine in an in-page sandbox — a concrete jail for untrusted content and agents.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Puter compiles Firefox to WebAssembly: the real Gecko engine rendering inside a browser tab</span><span class="em">developer.puter.com · 16 Jul</span></div>
+    <p>Puter compiled Firefox's <b>Gecko engine to WebAssembly</b> — the actual Firefox interface rendering entirely inside another browser tab, with WebGL-backed painting, experimental JS→WASM JIT, and page traffic proxied through a hosted Wisp WebSocket server. A demo, but a load-bearing one: it proves a heavyweight, untrusted rendering stack can run <b>fully inside the browser's own sandbox</b>, with no native system access.</p>
+    <p class="y">This is the same instinct as the day's permissions thread, applied to code instead of commands: <b>when you must run something you don't trust, run it in a jail that structurally can't reach the host</b>. If your product lets an agent render, execute, or preview untrusted content, an in-browser WASM sandbox is a real containment primitive — the untrusted thing gets a full runtime but a hard, OS-level-enforced boundary around it. Isolation by architecture beats isolation by policy.</p>
+    <a class="src" href="https://developer.puter.com/labs/firefox-wasm/">developer.puter.com — Firefox in WASM ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A tight late-July calendar — two open-weights / spec milestones and the Australian compliance deadline that matters most to this desk.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Late-July cluster: Kimi K3 weights (27 Jul), MCP final spec (28 Jul), AUSTRAC Tranche 2 enrolment (29 Jul)</span><span class="em">multiple · 27–29 Jul</span></div>
+    <p>Three dated milestones land within 48 hours of each other. <b>27 Jul</b> — Kimi K3's open weights drop, the moment self-hosting becomes testable. <b>28 Jul</b> — the MCP <code>2026-07-28</code> specification goes final (stateless core, hardened OAuth/OIDC auth, Tasks, MCP Apps, a formal deprecation policy) after its release candidate; six breaking changes for anyone running a server. <b>29 Jul</b> — AUSTRAC Tranche 2 enrolment closes: ~80,000 newly-regulated firms (lawyers, accountants, conveyancers, real-estate, dealers) must enrol, and AML/CTF programs must now document <b>how any AI they use is trained, validated and overseen.</b></p>
+    <p class="y">For a wealthtech founder the three rhyme: <b>ownership and accountability, on a clock.</b> K3 weights make "run our own model for data-residency reasons" a decision you can actually test by month-end; the MCP freeze means any agent integration you ship should target the final spec, not the RC; and AUSTRAC has turned "explain your AI's training and oversight" into a written expectation with a legal deadline. If AI touches advice, monitoring or onboarding in your product, the artifacts an auditor will ask for are the same ones a self-hosted, fine-tuned model makes easier to produce — model provenance is becoming a compliance asset, not just an engineering one.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io — 2026-07-28 RC ↗</a>
+    <a class="src" href="https://www.austrac.gov.au/reforms">austrac.gov.au — reforms ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
