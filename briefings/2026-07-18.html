@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The bottleneck was never the code — 18 July 2026 — AI Builder Signal</title>
+<meta name="description" content="The day's thread is ownership and constraints: where the real bottleneck hides, who owns the context, and whether the model even perceives what it claims. Voices: The New Stack argues AI hasn't moved the bottleneck to code review — 85% of teams say it has, but if merged PRs pile up undeployed, the constraint is downstream release, not review; Sean Goedecke on overtraining and grokking as the path past memorization. Ship Log: Unabyss for Claude took #1 Product of the Day — an MCP-native portable memory vault that hands any agent your context from email, Drive, GitHub and Notion; Aye ships a teachable browser intern you train by showing it once. Build Patterns: Kimi's PerceptionBench isolates perception from reasoning and finds no model clears 60% — they 'guess rather than perceive'; Simon Willison's LLM cliché highlighter is pattern-detection as a cheap brand-voice guardrail. Radar: OpenAI's Codex and deep-research models retire 23 July; swyx's 'own the problem, not the model' agent-lab thesis." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 032 · 18 July 2026</p>
+  <h1>The bottleneck was never the code</h1>
+  <p class="lede">Three of today's sharpest posts share one question: <b>where is the real constraint?</b> The New Stack argues that AI didn't move the software bottleneck from writing code to reviewing it — <b>85% of teams say it did</b>, but if merged pull requests pile up undeployed, the constraint was always <b>downstream of review</b>, in the release pipeline. Sean Goedecke, on the model side, revisits grokking and Gwern's provocation that the path past memorization is <b>overtraining</b> — enormous models on small data, forced to generalize. And Kimi's new <b>PerceptionBench</b> finds no multimodal model clears 60% on plain seeing: they <i>"guess rather than perceive."</i> The app-layer echo is <b>ownership</b>: Unabyss for Claude took #1 Product of the Day with a portable, MCP-native memory vault that hands any agent your context instead of trapping it in one tool — the same instinct swyx has been pushing for founders: <b>own the problem, not the model.</b> A day about looking past the obvious constraint to the one that actually binds.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Two arguments about mislocated bottlenecks — one in your delivery pipeline, one in how models are trained.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">The New Stack: AI hasn't shifted the bottleneck from coding to code review — the constraint is downstream</span><span class="em">thenewstack.io · 17 Jul</span></div>
+    <p>The essay pushes back on the consensus that review is the new chokepoint. The data it cites is real: GitLab's 2026 survey found <b>85% of teams believe AI moved the bottleneck to review</b>; Faros AI's study of 10,000 developers found high-AI teams merge <b>98% more PRs</b> while review time on those changes climbs <b>91%</b>. The counter is a theory-of-constraints read: if reviewed-and-merged code keeps accumulating <b>without reaching users</b>, then review isn't the binding constraint — <b>deployment and release are</b>. Adding reviewers or review-bots to a non-bottleneck just moves the pile.</p>
+    <p class="y">Before you buy an AI code-review tool or throw senior engineers at review, find where work-in-progress actually <b>accumulates</b>. If PRs merge fast but sit behind a slow release train, batched deploys, or a manual QA gate, that's your constraint — and speeding up the steps ahead of it makes the pile bigger, not the product faster. For a small wealthtech team shipping AI-written code daily, the leverage is usually continuous deploy and feature-flagged release, not more eyes on the diff.</p>
+    <a class="src" href="https://thenewstack.io/ai-code-bottleneck-myth/">thenewstack.io — the bottleneck myth ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Sean Goedecke: overtraining as the path to human-like AI</span><span class="em">seangoedecke.com · 17 Jul</span></div>
+    <p>Goedecke unpacks Gwern's counterintuitive proposal: instead of moderately-sized models on internet-scale data, train <b>enormous</b> models (he floats 100T parameters) on <b>small</b> datasets. The bet rests on <b>grokking</b> — the observation that a model trained on constrained data eventually stops memorizing and discovers the underlying rule. His line: <i>"if you feed the model all the data in the world, it can continue to improve simply by memorizing more."</i> Scarcity forces the harder, more general solution. He's clear it's speculative and unproven at scale.</p>
+    <p class="y">A useful lens for the make-vs-rent question, even before the theory is settled: some tasks want <b>recall</b> (retrieve the exact clause, the exact rate) and some want <b>reasoning</b> (generalize across a client's situation). When you evaluate a base model — or decide whether to fine-tune one on your domain — ask which of those you're actually buying. A model that has grokked a domain's structure beats one that has merely memorized more of its documents.</p>
+    <a class="src" href="https://www.seangoedecke.com/overtraining-as-the-path-to-human-like-ai/">seangoedecke.com — overtraining ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Two app-layer launches on the 17 July Product Hunt board — portable memory, and a browser agent you teach by showing.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Unabyss for Claude: a portable, MCP-native memory vault — #1 Product of the Day</span><span class="em">producthunt.com · 17 Jul</span></div>
+    <p>Unabyss gives Claude memory pulled from your other tools — <b>email, Drive, GitHub, Notion, meeting recorders and 20+ more</b> — via a single structured context vault exposed over <b>MCP</b>, with granular per-tool controls over what each agent can read. The pitch is de-siloing: context you build up in one assistant stops being trapped there, and what you tell Claude, another agent can pick up. It topped the 17 July leaderboard.</p>
+    <p class="y">Portable memory is turning into its own product category, and MCP is the wire that makes it possible. The builder takeaway is architectural: treat <b>user/context memory as a service your app reads and writes</b>, not state locked inside one model vendor. For a wealthtech product, that framing also maps cleanly onto consent and data-residency — a single vault with per-agent scopes is easier to audit than context smeared across five tools. Worth studying as a pattern even if you don't adopt the product.</p>
+    <a class="src" href="https://www.producthunt.com/products/unabyss">producthunt — Unabyss ↗</a>
+    <a class="src" href="https://unabyss.com/">unabyss.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Aye: a teachable AI intern for everyday browser work</span><span class="em">producthunt.com · 17 Jul</span></div>
+    <p>Aye (Product Hunt, 17 July) is a browser agent you <b>train by demonstration</b> — show it a repetitive web task once and it repeats it on your behalf, positioned as an "intern" for the mundane clicking-through work that fills a knowledge worker's day. It sits alongside Basedash Suggestions (an AI data analyst that now proposes its own questions) on the same board.</p>
+    <p class="y">The interaction pattern is the interesting part: <b>teach-by-showing beats prompt-by-describing</b> for procedural browser tasks, because a demonstration captures the exact steps and selectors a natural-language instruction leaves ambiguous. If your product has users doing repetitive multi-step flows, a record-once-replay agent is a lower-friction entry point than a chat box that asks them to articulate what they want.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/17">producthunt — 17 Jul leaderboard ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Evals as diagnosis, not scoreboard — one for multimodal perception, one for the writing your model ships.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Kimi's PerceptionBench: isolate seeing from reasoning, and no model clears 60%</span><span class="em">kimi.com · 17 Jul</span></div>
+    <p>Moonshot built PerceptionBench by studying how frontier models <b>fail</b> across 40+ existing visual benchmarks, then distilling 10 atomic perception skills — counting, depth, localization, OCR, fine-grained recognition, hallucination and more — into <b>3,000 questions answerable by looking alone</b>, no reasoning or outside knowledge. Findings are pointed: <b>no model reached 60%</b>; models with similar overall scores have wildly different perceptual profiles; and many correct answers <b>don't replicate on retry</b>, implying models <i>guess rather than perceive</i>.</p>
+    <p class="y">If your product reads documents, statements, IDs or charts, this is the eval design to copy: <b>test perception separately from reasoning</b>, because a model that reasons well over a <i>misread</i> figure fails silently and confidently. The non-replication finding is the real warning — run perception-critical prompts <b>more than once</b> and treat unstable answers as a red flag, not noise. For financial documents where a transposed digit is a real-money error, a separate perception gate belongs in your eval suite.</p>
+    <a class="src" href="https://www.kimi.com/blog/perception-bench">kimi.com — PerceptionBench ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Simon Willison's LLM cliché highlighter: pattern-detection as a cheap brand-voice guardrail</span><span class="em">simonwillison.net · 17 Jul</span></div>
+    <p>Willison (with Fable 5) shipped a browser tool that flags <b>ten recurring tells of LLM-generated prose</b> — the "no X, no Y" chain, "sit with that," "you already know," "is real and," "worth naming" — paste text or load a URL and it highlights offending sentences with pattern counts, running entirely client-side. A small tool, but a clean instance of a broadly useful idea.</p>
+    <p class="y">Deterministic pattern-matching is an underrated eval layer for anything that generates customer-facing text. Instead of asking a second LLM "does this sound generic?", a cheap regex pass over your outputs catches the house-style violations and AI tells <b>before they ship</b> — no tokens, no latency, fully explainable. Build your own list from your brand's forbidden phrases and wire it in as a post-generation check.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/17/llm-cliche-highlighter/">simonwillison.net — cliché highlighter ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A near-term deprecation, and a strategy frame worth holding while the models keep churning.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Deprecation clock: OpenAI's Codex and deep-research models retire 23 July</span><span class="em">developers.openai.com · 23 Jul</span></div>
+    <p>OpenAI's older <b>Codex</b> and <b>deep-research</b> model endpoints are scheduled for retirement on <b>23 July</b> — five days out — as the GPT-5.6 family (Sol / Terra / Luna, the last a new $1/$6 high-volume tier) becomes the default. Frontier churn stays fast: GPT-5.6 became ChatGPT's default 9 July, and the MCP <code>2026-07-28</code> spec goes final 28 July.</p>
+    <p class="y">One compressed line, but a dated action: if any workflow still pins a Codex or deep-research model id, migrate this week or it breaks. This is exactly the tax swyx's thesis is about — you can't stop the models from moving, so the durable move is to isolate model choice behind your own interface and absorb the swap invisibly for users.</p>
+    <a class="src" href="https://developers.openai.com/api/docs/deprecations">developers.openai.com — deprecations ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">swyx: own the problem, not the model — and don't pride yourself on routing</span><span class="em">latent.space · 10 Jul</span></div>
+    <p>swyx's "agent lab" thesis, still circulating: the only durable bet for an AI startup is a <b>specific customer problem</b>, not a specific model — become the trusted brand in a vertical and absorb model upgrades invisibly (Cursor for coding, Harvey for legal, Decagon for support). His sharpest warning is against multi-model routing: <i>"if you pride yourself on routing, you will never exploit the full capabilities of one"</i> — routing settles for the lowest common denominator and forfeits prompt caching, deep tool-use and volume discounts. The real hedge is <b>domain depth</b> that lets you re-implement when the landscape shifts, not abstraction across providers.</p>
+    <p class="y">Directly relevant to a wealthtech founder weighing make-vs-rent. It argues against the tempting "model-agnostic layer" reflex: go deep on one model's full capability surface, build switching costs through integration, and keep the domain expertise that lets you move fast when a better base lands. Your moat is the advisory problem you own, not the inference you rent.</p>
+    <a class="src" href="https://www.latent.space/p/agent-labs">latent.space — Agent Labs ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
