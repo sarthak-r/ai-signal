@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The best agent runs happened while nobody was watching — 21 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Today's thread: the day's most consequential agent runs all happened unattended — and the ones that worked had a cheap verifier waiting. Voices: Anthropic's Levent Alpoge says Claude Fable produced a counterexample to the 1939 Jacobian Conjecture, in degree 7, while he watched the World Cup final; Simon Willison argues reverse-engineering just got cheap enough to change build-vs-buy. Ship Log: Linear ships Loops — agents that run on a schedule or event with no human in the trigger; Claude Code removes auto-invocation of /verify and /code-review; Vercel Workflows pins agent run-state to a home region, Sydney included. Build Patterns: a researcher found a pre-auth WordPress RCE for ~$25 using four concurrent agents and a mandatory six-hour minimum research window. Radar: Xi's open-source push, Qwen 3.8 Max at 2.4T weights, and the 80% figure on startups already running Chinese models." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 035 · 21 July 2026</p>
+  <h1>The best agent runs happened while nobody was watching</h1>
+  <p class="lede">Every headline item today is an agent that ran <b>unattended</b>. Anthropic's Levent Alpoge posted a counterexample to the <b>1939 Jacobian Conjecture</b> that Claude Fable found "during the world cup final" — in <b>degree 7</b>, against a field that expected degree 200. A security researcher found a pre-auth <b>WordPress RCE for about $25</b> by giving four concurrent agents a <b>mandatory six-hour minimum</b> before they were allowed to report. Linear shipped <b>Loops</b>, agents that fire on a schedule or an event with no human in the trigger at all. The pattern underneath all three is the same one this briefing keeps landing on: <b>autonomy scales with verifiability</b>. A polynomial map can be checked exactly in seconds; an exploit either pops a shell or it doesn't. Where the verifier is cheap, you can let the thing run for hours and not read the transcript. And where it isn't, the correction is already visible — Claude Code this week <b>stopped auto-invoking its own <code>/verify</code> and <code>/code-review</code> skills</b>, handing the trigger back to the human.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">A conjecture falls to an unattended run, and the economics of integration quietly invert.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Levent Alpoge: Claude Fable produced a counterexample to the Jacobian Conjecture</span><span class="em">x.com · 20 Jul</span></div>
+    <p>Alpoge posted an explicit polynomial map ℂ³→ℂ³ with <b>constant Jacobian determinant −2</b> that is nonetheless <b>not injective</b> — which, if it holds, falsifies the conjecture Ott-Heinrich Keller posed in <b>1939</b>. His credit line: "thanx to my close friend akhil for asking about it and my other close friend fable for working during the world cup final." The detail specialists are reacting to is the <b>degree</b>: the map is <b>degree 7</b>, where the field's working intuition put any counterexample somewhere around degree 200. The map is public and the checks are exact and independently reproducible; formal peer review and an arXiv posting have not happened yet.</p>
+    <p class="y">Ignore the "AI does maths" framing and look at the <b>shape of the task</b>. This is a search over a huge space where a candidate answer can be <b>verified exactly, cheaply, and without a human</b> — expand the polynomial, check the determinant, find two points that collide. That is the same structure as the Bun→Rust port (a million-assertion suite) and the same structure as an exploit (it fires or it doesn't). The transferable question for your own roadmap isn't "can the model do it" but <b>"can I check the answer for free?"</b> Where you can, buy hours of unattended compute. Where you can't — most of financial advice — you are still paying for a human read, and no model release changes that.</p>
+    <a class="src" href="https://x.com/__alpoge__/status/2079028340955197566">x.com — @__alpoge__ ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48973869">Hacker News thread ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Simon Willison: reverse-engineering is cheap now</span><span class="em">simonwillison.net · 20 Jul</span></div>
+    <p>Short note, load-bearing point. Willison argues coding agents have moved the break-even on undocumented-API work: "The effort to get a simple automation working has dropped, as has <b>the cost of trying and failing</b> to get it to work." The second clause is the real one — the blocker on integrating a closed device or platform was never only the build, it was the <b>open-ended maintenance liability</b> you accepted by starting. If re-deriving the integration is a cheap afternoon, breakage stops being a commitment.</p>
+    <p class="y">Re-run your integration backlog against this. Every custodian feed, platform export, and adviser-software API you scoped and shelved because the payoff didn't justify a <b>permanent maintenance owner</b> now has different numbers — the ROI didn't change, the <b>downside of it breaking</b> did. The pragmatic move is to reclassify those from "integrations" to <b>disposable adapters</b>: no long-term ownership, regenerate when the vendor shifts. Worth an hour re-scoring the list; some of it is now cheap enough to just do.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/20/cheap-reverse-engineering/">simonwillison.net ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Agents get a scheduler, lose an automatic verifier, and gain a home region.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Linear ships Loops — agents that run on a trigger, not an invocation</span><span class="em">linear.app · 20 Jul</span></div>
+    <p>Describe a recurring job in plain language and Linear Agent runs it <b>on a schedule or on an event</b>. Each run re-reads its instructions and decides its own next steps, pulling context from the workspace, connected codebases, MCP servers, and <b>prior runs</b> — triaging issues out to coding agents, chasing follow-ups from meeting notes, keeping project docs current. Scoped to team or workspace with <b>shared visibility</b>: anyone with access can read the instructions, inspect the config, and audit execution history. Business/Enterprise, burns AI credits, with $20/seat promo credits through 20 Aug.</p>
+    <p class="y">This is the line being crossed right now across the app layer: from <b>agent-you-invoke</b> to <b>agent-that-wakes-itself</b>. Note what Linear had to ship alongside it — not a better model, a <b>governance surface</b>. Shared instructions, inspectable config, per-run audit history. That is the honest cost of removing the human from the trigger, and it's the part most teams building internal agents skip. If you're putting any agent on a cron in a regulated shop, <b>build the audit trail before the scheduler</b>; Linear's shape is a free reference design for what a reviewer will ask you for.</p>
+    <a class="src" href="https://linear.app/changelog/2026-07-20-introducing-loops">linear.app — Loops ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code walks back auto-invoked verification</span><span class="em">github · 19–20 Jul</span></div>
+    <p>Two releases worth reading as one. <code>v2.1.215</code> (19 Jul) is a one-line behavioural change: Claude <b>no longer runs the <code>/verify</code> and <code>/code-review</code> skills automatically</b> — they are explicit-invocation only. <code>v2.1.216</code> (20 Jul) adds a <b>filesystem isolation toggle</b> and fixes a <b>quadratic message-normalisation slowdown</b> that was causing multi-second stalls and slow resumes in long sessions, plus file-op, git-worktree and background-session fixes.</p>
+    <p class="y">A vendor deliberately <b>reducing</b> its agent's autonomy is rarer than the reverse and tells you something. Auto-running a review skill sounds strictly good until you notice what it does to trust: verification that fires on its own becomes <b>ambient noise</b> the user learns to scroll past, and it burns tokens on turns that didn't need it. Making the check <b>explicit</b> makes it mean something again. Same principle as today's Voices item from the other end — if the verifier isn't cheap and automatic, don't pretend it is; <b>put a human hand on it</b>. Also: audit your own agent UX for checks that fire so often nobody reads them.</p>
+    <a class="src" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.215">github — v2.1.215 ↗</a>
+    <a class="src" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.216">github — v2.1.216 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Vercel Workflows: pin agent run-state to a home region</span><span class="em">vercel.com · 20 Jul</span></div>
+    <p>Each run's <b>state, queue dispatch, and output streams</b> now live in a single home region held for the lifetime of the run — either where execution started or a region you name via a <code>region</code> option on <code>start()</code>. Existing workflows pick up regional placement on their next run with <b>no code change</b>; regional failover during incidents is included. Needs <code>workflow@5.0.0-beta.33</code> or later. The changelog frames it explicitly for agents, and picks the example that matters here: "an agent serving someone in <b>Sydney</b> executes, checkpoints its progress, and streams output from Sydney."</p>
+    <p class="y">Agent <b>checkpoints are client data</b> — mid-run state carries whatever the agent has read, which for us means holdings, balances, and personal circumstances sitting in a durable store you may never have located on a map. Data-residency reviews under the Privacy Act and CPS 230 ask where the <b>inference</b> runs and forget to ask where the <b>loop's memory</b> lives. This makes that answerable in one line of config. Whatever orchestrator you're on, go find out where your agent run-state is persisted today — the answer is often a US region nobody chose.</p>
+    <a class="src" href="https://vercel.com/changelog/configure-where-run-state-lives-in-vercel-workflows">vercel.com — changelog ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">A harness that buys results by forcing the agent to keep going.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">The $25 zero-day: forcing long-horizon search with a minimum research window</span><span class="em">slcyber.io · 20 Jul</span></div>
+    <p>Adam Kues adapted OpenAI's Cycle Double Cover mathematical prompt into a security-research harness and pointed it at WordPress <b>source code</b> rather than historical diffs. The setup is the interesting part: <b>up to four concurrent agents</b>, each assigned a <b>different attack surface</b> (input parsing, charsets, file uploads, error handling, builtin routes, serialization), and a <b>mandatory six-hour minimum research window</b> before any agent was permitted to conclude. Result: a pre-auth chain in software running on a claimed ~500M installs, about <b>10 hours</b> to a working exploit, for roughly <b>$25</b> — half a week of a $200 subscription.</p>
+    <p class="y">Two things to steal, neither of them about security. First: the <b>minimum-duration floor</b>. Agents converge early and report a tidy non-answer; forcing a wall-clock or step budget <b>before</b> the agent is allowed to conclude is a cheap harness change that turns shallow search into deep search. Second: <b>partition the surface across parallel agents</b> instead of asking one agent to be thorough — thoroughness is a property of the decomposition, not the prompt. Apply both to reconciliation sweeps, document-extraction audits, or eval-failure mining. The defensive read is free and urgent: <b>$25 and ten hours</b> is now the cost of a competent adversary reading your dependency tree — which also means it's the cost of you reading it first.</p>
+    <a class="src" href="https://slcyber.io/research-center/exploit-brokers-pay-500000-for-a-wordpress-rce-i-found-one-with-gpt5-6/">slcyber.io — Assetnote research ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">The open-weights argument gets a policy push and a number.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Open weights become state policy — and the 80% figure</span><span class="em">werd.io / simonwillison.net · 20 Jul</span></div>
+    <p>Two posts, same day, same thread. Ben Werdmuller argues US labs are losing on strategy, not capability — "locked-down business practices for a technology with <b>no real moat</b>" — citing a16z's Martin Casado in The Economist putting an <b>80% chance a given startup is already using Chinese models</b>. Willison links Ben Thompson's counter-proposal — legislate that training-data collection is <b>fair use</b> and bar ToS clauses restricting distillation, since "stopping distillation — which is literally just querying the API — is nearly impossible" — and notes Xi's call to "seize this rare, historic opportunity to encourage open source," which plausibly explains why <b>Qwen 3.8 Max (2.4T)</b> is being open-sourced when its predecessor wasn't. <b>Kimi K3</b> sits at 2.8T.</p>
+    <p class="y">Skip the geopolitics; take the <b>procurement</b> consequence. Two frontier-class open-weight models at multi-trillion scale means the <b>self-hosted tier is now genuinely capable</b>, and that is the tier that solves the problem an Australian wealthtech actually has: client data that can't leave the jurisdiction, and a per-token bill that doesn't scale with an adviser's curiosity. Practical step — pick your single most data-sensitive workload (SoA drafting, file-note extraction) and <b>run it once against an open-weight model on infrastructure you control</b>. You're not migrating; you're measuring the gap, so that when a residency question lands you have a number instead of a plan.</p>
+    <a class="src" href="https://werd.io/american-ai-is-locked-down-and-proprietary-its-losing/">werd.io ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Jul/20/afraid-of-chinese-models/">simonwillison.net ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
