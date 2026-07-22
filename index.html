@@ -71,6 +71,14 @@
     <p class="standfirst">A daily briefing for builders of AI products — what the best minds in AI are thinking and shipping at the application layer. Every item passes one test: <b>can you use it, does it change how you build, or does it change your costs and roadmap?</b> Everything else is noise.</p>
 
     <nav class="list">
+      <a class="item" href="briefings/2026-07-22.html">
+        <span class="date">Jul 22</span>
+        <span class="body">
+          <span class="t">The work today was on the scaffolding, not the model</span>
+          <span class="d">No frontier release moved a roadmap — what shipped was the plumbing around the agents you already run, and it points one way. The Claude Code team (Cat Wu &amp; Thariq Shihipar, via Simon Willison) went on record: they cut the system prompt ~80% for newer models because examples made Claude less creative, keep tools deliberately low-cardinality, gate every feature on an internal retention bar, and drop human code review only in the narrow categories their evals prove the automated reviewer handles perfectly. Claude Code v2.1.217 caps concurrent subagents at 20 and stops them spawning nested subagents by default — a guardrail for the agent swarm, not a capability. v0 added slash-command skills and live-Shopify GA; Nativ runs capable open vision-LLMs fully on-device with a localhost API that Claude Code and Codex can point at (zero data egress). AWS CloudWatch turned coding-agent token spend and PR-velocity into a dashboard. Radar: AUSTRAC's Tranche 2 enrolment deadline is 29 July — seven days out — and Gemini 2.5 retires no earlier than 16 Oct.</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
       <a class="item" href="briefings/2026-07-21.html">
         <span class="date">Jul 21</span>
         <span class="body">

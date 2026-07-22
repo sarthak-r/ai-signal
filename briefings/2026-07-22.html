@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The work today was on the scaffolding, not the model — 22 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Today's thread: nobody shipped a model that matters — they shipped the plumbing around the agents you already run. Voices: the Claude Code team (Cat Wu &amp; Thariq Shihipar, via Simon Willison) reveal they cut the system prompt ~80% for newer models, drop human review only where evals prove the automated reviewer is perfect, and gate every feature on an internal retention bar. Ship Log: Claude Code v2.1.217 caps concurrent subagents at 20 and stops them spawning their own subagents by default; v0 gets slash-command skills and Shopify GA; Nativ runs capable open models fully on-device with a localhost API. Build Patterns: AWS CloudWatch makes coding-agent token spend and PR-velocity an observable ops surface. Radar: AUSTRAC's Tranche 2 enrolment deadline is 29 July — seven days out — and Gemini 2.5 retires no earlier than 16 Oct." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 036 · 22 July 2026</p>
+  <h1>The work today was on the scaffolding, not the model</h1>
+  <p class="lede">No frontier release moved a roadmap today. What shipped was the <b>plumbing around the agents you already run</b> — and it points one direction. The Claude Code team went on record about how they actually build: they <b>cut the system prompt by ~80%</b> for newer models because examples made Claude <b>less</b> creative, and they retire human code review only in the narrow categories where their evals prove the automated reviewer is already perfect. Claude Code itself shipped a <b>hard ceiling on concurrent subagents</b> and stopped them spawning their own — a guardrail, not a capability. AWS turned coding-agent <b>token spend and PR-velocity into a dashboard</b>. Nativ put frontier-adjacent open models <b>fully on-device</b> with a localhost API. The pattern: the model is assumed; the edge is now in how tightly you <b>govern, observe, budget, and localise</b> the thing. And the one hard date this week isn't a launch — it's <b>AUSTRAC's 29 July enrolment deadline</b>, seven days out.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">The team behind the leading coding agent says the quiet part: trust the model more, constrain it less.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">The Claude Code team on how they actually build it</span><span class="em">simonwillison.net · 21 Jul</span></div>
+    <p>Simon Willison's writeup of an AI Engineer World's Fair fireside with Anthropic's <b>Cat Wu</b> and <b>Thariq Shihipar</b> is the densest app-layer craft post in the window. The load-bearing details: they <b>cut Claude Code's system prompt ~80%</b> for Fable/Opus 4.8, and <b>removing examples</b> helped most — the frontier model "was just more creative" than the examples were boxing it into. Tool design is deliberately <b>low-cardinality</b> — "every tool we add has a distinct function from every other," and specialised search tools were replaced with plain bash. They now write prompts thinking about "the ways in which it could be misinterpreted by a <b>well-intentioned human</b>." Features must clear an <b>internal retention bar</b> among Anthropic staff before public release, and human code review is dropped only in categories the automated reviewer handles perfectly, with every incident fed back into the eval set. Their internal Claude Tag reportedly <b>lands 65% of product PRs</b>.</p>
+    <p class="y">Four transferable moves, none of them "use a better model." <b>One:</b> if your agent's prompt is a wall of examples and edge-case rules written against last year's model, delete most of it and re-measure — over-constraint now costs you the model's judgment. <b>Two:</b> collapse overlapping tools; ambiguity about <i>which</i> tool to call is a bigger failure source than any single tool's design. <b>Three:</b> write instructions for a well-intentioned reader, not an adversarial parser — absolute rules get misapplied. <b>Four:</b> the honest way to remove a human check is Anthropic's — prove with evals that automation is perfect <i>in a specific category</i>, retire review only there, and feed every miss back. That's the exact template a regulated advice shop needs to defend dropping a manual review step.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/21/cat-and-thariq/">simonwillison.net ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Guardrails for agent swarms, a skill-composable generator, and capable models that never leave the laptop.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Code v2.1.217 — a ceiling on the agent swarm</span><span class="em">github · 21 Jul</span></div>
+    <p>The headline change is orchestration governance: a <b>cap on concurrent subagents</b> (default <b>20</b>, override via <code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code>), and subagents <b>no longer spawn nested subagents by default</b> (<code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH</code> to allow deeper trees). Also fixed: a <b>memory leak</b> where truncated MCP tool outputs retained the full result, <b>Windows auto-update</b> failures that could delete <code>claude.exe</code>, corporate mTLS/proxy/OAuth settings being ignored in Desktop, and <code>--max-budget-usd</code> not stopping background subagents.</p>
+    <p class="y">As multi-agent fan-out becomes the default way to work, <b>runaway spawning is the new footgun</b> — cost and stability both blow up when agents recursively launch agents. Making non-nesting the default and a concurrency ceiling explicit is a vendor telling you the shape of the problem before you hit it. If you run parallel agents in your own product, copy the two knobs directly: a <b>hard concurrency cap</b> and a <b>spawn-depth limit</b> are the cheapest insurance against a single request quietly becoming a hundred. The budget-stop and MCP memory-leak fixes matter for anyone leaving agents running unattended.</p>
+    <a class="src" href="https://github.com/anthropics/claude-code/releases/tag/v2.1.217">github — v2.1.217 ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">v0 gets slash-command skills and live Shopify data</span><span class="em">v0.app · 21 Jul</span></div>
+    <p>Type <code>/</code> in the v0 composer to open a live-filtering menu that <b>attaches a skill without leaving the keyboard</b>, including remote skills; attached skills render as inline chips with draft persistence, undo/redo and drag-to-reorder. Separately, the <b>Shopify integration is now GA</b> — connect a store and v0 builds a storefront that reads <b>live products, prices and inventory</b> through the Storefront and Admin APIs. Plus completion sound notifications and a Snowflake reliability pass that detects code changes and offers re-deploy.</p>
+    <p class="y">Two signals. Slash-commands + remote skills push v0 from a <b>one-shot generator</b> toward a <b>composable, skill-driven surface</b> — the same skills-as-primitives pattern Claude Code and others are converging on, worth watching if you're designing how users invoke capabilities in your own tool. And "reads live product data" over a mock is the tell that generative-UI tools are moving from <b>demo output to wired-to-real-backend output</b> — the boring integration layer is where the actual product value now sits.</p>
+    <a class="src" href="https://v0.app/changelog">v0.app — changelog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Nativ: frontier-adjacent open models, fully on your Mac</span><span class="em">blaizzy.github.io · 21 Jul</span></div>
+    <p>Prince Canuma shipped <b>Nativ</b>, an MIT-licensed macOS app wrapping MLX to run open vision-LLMs locally — no account, no cloud, no subscription. It bundles models like <b>Gemma 4 E2B</b> (128K context) and <b>Cohere North Mini Code</b> (500K context), a chat UI with per-message tokens/sec, memory-pressure and thermal telemetry, and — the builder hook — <b>localhost API endpoints for coding agents</b>: Pi, Codex, Claude Code, OpenCode all point at it.</p>
+    <p class="y">This is the concrete version of yesterday's open-weights-is-now-viable argument, and it lands on the one axis an Australian wealthtech actually cares about: <b>the data never leaves the device</b>. A local model behind a standard localhost endpoint means you can point a coding agent — or a file-note extraction step — at client-sensitive material with <b>zero egress</b>. The practical move isn't to migrate; it's to <b>run one data-sensitive workload against a local model and measure the quality gap</b>, so when a residency question lands you answer with a number, not a plan. Note the ceiling: Apple Silicon only, and the biggest models still want serious RAM.</p>
+    <a class="src" href="https://blaizzy.github.io/nativ/">blaizzy.github.io — Nativ ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">The coding agent becomes a thing you instrument, budget, and report on.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">AWS makes coding-agent spend an observable ops surface</span><span class="em">aws.amazon.com · 20 Jul</span></div>
+    <p>CloudWatch shipped <b>Coding Agent Insights</b>: org-wide telemetry on AI coding agents — <b>Claude Code, Codex, GitHub Copilot</b> — collected over <b>OpenTelemetry</b> with no extra instrumentation (Claude Code flows in via the Claude apps gateway). It tracks <b>token-spend trends</b>, sets proactive billing alerts, <b>right-sizes token budgets per team</b>, flags the best cost-to-output models, and correlates agent adoption with <b>commit throughput and PR velocity</b> — all on a dashboard beside existing ops data.</p>
+    <p class="y">This is <b>eval/observability-as-product</b> aimed at the coding-agent layer itself — treating "is this agent worth its token bill" as a first-class ops question rather than a gut feel. Two things to take even if you never touch CloudWatch. <b>One:</b> the metric that matters isn't tokens, it's <b>tokens correlated to shipped output</b> (PRs, commits) — instrument that ratio for any agent you run in production. <b>Two:</b> in a regulated shop, a <b>per-team spend-and-outcome audit trail for agent usage</b> is exactly what a reviewer will eventually ask for; the pattern here is a free reference for what to log before you're asked.</p>
+    <a class="src" href="https://aws.amazon.com/about-aws/whats-new/2026/07/cloudwatch-coding-agent-insights/">aws.amazon.com — what's new ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">One hard AU deadline this week, and a model retirement to diarise.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">AUSTRAC Tranche 2 enrolment closes 29 July — seven days out</span><span class="em">austrac.gov.au · this week</span></div>
+    <p>Australia's expanded AML/CTF regime commenced <b>1 July 2026</b>, and newly regulated "Tranche 2" reporting entities — <b>accountants, lawyers, conveyancers, real estate agents, dealers in precious metals</b> — providing designated services from that date must <b>enrol with AUSTRAC and notify their AML/CTF Compliance Officer by 29 July 2026</b>, with <b>no general extension</b>. AUSTRAC estimates ~80,000 entities in scope, all needing a board-approved, risk-based AML/CTF program. New threshold-transaction and suspicious-matter report forms are already in effect.</p>
+    <p class="y">Advisers are already covered, but this sweeps in the <b>accounting and legal arms</b> that sit right next to advice practices — and it's a hard date <b>one week away</b>. Two builder consequences: any compliance or onboarding product serving those verticals should be <b>surfacing this deadline now</b>, and AUSTRAC's guidance increasingly expects programs to <b>document how any AI models used in monitoring are trained, validated and calibrated</b>. If your product touches transaction monitoring or CDD, "we use AI" now carries an evidentiary burden — build the model-governance doc before a regulator asks for it.</p>
+    <a class="src" href="https://www.austrac.gov.au/changes-transaction-reporting-1-july-2026">austrac.gov.au — reporting changes ↗</a>
+    <a class="src" href="https://www.cpaaustralia.com.au/public-practice/inpractice/practice-management/austrac-opens-enrolments-are-tranche-2-entities-ready">CPA Australia — are you ready ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Diarise it: Gemini 2.5 retires no earlier than 16 Oct</span><span class="em">github.blog · ongoing</span></div>
+    <p>Google has told Vertex AI users that <b>Gemini 2.5 Pro, Flash and Flash-Lite</b> will be discontinued <b>no earlier than 16 October 2026</b>, with GitHub already flagging the 2.5 Pro deprecation. The date is the <b>earliest possible</b>, not final — Google says it will lock a confirmed date once Gemini 3 is GA and give six months' notice — but some users already report 2.5-Flash returning "no longer available" errors ahead of it. For context on the frontier tier nobody needs to chase: GPT-5.6 (Sol/Luna) is now GA in the OpenAI API and Codex.</p>
+    <p class="y">If any production path — a cheap classifier, a summarisation step — is pinned to <code>gemini-2.5-flash</code>, treat 16 Oct as a <b>real migration trigger</b> and the early-error reports as a reason not to wait for the "confirmed" date. The recurring lesson from every deprecation this year: <b>never hard-code a single model id</b> in a critical path. Route through an abstraction with a fallback so a vendor's retirement calendar is a config change, not an incident.</p>
+    <a class="src" href="https://github.blog/changelog/2026-07-02-upcoming-deprecation-of-gemini-2-5-pro-and-gemini-3-flash/">github.blog — deprecation notice ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
