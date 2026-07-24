@@ -71,6 +71,15 @@
     <p class="standfirst">A daily briefing for builders of AI products — what the best minds in AI are thinking and shipping at the application layer. Every item passes one test: <b>can you use it, does it change how you build, or does it change your costs and roadmap?</b> Everything else is noise.</p>
 
     <nav class="list">
+      <a class="item" href="briefings/2026-07-24.html">
+        <span class="date">Jul 24</span>
+        <span class="body">
+          <span class="t">The tooling can't fix the model</span>
+          <span class="d">HumanLayer's Dex Horthy argues no amount of agent tooling fixes what is a model-training problem: training rewards pass/fail signals that resolve in seconds, while bad architecture bills you in months, so there is no fast oracle for maintainability and no penalty for wrecking it. His evidence is Faros AI's telemetry over 22,000 developers — incidents per PR up 242.7%, bugs per developer up 54%, code churn up 861%, and 31.3% more PRs merging unreviewed — and his fix is four alignment phases before any code exists, for a durable 2–3x rather than the advertised 100x. Measure incidents per PR, not merge counts. Cursor shipped the day's other answer to cost: Cursor Router picks a model per request across Intelligence, Balance and Cost modes with admin-level model allow/deny, on by default for Teams; Show HN's Echo runs the same play over open-weight models and claims Fable-level results at a third of the price. OneCLI hands agents placeholder API keys and swaps in the real ones at a Rust gateway, so a leaked key is a non-event. Screenpipe reads the accessibility tree instead of making a vision model re-derive structure. Radar: the largest MCP revision since launch goes final 28 July (stateless core, Tasks lifecycle, MCP Apps), PyPI now freezes releases after 14 days, and 17% of Australians — 28% under 30 — already take financial advice from AI while only 39% of advice practices have a policy governing it.</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
       <a class="item" href="briefings/2026-07-23.html">
         <span class="date">Jul 23</span>
         <span class="body">
