@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Change the agent's tools mid-run — 26 July 2026 — AI Builder Signal</title>
+<meta name="description" content="Claude Opus 5 landed Friday at the same $5/$25 price, but the benchmark table isn't the part that changes your build — two API changes are: you can add or remove an agent's tools mid-conversation without invalidating the prompt cache, and safety-flagged requests can route to another model instead of returning a hard error. Simon Willison flags Opus 5 writing its own computer-vision pipeline when handed no image access. Claude Code lets subagents nest three deep. Ruff turns on 413 default rules, up from 59. FluentDB shows an LLM your schema, not your rows. Radar: AUSTRAC compliance-officer notification due 29 July, DeepSeek's legacy aliases stopped resolving." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 039 · 26 July 2026</p>
+  <h1>Change the agent's tools mid-run</h1>
+  <p class="lede">Claude Opus 5 landed Friday at the same $5/$25 price as Opus 4.8. Skip the benchmark table; two API changes are what move a builder's roadmap. You can now <b>add or remove an agent's tools mid-conversation without invalidating the prompt cache</b>, and requests that trip a safety classifier can <b>route to another model instead of returning a hard error</b>. Simon Willison, writing from a kayak, flags the behaviour worth watching: handed a drawing it had no image access to, Opus 5 wrote its own computer-vision pipeline rather than giving up. Claude Code shipped alongside it — <b>subagents now nest three deep by default</b>, and a strict network allowlist denies non-allowlisted hosts with no prompt. Astral turned on <b>413 Ruff rules by default</b>, up from 59. On the radar: Australia's AUSTRAC compliance-officer notification is due <b>29 July</b> for the accountants, lawyers and conveyancers pulled into AML/CTF on 1 July, and DeepSeek's legacy model aliases stopped resolving on the 24th.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">What Opus 5 does when it's stuck, and a linter that got seven times stricter.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Simon Willison: what Opus 5 does when it can't see the image</span><span class="em">simonwillison.net · 24 Jul</span></div>
+    <p>Simon Willison's first-pass writeup of Claude Opus 5 skips the benchmarks for two behaviours a builder should note. Given a machine-part drawing it had no direct image access to, Opus 5 <b>wrote its own computer-vision pipeline to pull the geometry from raw pixels</b> and reconstructed the part — it built the tool it lacked rather than stopping. On security, it now comes close to the top model at <i>finding</i> vulnerabilities while staying well behind at <i>exploiting</i> them, a gap Anthropic trained in deliberately. He filed the notes from a kayak, so treat them as early signal, not a full eval.</p>
+    <p class="y">The computer-vision behaviour is the one to plan for. Newer models route around missing capabilities by writing code, which changes what "give the agent the right tools" means: under-provision it and it may improvise a worse tool instead of failing loudly. For a compliance-sensitive product that's a reason to constrain what the agent can build, not only what it can call. The find-but-don't-exploit split is also the shape of security tooling you can actually ship to advisers — a scanner that surfaces holes without weaponising them.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/24/introducing-claude-opus-5/">simonwillison.net ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Ruff turns on 413 default rules, up from 59</span><span class="em">astral.sh · 23–25 Jul</span></div>
+    <p>Astral shipped Ruff v0.16.0 with <b>413 rules enabled by default, up from 59</b> — the default set had barely moved since 2023. The additions catch severe problems that previously passed silently, including syntax errors and immediate runtime errors like <code>yield-in-init</code> and <code>load-before-global-declaration</code>. Simon Willison's workflow for the upgrade: run <code>uvx ruff@latest check . --fix --unsafe-fixes</code>, then hand the violations Ruff can't auto-fix to a coding agent to clear. He ran it against three large projects and each surfaced hundreds of real violations.</p>
+    <p class="y">If your Python CI pins Ruff, a bump to 0.16 will light up — schedule it rather than letting it ambush a release. The remediation pattern is the transferable part: a deterministic tool finds and auto-fixes the mechanical cases, and the agent only touches the residue that needs judgement, which keeps both the token bill and the review surface small. Cheap tool first, model on the remainder, is the right default for any lint, migration or codemod job.</p>
+    <a class="src" href="https://astral.sh/blog/ruff-v0.16.0">astral.sh — v0.16.0 ↗</a>
+    <a class="src" href="https://simonwillison.net/">simonwillison.net ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The Opus 5 API changes that matter more than the benchmarks, and Claude Code lets subagents nest.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Opus 5: swap an agent's tools mid-run without busting the cache</span><span class="em">anthropic.com · 24 Jul</span></div>
+    <p>The Opus 5 launch is the window's big frontier drop, priced unchanged at $5/$25 per MTok. Two API changes matter more to agent builders than the benchmark line. First, you can <b>add or remove tools mid-conversation without invalidating the prompt cache</b>; previously any change to the tool set forced a cold cache and a full re-bill of the context. Second, requests that a safety classifier flags can be set to <b>route to another model instead of returning a hard error</b>, so a flagged call yields a result rather than a 4xx your code has to catch. There's also an effort setting to trade intelligence for token savings. On Anthropic's own numbers it more than doubles Opus 4.8 on Frontier-Bench and beats Fable 5 on OSWorld at a third of the cost.</p>
+    <p class="y">The cache-preserving tool swap changes how you architect a long agent session. You no longer fix the tool list up front or eat a cold cache each time the task moves to a new phase, so narrow, phase-specific toolsets become cheap instead of costly. The safety fallback removes a class of production incident: a classifier false-positive that used to surface as an error now degrades to a different model quietly. Both are free wins if you're already on Opus, and neither shows up in a benchmark.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-opus-5">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Claude Code 2.1.219: subagents can spawn subagents, three deep</span><span class="em">code.claude.com · 24–25 Jul</span></div>
+    <p>Claude Code raised the default subagent nesting depth from 1 to 3 (<code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1</code> restores the old limit), so an orchestrating agent can fan out into sub-orchestrators within a single run. The same release added a <code>DirectoryAdded</code> hook that fires when <code>/add-dir</code> or the SDK registers a new working directory mid-session, and a <code>sandbox.network.strictAllowlist</code> setting that denies non-allowlisted hosts outright with no prompt. Opus 5 is now the default Opus model in Claude Code, with a 1M-context fast mode at $10/$50 per MTok. 2.1.220 followed a day later with fixes.</p>
+    <p class="y">Depth-3 nesting turns Claude Code from one agent with helpers into a small tree, which is the difference between "summarise these ten files" and "audit this subsystem, delegating each module." The strict allowlist is the quietly important one for your context: it's a real primitive for running agent-generated code in CI without a network escape, the exact failure mode that put a runaway agent in this briefing twice last week. Pair it with the <code>DirectoryAdded</code> hook to enforce policy the moment a new repo root enters a session.</p>
+    <a class="src" href="https://code.claude.com/docs/en/changelog">code.claude.com — changelog ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two shipped answers to old problems: an LLM on your database without the rows, and voice as the way you watch a run.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">FluentDB: give an LLM your schema, not your rows</span><span class="em">Product Hunt · 25 Jul</span></div>
+    <p>FluentDB, the #2 launch on Product Hunt on 25 July (288 points), is an AI database client for Postgres, MySQL, SQLite and SQL Server built on one rule: "models see your schema, not your data." The model gets table and column structure to write queries and never sees rows. AI-generated queries also require explicit human approval before they run, by default.</p>
+    <p class="y">Copy the pattern whether or not you use the product. The reason teams hesitate to point an LLM at a production database is exfiltration — a prompt injection or an over-broad query pulling client records into a model context — and schema-only access closes most of that hole while keeping the useful part, since query generation needs structure, not contents. Approval-before-execute is the second half: the model proposes, a human commits. For a wealthtech product sitting on client financials, "the model never saw a row" is a sentence you want to be able to say to an auditor.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/25">producthunt.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Heard: voice as the way you watch an agent run</span><span class="em">Product Hunt · 25 Jul</span></div>
+    <p>Heard topped Product Hunt on 25 July (290 points): a macOS voice layer that connects to Claude Code, Codex and Cursor and speaks their output aloud as audible progress summaries. Open source, free for personal use.</p>
+    <p class="y">Heard uses voice for monitoring rather than dictation. You start a long agent run and listen to progress instead of watching the terminal, which frees your eyes for other work — a fit for how agent work feels now that a single task can run for minutes. If you're designing how an adviser supervises background agents, ambient audio summaries are worth a prototype: the human stays in the loop by ear without being pinned to the screen.</p>
+    <a class="src" href="https://www.producthunt.com/leaderboard/daily/2026/7/25">producthunt.com ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A three-day AUSTRAC deadline that lands on your customers, and a DeepSeek alias that stopped resolving.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">AUSTRAC compliance-officer notification is due 29 July</span><span class="em">austrac / namescan · 3 days out</span></div>
+    <p>Tranche 2 entities brought into Australia's AML/CTF regime on 1 July 2026 — accountants, lawyers, conveyancers and real-estate agents, alongside virtual-asset providers — must notify AUSTRAC of their appointed AML/CTF compliance officer by the later of <b>29 July 2026</b> or 14 days after enrolment. AUSTRAC is explicit that this is separate from enrolment: registering the business does not satisfy the compliance-officer notification.</p>
+    <p class="y">This lands on your customers rather than on you, which is the opportunity. A meaningful share of advice practices and their accounting and legal partners are newly in scope and three days from a hard date many won't have flagged. A dated in-product nudge, or a one-line reminder in your next customer comms, is the kind of thing that earns an advisory firm's trust for the harder compliance work later. Know the date before your customers ask.</p>
+    <a class="src" href="https://namescan.io/insights/austrac-compliance-officer-notification-deadline/">namescan.io ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">DeepSeek's legacy API aliases stopped resolving</span><span class="em">api-docs.deepseek.com · 24 Jul</span></div>
+    <p>At 15:59 UTC on 24 July, DeepSeek hard-retired the <code>deepseek-chat</code> and <code>deepseek-reasoner</code> model names with no grace period. Both were routing labels silently forwarding to V4; calls to the old strings now return HTTP errors. The migration targets are <code>deepseek-v4-flash</code> (the new default) and <code>deepseek-v4-pro</code> (reasoning, 1M context).</p>
+    <p class="y">The failure mode is the nasty kind: an alias that worked for months returns a 4xx the day a dependency's config still pins it. Grep your stack, and your tooling configs, for the old names — a Claude Code or agent-framework preset that hard-codes <code>deepseek-chat</code> breaks without warning. The wider lesson is to pin concrete model versions, not convenience aliases, so a vendor's routing change is your decision to make rather than an outage you find in production.</p>
+    <a class="src" href="https://api-docs.deepseek.com/updates/">api-docs.deepseek.com ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>

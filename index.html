@@ -71,6 +71,15 @@
     <p class="standfirst">A daily briefing for builders of AI products — what the best minds in AI are thinking and shipping at the application layer. Every item passes one test: <b>can you use it, does it change how you build, or does it change your costs and roadmap?</b> Everything else is noise.</p>
 
     <nav class="list">
+      <a class="item" href="briefings/2026-07-26.html">
+        <span class="date">Jul 26</span>
+        <span class="body">
+          <span class="t">Change the agent's tools mid-run</span>
+          <span class="d">Claude Opus 5 landed Friday at the same $5/$25 price as Opus 4.8, but the benchmark table isn't the part that changes your build — two API changes are: you can add or remove an agent's tools mid-conversation without invalidating the prompt cache, and requests a safety classifier flags can route to another model instead of returning a hard error. Simon Willison, writing from a kayak, flags the behaviour worth watching — handed a drawing it had no image access to, Opus 5 wrote its own computer-vision pipeline rather than giving up, which is a reason to constrain what an agent can build, not only what it can call. Claude Code 2.1.219 lets subagents nest three deep by default and adds a strict network allowlist that denies non-allowlisted hosts with no prompt — a real primitive for running agent code in CI without a network escape. Astral turned on 413 Ruff rules by default, up from 59; pair the auto-fix with an agent for the residue. FluentDB shows an LLM your schema, not your rows, with query approval on by default — the pattern for putting a model on a production database. Radar: Australia's AUSTRAC compliance-officer notification is due 29 July for the accountants, lawyers and conveyancers pulled into AML/CTF on 1 July — it lands on your customers — and DeepSeek's deepseek-chat and deepseek-reasoner aliases stopped resolving on the 24th, so grep your configs.</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
       <a class="item" href="briefings/2026-07-24.html">
         <span class="date">Jul 24</span>
         <span class="body">
