@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>29,000 lines and still not done — 28 July 2026 — AI Builder Signal</title>
+<meta name="description" content="HumanLayer's SlopCodeBench reveals requirements in checkpoints instead of one spec, and Opus 5 passed 24% of them, left 8–11 bugs per problem, and wrote 29,065 lines — 3x competitors. The build lesson: scope agents to one issue and keep a human in the loop. Anthropic answers the Kimi K3 moment with its position on open weights: no ban, but chip limits and a distillation crackdown. Ethan Mollick reframes AI as agentic systems, not chat. Opus 5 lands near-Fable-5 quality at half the price. Robynn ships a propose-stage-measure-revert loop for live sites. Radar: Australia's AUSTRAC compliance-officer notification is due tomorrow." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 041 · 28 July 2026</p>
+  <h1>29,000 lines and still not done</h1>
+  <p class="lede">HumanLayer published <b>SlopCodeBench</b>, a coding benchmark that reveals requirements in checkpoints instead of stating the whole problem up front, so a model has to grow a codebase as new demands land. Opus 5 passed <b>24%</b> of checkpoints strictly, left <b>8–11 bugs</b> per problem at completion, and wrote <b>29,065 source lines</b>, roughly 3x its competitors. The build lesson is old and now measured: scope agents to one issue, keep a human in the checkpoint loop. Anthropic answered the Kimi K3 moment with its position on open weights: no ban, but chip-export limits and a crackdown on industrial distillation. Ethan Mollick reframed AI for non-experts as agentic systems that work for hours, not chat. Opus 5 landed near-Fable-5 quality at half the price. Robynn shipped a propose-stage-measure-revert loop for live websites. On the radar: Australia's AUSTRAC compliance-officer notification is due <b>tomorrow</b>.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Anthropic answers the open-weights moment, and Mollick tells non-experts the interaction model has changed.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Anthropic's position on open weights, the day after Kimi K3</span><span class="em">anthropic.com / HN 433▲ · 27 Jul</span></div>
+    <p>Anthropic published where it stands on open-weights models, and the post topped Hacker News. Dario Amodei's line: the company has never advocated a ban, and models without dangerous capabilities are worth their compute cost to developers and researchers. The stated worry is narrower — authoritarian militaries and cyber/bio misuse — and the proposed answers are targeted rather than blanket: restrict chip exports to China, crack down on industrial-scale distillation, and mandate safety testing for any sufficiently capable model, open or closed.</p>
+    <p class="y">It lands the day after Kimi K3's 2.8T weights hit Hugging Face, and the distillation economy Simon Willison mapped last week is now a named policy target. If you fine-tune on or self-host a Chinese open model, the regulatory ground under that choice is moving, so track it before you commit a roadmap to it. Note the question the post leaves open: whether Anthropic will ever release open weights of its own.</p>
+    <a class="src" href="https://www.anthropic.com/news/position-open-weights-models">anthropic.com ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=49038060">news.ycombinator.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Ethan Mollick: using AI now means handing off a task, not chatting</span><span class="em">oneusefulthing.org · 23–26 Jul</span></div>
+    <p>Mollick refreshed his periodic guide to which AI to use, then updated it twice within days to add Opus 5 and Codex's voice mode. The reframe for non-experts: using AI no longer means a back-and-forth with a chatbot, it means handing an agentic system a task it works on for the equivalent of hours by pairing a model with tools that plan and act.</p>
+    <p class="y">It's the clearest short brief to hand a teammate who hasn't kept up. For a product builder the signal is that the unit of work users now expect is a delegated task with a result, not a conversation, and the person who tracks this full-time still had to revise his guide twice in a week — a fair measure of how fast the surface is shifting under your onboarding copy.</p>
+    <a class="src" href="https://www.oneusefulthing.org/p/an-opinionated-guide-to-which-ai-b22">oneusefulthing.org ↗</a>
+    <a class="src" href="https://x.com/emollick/status/2081475928086003869">x.com/emollick ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">A live-site product that lets agents edit only through an approval-and-measurement loop.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Robynn: agents that edit your site through a propose-stage-measure loop</span><span class="em">Product Hunt · this week</span></div>
+    <p>Robynn AI connects to a live site with no rebuild, recognises the CMS from the URL, then runs agents that audit every page against your brand, ideal customer, competitors and target keywords. A marketer points at any element, describes a change in plain language, and the agents rewrite and stage it; nothing goes live until a human approves. After publishing, it measures the change in Google Analytics, reinforces what moved the numbers and rolls back regressions.</p>
+    <p class="y">The closed loop is the pattern worth copying: propose, stage for human approval, publish, measure, then reinforce or auto-revert. That's a safe shape for letting agents touch anything a customer sees. For a wealthtech product it maps onto agent-drafted client content or advice components — stage every change, require sign-off, measure the effect, and keep it reversible — which is roughly what a compliance reviewer would ask for anyway.</p>
+    <a class="src" href="https://www.producthunt.com/products/robynn-ai-self-improving-websites">producthunt.com ↗</a>
+    <a class="src" href="https://robynn.ai/">robynn.ai ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">A benchmark built the way you actually ship — one requirement at a time — and what it exposes about running agents unattended.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">SlopCodeBench: models still can't build one issue at a time unattended</span><span class="em">github.com/humanlayer · 27 Jul</span></div>
+    <p>HumanLayer published SlopCodeBench, which grades a model on maintaining code quality across a sequence of checkpoints rather than a single up-front spec — closer to how software is built, where you discover problems as you go. On the tested subset Opus 5 passed <b>24%</b> of checkpoints strictly (4 of 17), left <b>8–11 bugs</b> per problem at completion, and wrote <b>29,065 source lines</b> at a 51% test-to-code ratio, against 11% for Opus 4.8 and roughly a third of the line count from other models. The authors' conclusion: for real-shaped work built one issue at a time, today's models can't run lights-off without steering.</p>
+    <p class="y">This benchmark matches how you actually ship — requirements arrive incrementally — and it quantifies what teams feel: hand an agent a growing codebase unattended and it accumulates defects and code bloat. Scope agents to one issue at a time, keep a human at each checkpoint, and read a sudden 3x jump in lines or tests as a smell rather than throughput. It's the counterweight to the "let it run overnight" pitch, with numbers.</p>
+    <a class="src" href="https://github.com/humanlayer/advanced-context-engineering-for-coding-agents/blob/main/benchmarking-opus-5-on-slop-code-bench.md">github.com/humanlayer ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A near-frontier model at half the price, and an AUSTRAC deadline that lands on your customers tomorrow.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Opus 5: near-Fable-5 quality at half the token price</span><span class="em">anthropic.com · 24 Jul</span></div>
+    <p>Anthropic shipped Opus 5 on 24 July at <code>$5/$25</code> per MTok — the same as Opus 4.8 and half of Fable 5's <code>$10/$50</code> — with quality close to Fable 5, a new cost/capability toggle, and default status on Claude Max. It's the fourth Claude 5 model in under two months.</p>
+    <p class="y">The cost curve moved, not the frontier. Re-run your inference math this week: hold quality and roughly halve spend, or hold budget and step up a tier. The toggle also lets you route cheap by default and escalate only the hard requests inside one model family, which is cheaper than maintaining two.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-opus-5">anthropic.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et star">AUSTRAC compliance-officer notification is due tomorrow</span><span class="em">austrac / namescan · 29 Jul</span></div>
+    <p>The tranche-2 entities brought into Australia's AML/CTF regime on 1 July — accountants, lawyers, conveyancers, real-estate agents and virtual-asset providers — must notify AUSTRAC of their appointed AML/CTF compliance officer by the later of <b>29 July 2026</b> or 14 days after enrolment. AUSTRAC is explicit that enrolling the business does not satisfy this; the compliance-officer notification is a separate, dated step.</p>
+    <p class="y">It lands on your customers and it's now one day out. A meaningful share of advice practices and their accounting and legal partners are newly in scope and won't have the date flagged. A dated in-product nudge, or one line in today's customer note, puts you ahead of the firms that haven't caught it — cheap trust to bank before the harder compliance work.</p>
+    <a class="src" href="https://namescan.io/insights/austrac-compliance-officer-notification-deadline/">namescan.io ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
