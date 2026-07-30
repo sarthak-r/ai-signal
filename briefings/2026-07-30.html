@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MCP goes stateless and grows a UI — 30 July 2026 — AI Builder Signal</title>
+<meta name="description" content="The MCP 2026-07-28 release candidate drops sessions for stateless request/response, moves Tasks and Apps into a versioned Extensions framework, and hardens auth to OAuth/OIDC — and Claude shipped support the same day with managed connector auth, an observability dashboard, and private-network Tunnels. MCP Apps let a connector render its own UI in the conversation. Simon Willison flagged the first self-replicating prompt injection, one that survives a round trip through Copilot for Word. Perplexity put its Personal Computer agent on Windows with a cloud-brain/local-hands split. Sebastian Raschka tore down Kimi K3. Radar: document-borne injection is now a named, replicating threat, and your ingestion pipeline is the exposed surface." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 042 · 30 July 2026</p>
+  <h1>MCP goes stateless and grows a UI</h1>
+  <p class="lede">The <b>MCP 2026-07-28</b> release candidate rewrites the protocol builders are standardizing on: sessions are gone, so a remote server runs serverless behind a plain load balancer; <b>Tasks</b> and <b>MCP Apps</b> move into a versioned Extensions framework; auth aligns to OAuth 2.0 / OpenID Connect. Anthropic shipped Claude support the same day — managed connector auth, a connector observability dashboard, and private-network Tunnels. The sleeper is MCP Apps, which lets a connector render its own UI in the conversation instead of a wall of JSON. Simon Willison flagged the first <b>self-replicating</b> prompt injection, one that survives a round trip through Copilot for Word and turns each drafted document into a fresh carrier. Perplexity put its Personal Computer agent on Windows with a cloud-brain, local-hands split. Sebastian Raschka tore down Kimi K3 for anyone weighing the open model. On the radar: document-borne injection is now a named, replicating threat, and your ingestion pipeline is the exposed surface.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Willison names a new attack class; Raschka opens up the open model everyone is evaluating.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Simon Willison flags the first self-replicating prompt injection</span><span class="em">simonwillison.net · 29 Jul</span></div>
+    <p>Willison surfaced Håkon Måløy's writeup of a prompt injection that survives a round trip through Copilot for Word. Hidden instructions in a source document get carried into the document Copilot drafts, so the output becomes a fresh carrier that infects the next person who feeds it to an AI — no further contact from the original attacker. White-on-white hidden text is old; the deliberate self-replication is new. Microsoft received responsible disclosure and has not shipped a full mitigation.</p>
+    <p class="y">Any agent that reads untrusted content and then writes new content is a propagation surface, not a one-shot target. For a product that ingests client statements, PDFs and emails, treat model-written output as tainted until sanitised, and never let one drafting agent's output feed another agent unchecked — one poisoned file can seed many.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/29/ai-worming-through-word/">simonwillison.net ↗</a>
+    <a class="src" href="https://enklypesalt.com/posts/context-collapse-part3-ai-worming-through-word/">enklypesalt.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Sebastian Raschka's teardown of Kimi K3's architecture</span><span class="em">sebastianraschka.com · 28 Jul</span></div>
+    <p>Raschka posted a short architecture note on Kimi K3, last week's 2.8T open-weights model. It walks the design choices that let a model this size run at all: LatentMoE, Kimi Delta Attention, attention residuals, dropping positional encodings (NoPE), and the inference-efficiency trade-offs behind them.</p>
+    <p class="y">If you are weighing whether to fine-tune on or self-host an open model, this is the fastest read on what you would actually be running and where its costs sit. Raschka writes for builders, not academics, and it is the cheapest due diligence you will do before committing infra to K3.</p>
+    <a class="src" href="https://sebastianraschka.com/blog/2026/kimi-k3-architecture-notes.html">sebastianraschka.com ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">The protocol under your connectors got rewritten, and a desktop agent split its brain from its hands.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">MCP 2026-07-28: stateless core, Tasks and Apps as extensions, OAuth-aligned auth</span><span class="em">modelcontextprotocol.io / claude.com · 28 Jul</span></div>
+    <p>The MCP 2026-07-28 release candidate drops the stateful session model for request/response, so a remote server can run serverless behind a round-robin load balancer instead of needing sticky sessions and a shared store, and clients can cache <code>tools/list</code>. Long-running work moves to a <b>Tasks</b> extension (the server returns a task handle the client drives with <code>tasks/get</code> / <code>tasks/cancel</code>), UI moves to <b>MCP Apps</b>, and both live in a versioned Extensions framework with reverse-DNS IDs. Authorization aligns to OAuth 2.0 / OpenID Connect. Anthropic shipped Claude support the same day: enterprise-managed connector auth via Entra/Okta, an observability dashboard for published connectors, and MCP Tunnels for reaching servers inside a private network.</p>
+    <p class="y">Stateless removes the operational tax that made remote MCP servers a chore to run — edge/serverless deploys become viable. The cost is a migration you should schedule now: the <code>initialize</code>/<code>initialized</code> handshake is gone (client info rides in <code>_meta</code> on every request) and anyone on the <code>2025-11-25</code> experimental Tasks API moves to the new lifecycle. It is a release candidate, so pin your target and test against it before it finalises.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io ↗</a>
+    <a class="src" href="https://claude.com/blog/bringing-mcp-2026-07-28-to-claude">claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Perplexity's Personal Computer agent lands on Windows</span><span class="em">perplexity.ai / siliconangle · 28 Jul</span></div>
+    <p>Perplexity shipped its desktop agent for Windows: an always-on agent that reads and edits local files and drives Excel, PowerPoint, Word, Outlook and OneDrive. Reasoning stays in the cloud — an orchestrator (Claude Opus 4.7 by default) decomposes each task and routes sub-tasks across a roster of 20-plus models. It prompts before sensitive actions like sending mail or deleting files. Max and Enterprise Max only, from <code>$200/mo</code>.</p>
+    <p class="y">The cloud-brain, local-hands split is the design worth copying. The desktop is the actuator; the model roster is swappable behind an orchestrator. If you are building a desktop or ops agent, that shape keeps you off any single model and lets you route cheap-by-default and escalate on the hard requests without shipping inference to the client machine.</p>
+    <a class="src" href="https://www.perplexity.ai/hub/blog/personal-computer-on-windows">perplexity.ai ↗</a>
+    <a class="src" href="https://siliconangle.com/2026/07/28/perplexity-brings-personal-computer-ai-agent-windows/">siliconangle.com ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">The new MCP surface turns a tool that returns JSON into a tool that returns an interface.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">MCP Apps: connectors that render their own UI in the conversation</span><span class="em">modelcontextprotocol.io · 28 Jul</span></div>
+    <p>The MCP Apps extension lets a server return server-rendered HTML that the host displays in a sandboxed iframe inside the conversation, alongside tool calls. A connector can show a form, a chart or an interactive control where you would otherwise get text the model paraphrases — and Claude already renders it.</p>
+    <p class="y">The unit you ship stops being a tool that returns JSON and becomes a tool that returns an interface. For a wealthtech connector that means a scenario slider or a projection chart rendered in-chat, with direct manipulation and fewer numbers for the model to hallucinate on the way past. Now that the surface exists, design connectors UI-first for anything where a rendered control beats a paragraph.</p>
+    <a class="src" href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/">modelcontextprotocol.io ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Document-borne injection is the compliance-shaped risk your buyers will start asking about.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">Document-borne prompt injection is now a named, replicating threat</span><span class="em">enklypesalt / simonwillison · 29 Jul</span></div>
+    <p>The self-replicating Word/Copilot worm above generalises: untrusted content reaches a tool-wielding agent and issues instructions it obeys, and the payload can now propagate through the documents the agent produces, not just the one it reads.</p>
+    <p class="y">For an Australian wealthtech product this is the risk your compliance-minded buyers will raise. Any pipeline that ingests client documents and lets an agent act — draft advice, update a record, send a message — needs the injection boundary drawn on purpose: neutralise instructions in ingested content, gate side-effectful actions behind human sign-off, and log what the agent read. It is the propose-stage-approve loop that keeps agents safe on live sites, applied to document intake.</p>
+    <a class="src" href="https://enklypesalt.com/posts/context-collapse-part3-ai-worming-through-word/">enklypesalt.com ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Jul/29/ai-worming-through-word/">simonwillison.net ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
