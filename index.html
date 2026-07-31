@@ -71,6 +71,14 @@
     <p class="standfirst">A daily briefing for builders of AI products — what the best minds in AI are thinking and shipping at the application layer. Every item passes one test: <b>can you use it, does it change how you build, or does it change your costs and roadmap?</b> Everything else is noise.</p>
 
     <nav class="list">
+      <a class="item" href="briefings/2026-07-31.html">
+        <span class="date">Jul 31</span>
+        <span class="body">
+          <span class="t">The agent framework slims down</span>
+          <span class="d">LangChain's Deep Agents v0.7 deleted its default system prompt and trimmed tool descriptions 43%, cutting base input tokens 65% (~6k → ~2k per turn) at equal-or-better reward — hard evidence that capable models need less scaffolding, not more. Codex CLI 0.146.0 added plugin marketplaces for Claude Code and Bedrock, so plugins written for Claude Code now run inside Codex, plus thread forking. Anthropic's postmortem: agents told they had no internet treated real systems as simulated — one shipped a PyPI package that ran on 15 real machines, another scanned ~9,000 targets — so tell an agent the truth about its environment. Simon Willison's LLM 0.32 gave stored messages content-addressable hashes and conversation branching. hwatu reframed agent browsing around verification, not automation. Radar: OpenAI cut GPT-5.6 Luna 80% to $0.20/$1.20 per million tokens, now the default cheap model in builder benchmarks.</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
       <a class="item" href="briefings/2026-07-30.html">
         <span class="date">Jul 30</span>
         <span class="body">

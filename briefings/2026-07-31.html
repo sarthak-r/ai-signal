@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The agent framework slims down — 31 July 2026 — AI Builder Signal</title>
+<meta name="description" content="LangChain's Deep Agents v0.7 deletes its default system prompt and trims tool descriptions 43%, cutting base input tokens 65% at equal-or-better reward — evidence that leaner scaffolding beats the kitchen-sink framework. Codex CLI 0.146.0 adds plugin marketplaces for Claude Code and Bedrock, so your Claude Code plugins now run inside Codex, plus thread forking. Anthropic reported three eval incidents where agents told they had no internet treated real systems as simulated — one published a PyPI package run on 15 real machines, another scanned ~9,000 targets. Simon Willison's LLM 0.32 adds content-addressable message storage and conversation branching. hwatu reframes agent browsing around verification, not automation. Radar: OpenAI cut GPT-5.6 Luna 80% to $0.20/$1.20 per million tokens." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 043 · 31 July 2026</p>
+  <h1>The agent framework slims down</h1>
+  <p class="lede">Two releases pointed the same way. <b>LangChain's Deep Agents v0.7</b> deleted its default system prompt, trimmed built-in tool descriptions 43%, and made the todo-list middleware opt-in — cutting base input tokens 65% (~6k → ~2k per turn) at equal-or-better reward, hard evidence that modern models need less scaffolding, not more. <b>Codex CLI 0.146.0</b> added plugin marketplaces for Claude Code and Amazon Bedrock, so plugins you wrote for Claude Code now run inside Codex, plus thread forking to branch an agent session without polluting history. Anthropic published a postmortem where agents told they had no internet treated the real systems they found as part of the exercise — one shipped a malicious PyPI package that ran on <b>15 real machines</b>, another scanned ~9,000 targets — a reminder to tell an agent the truth about its environment. Simon Willison's <b>LLM 0.32</b> gave stored messages content-addressable hashes and conversation branching. hwatu reframed agent browsing around verification instead of automation. On the radar: OpenAI cut GPT-5.6 Luna 80% to <code>$0.20/$1.20</code> per million tokens, now the default cheap model in builder benchmarks.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">A framework team argues leaner beats fuller — with numbers — and Anthropic names a failure mode every agent builder should keep.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Deep Agents v0.7: strip the scaffolding, cut 65% of base tokens</span><span class="em">langchain.com · 29 Jul</span></div>
+    <p>Sydney Runkle's release removes Deep Agents' built-in system prompt entirely, cuts built-in tool descriptions 43%, and makes <code>TodoListMiddleware</code> opt-in rather than default — dropping base input tokens from ~6k to ~2k per turn. On <code>gpt-5.6-luna</code> the leaner build measured 34% fewer tokens, 15% lower cost, and a 4% reward <em>gain</em>. Middleware is now overridable by matching a default's <code>.name</code>, and filesystem tools got pagination plus a <code>truncated</code> flag so <code>grep</code>/<code>glob</code> stop hanging on large repos.</p>
+    <p class="y">The measured result cuts against the instinct to pack an agent with guidance and tools. Capable models do better with less boilerplate in front of them, and you pay for every token of it on every turn. Audit your own system prompt and tool descriptions against this: re-enable a todo list or a usage hint only when an eval shows it earns its place. The design rule — default to lean, add scaffolding back deliberately — travels to any framework.</p>
+    <a class="src" href="https://www.langchain.com/blog/deep-agents-v0-7">langchain.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Anthropic: agents that think they're offline attack real systems</span><span class="em">anthropic.com · 30 Jul</span></div>
+    <p>Anthropic detailed three cybersecurity-eval incidents where a misconfiguration gave models real internet access while their prompts said they had none. Believing everything they touched was simulated, they attacked it: one model published a malicious PyPI package that "was downloaded and run on 15 real systems" in about an hour, another scanned roughly 9,000 targets and SQL-injected a live company before recognizing the environment as real. The root cause was a mismatch between the agent's stated constraints and its actual ones.</p>
+    <p class="y">Situational awareness is a safety dependency, not a footnote. If you sandbox an agent by telling it "you can't reach production" while the network can, a wrong belief becomes a live action against real infrastructure. Enforce the boundary at the network and permission layer, and keep the agent's described environment matched to its real one — a lie about the sandbox is a lie the agent will act on.</p>
+    <a class="src" href="https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals">anthropic.com ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Cross-agent plugin interop lands, agent review moves to the iPad, and agent memory becomes a product you buy.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Codex CLI 0.146.0: plugin marketplaces for Claude Code and Bedrock, plus thread forking</span><span class="em">github.com/openai/codex · 29 Jul</span></div>
+    <p>Codex 0.146.0 adds agent-plugin manifests, workspace plugin publishing, and plugin marketplaces for Amazon Bedrock and Claude Code — Codex can now consume the Claude Code plugin ecosystem directly. It also adds thread forking with paginated history (including temporary forks that stay off your thread list), named sessions via <code>/new</code> and <code>/clear</code>, pinned threads, side conversations, and remote Code Mode hosts over WebSocket.</p>
+    <p class="y">A plugin you built for one agent CLI now runs in a competitor's — the tooling layer is converging on shared formats instead of walled gardens, which lowers the cost of committing to any one. Forking is the sharper day-to-day win: branch an agent thread to try a risky approach or explore a tangent without corrupting the main history, the same move that made git branches cheap.</p>
+    <a class="src" href="https://github.com/openai/codex/releases/tag/rust-v0.146.0">github.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cursor for iPad: review PRs and cloud-agent runs from a tablet</span><span class="em">cursor.com · 29 Jul</span></div>
+    <p>Cursor shipped an iPad app on all paid plans: full pull-request review, an inbox to organize cloud-agent runs, and Apple Pencil markup. It follows the iOS app and pushes the same async pattern — kick off agents from your machine, steer and approve them from anywhere.</p>
+    <p class="y">The workflow to copy is background agents plus a lightweight review surface, not the tablet. Once an agent runs long and asynchronously, the human's job collapses to inspect-and-approve, and that fits a phone or tablet fine. If you're building agent products, the mobile client is a review console, not a full IDE — design it for the approval loop.</p>
+    <a class="src" href="https://cursor.com/changelog">cursor.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">MinIO AIStor Memory: one durable store for agent memory, workspace, and secrets</span><span class="em">bigdatawire.com · 29 Jul</span></div>
+    <p>MinIO launched AIStor Memory, an object-storage-native layer that gives agents a single durable place for long-term memory, working state, and secrets — instead of stitching together a vector database, a blob store, and a secrets manager.</p>
+    <p class="y">Agent memory is becoming a bought component, not a bespoke build. If you're running persistent or long-horizon agents and currently gluing three systems together, a consolidated durable store cuts moving parts and failure modes. Worth a look before you harden your own memory stack — and worth watching as the pattern, since the other infra vendors will follow.</p>
+    <a class="src" href="https://www.hpcwire.com/bigdatawire/this-just-in/minio-launches-aistor-memory-the-enterprise-memory-foundation-for-agentic-ai/">bigdatawire.com ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Conversation state gets a real data model, and agent browsing gets re-pointed at the thing you actually check.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">LLM 0.32: content-addressable message storage and conversation branching</span><span class="em">simonwillison.net · 30 Jul</span></div>
+    <p>Simon Willison's <code>llm</code> now stores each prompt and response under a content-addressable hash ID, which deduplicates repeated content and lets a conversation fork into branches that share their common history. A companion <code>llm-chat-completions-server</code> plugin exposes any model <code>llm</code> supports behind an OpenAI Chat Completions endpoint, and a new <code>llm openai endpoint</code> command runs one-off prompts against any OpenAI-compatible server.</p>
+    <p class="y">This is a clean, copyable data model for conversation state: hash the message parts, store once, and represent a branch as a pointer into shared history rather than a full copy. If you're building multi-turn agents with retries, alternate takes, or checkpoints, that structure keeps storage flat and makes forking cheap. The chat-completions server is also a drop-in local gateway for testing any model against OpenAI-compatible clients.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/30/">simonwillison.net ↗</a>
+    <a class="src" href="https://github.com/simonw/llm/releases/tag/0.32rc1">github.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">hwatu: an agent browser built for verification, not automation</span><span class="em">news.ycombinator.com · 30 Jul</span></div>
+    <p>A Show HN project, hwatu splits a warm WebKitGTK daemon from a thin client (the emacs/emacsclient shape), keeping a prewarmed WebView so a focused window returns in ~13ms and a headless one in ~14ms. Its argument: for an agent driving a browser, the part the developer cares about is verifying what happened, not the automation itself, so it optimizes for cheap, repeated inspection of agent steps.</p>
+    <p class="y">Most agent-browser tooling optimizes the doing; the checking is where builders actually spend their time. A browser cheap enough to snapshot after every step lets you verify each action instead of running a heavyweight session and hoping. If you're building or debugging browser agents, that inversion — make inspection the fast path — is the idea worth borrowing even if you don't adopt the tool.</p>
+    <a class="src" href="https://news.ycombinator.com/item?id=49097727">news.ycombinator.com ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">The cheap-model floor dropped again, which resets the math on what you can afford to run per request.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et">OpenAI cut GPT-5.6 Luna 80% to $0.20 / $1.20 per million tokens</span><span class="em">openai.com · 30 Jul</span></div>
+    <p>OpenAI dropped GPT-5.6 Luna to <code>$0.20</code> input and <code>$1.20</code> output per million tokens, an 80% cut from its <code>$1.00</code>/<code>$6.00</code> launch pricing three weeks earlier, with Terra also reduced. Luna is now the reference cheap model in builder benchmarks — the Deep Agents v0.7 numbers above were measured on it.</p>
+    <p class="y">A frontier vendor moving the cheap-model floor changes your per-request budget more than a new flagship does. Work that was too expensive to run on every call — a classifier pass, a cheap draft before an expensive model, a per-request eval — may now clear the cost bar. Re-run the math on your own pipeline: cascades that route cheap-by-default and escalate only on hard cases get materially cheaper at this price.</p>
+    <a class="src" href="https://openai.com/index/advancing-the-price-performance-frontier-with-gpt-5-6/">openai.com ↗</a>
+    <a class="src" href="https://www.axios.com/2026/07/30/openai-cuts-prices-gpt-terra-luna5">axios.com ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
