@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Give the agent tools, not a terminal — 1 August 2026 — AI Builder Signal</title>
+<meta name="description" content="Simon Willison made the case for stateless MCP as a security posture: scoped tools are safer to hand an agent than shell access, easier to audit, and small local models can still drive them — and he shipped mcp-explorer, datasette-mcp, and llm-mcp-client to prove it. GitHub Copilot's July VS Code release put agent work into forkable multi-chat sessions, added BYOK models in the Agents window, and took vision plus agent skills and MCP to GA. Microsoft Agent Framework's Copilot integration hit v1.0 in C# and Python, so Copilot's coding agent becomes a component in your own orchestration. Statewave launched a governance-first memory runtime: provenance-tagged context bundles, sensitivity labels for pii and financial data, and tamper-evident audit receipts. Radar: DeepSeek's re-trained V4-Flash-0731 scores 82.7 on Terminal-Bench 2.1 at $0.14/$0.27 per million tokens and fits on a 128GB MacBook." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 044 · 1 August 2026</p>
+  <h1>Give the agent tools, not a terminal</h1>
+  <p class="lede"><b>Simon Willison</b> spent the week convinced by stateless MCP and turned it into a security argument: scoped MCP tools are safer to hand an agent than shell and <code>curl</code> access, easier to audit, and simple enough that a small local model can still drive them. He shipped three tools to prove it — <code>mcp-explorer</code>, <code>datasette-mcp</code>, and <code>llm-mcp-client</code>. <b>GitHub Copilot's July VS Code release</b> put agent work into forkable multi-chat sessions, added bring-your-own-key models in the Agents window, and took vision plus agent skills and MCP to GA. <b>Microsoft Agent Framework</b> shipped its GitHub Copilot integration to v1.0 in C# and Python, so Copilot's coding agent becomes a component inside your own orchestration. <b>Statewave</b> launched a governance-first memory runtime: provenance-tagged context bundles, sensitivity labels for <code>pii</code> and <code>financial</code> data, and tamper-evident audit receipts. On the radar: DeepSeek's re-trained <b>V4-Flash-0731</b> scores 82.7 on Terminal-Bench 2.1 at <code>$0.14/$0.27</code> per million tokens and fits on a 128GB MacBook — near-frontier agentic coding you can run in-house.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Willison reframes how much power you hand an agent as a security decision, not an ergonomic one.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Willison's case for stateless MCP: scoped tools over shell access</span><span class="em">simonwillison.net · 31 Jul</span></div>
+    <p>Simon Willison shipped three MCP tools this week and argued that MCP is a safer way to build with agents than a terminal. Stateless MCP — one HTTP request, no server-side session — strips most of the implementation complexity of the old two-request protocol, so a server runs like an ordinary scalable web app. His sharper point is about control: scoped tools are "much easier to reason about" and audit than arbitrary command execution, and they stay simple enough that laptop-sized models can drive them. The three tools: <code>mcp-explorer</code> (a <code>uvx</code>-run CLI to probe any MCP server), <code>datasette-mcp</code> (exposes <code>list_databases</code>, <code>get_database_schema</code>, and <code>execute_sql</code> over MCP), and <code>llm-mcp-client</code> (alpha, wires MCP into his <code>llm</code> tool).</p>
+    <p class="y">The choice between handing an agent a shell and handing it a named set of tools is where you set the blast radius. A scoped tool surface bounds what can go wrong and stays legible to a human reviewer, and it lowers the model bar — a cheaper local model can safely run a tool it could never be trusted with a terminal for. His three tools are a working template for exposing your own data as auditable MCP tools instead of a raw exec endpoint: publish read-only SQL and schema access, not a database shell.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/31/stateless-mcp/">simonwillison.net ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Agent work gets branchable inside the IDE, and Copilot's coding agent becomes something you can embed.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">GitHub Copilot's July release: forkable multi-chat sessions and BYOK in the Agents window</span><span class="em">github.blog · 30 Jul</span></div>
+    <p>The July release (VS Code 1.127–1.131) lets one agent session hold several related chats, each with its own history, title, and model, and lets you fork a discussion into a peer chat, keyboard-first, with no linear-thread lock-in. Bring-your-own-key models now run inside the Agents window, Copilot vision (images and PDFs in chat) reached GA, dictation landed across chat, editor, and terminal, and agent skills plus MCP went generally available on 29 July.</p>
+    <p class="y">Branchable chats bring the cheap-experiment habit of version control to agent conversations: try a risky direction in a peer chat without corrupting the main thread, and keep two models working the same task side by side. BYOK-in-agents plus MCP GA means you can route your own model and your own tools through the Copilot agent loop now, so the IDE stops deciding your model and data choices for you.</p>
+    <a class="src" href="https://github.blog/changelog/2026-07-30-github-copilot-in-visual-studio-code-july-2026-releases/">github.blog ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Microsoft Agent Framework: Copilot's coding agent as a stable building block for .NET and Python</span><span class="em">devblogs.microsoft.com · 30 Jul</span></div>
+    <p>The framework's GitHub Copilot integration reached v1.0 in C# and Python — shell execution, file operations, URL fetch, and MCP server integration, now supported and stable. The same post introduced Squad, an open-source multi-agent framework running on the Copilot CLI/SDK (a coordinator plus specialists), and a <code>Squad.Agents.AI</code> NuGet package that lets a Squad team act as a standard Agent Framework agent.</p>
+    <p class="y">Copilot's coding agent is now a component you drop into your own orchestration rather than a closed IDE feature. On .NET or Python you get its shell, file, and MCP capabilities under your runtime, model abstraction, and telemetry — the setup you want when an agent that edits code is one step inside a larger workflow you control, not the whole product.</p>
+    <a class="src" href="https://devblogs.microsoft.com/agent-framework/building-agent-teams-with-agent-framework-github-copilot-cli-and-squad/">devblogs.microsoft.com ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Agent memory grows governance — provenance, data labels, and an audit trail baked into the layer itself.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Statewave: agent memory as a governed, provenance-tagged artifact</span><span class="em">github.com/smaramwbc · 31 Jul</span></div>
+    <p>Statewave (Apache-2.0, self-hosted on Postgres + pgvector, Python and TypeScript SDKs) launched a memory runtime that stores reproducible, provenance-tagged context bundles rather than doing query-time retrieval. Every memory traces to its source and carries a sensitivity label (<code>pii</code>, <code>financial</code>, <code>secret</code>); declarative YAML policies deny or redact by tag with <code>log_only</code> and <code>enforce</code> modes; and writes leave tamper-evident audit receipts. It's pitched as a self-hosted alternative to hosted memory like Mem0 and Zep.</p>
+    <p class="y">Two patterns transfer even if you never adopt the tool. Treat retrieved context as a versioned bundle with provenance, so you can reproduce exactly what the agent saw on any given turn instead of re-running an opaque vector search. And push governance down into the memory layer: label PII and financial data at write time and let policy enforce redaction. For a builder running agents over regulated client data, that is the audit trail and data boundary a licensee will ask about, built in rather than bolted on afterward.</p>
+    <a class="src" href="https://github.com/smaramwbc/statewave">github.com ↗</a>
+    <a class="src" href="https://www.statewave.ai/">statewave.ai ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">A budget open-weights model clears 80 on agentic coding, which changes what you can run per call and where.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">DeepSeek's re-trained V4-Flash beats its own Pro model on agent benchmarks</span><span class="em">simonwillison.net · 31 Jul</span></div>
+    <p>DeepSeek moved V4-Flash-0731 to public beta: same 304B architecture as the preview, re-post-trained, now scoring 82.7 on Terminal-Bench 2.1 (agentic coding) against 72.1 for its larger V4-Pro-Preview and 61.8 for the earlier Flash preview. It's priced at <code>$0.14</code> input and <code>$0.27</code> output per million tokens, and at ~167GB it runs on a 128GB MacBook. Willison called it arguably the best value-per-intelligence model out right now; reasoning effort matters, since default settings underperformed on hard prompts.</p>
+    <p class="y">An open-weights model that clears 80 on agentic coding resets both your per-call budget and where the calls can run. Agent loops too costly to run on every request — or that you would rather not send to a hosted API for client-data reasons — become viable on your own hardware at near-frontier quality. Re-run the math on cheap-by-default cascades, and reconsider which regulated workloads you can now keep fully in-house.</p>
+    <a class="src" href="https://simonwillison.net/2026/Jul/31/deepseek-v4-flash-0731/">simonwillison.net ↗</a>
+    <a class="src" href="https://www.marktechpost.com/2026/07/31/deepseek-upgrades-deepseek-v4-flash-0731-with-major-agentic-and-coding-gains/">marktechpost.com ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
