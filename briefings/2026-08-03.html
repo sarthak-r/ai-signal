@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Two hours, 5,500 lines, ten dollars — 3 August 2026 — AI Builder Signal</title>
+<meta name="description" content="Andrej Karpathy gave Opus 5 the first paragraph of The Lord of the Rings and a 1M-token budget; it ran two hours and wrote 5,500 lines of Three.js that procedurally render the story, which he says retires the pelican-on-a-bicycle style of model test. Claude Tag replaces Claude in Slack today: one Claude per channel, shared context, multi-day async tasks, and 65% of Anthropic's product team code written by the internal version. Show HN's Mu puts 67 real tools behind one MCP endpoint from a single Go binary. OpenAI's Astra published ten open-problem proofs with Lean 4 certificates at under $2,000 per problem. Simon Willison shipped app_debug(), which lets an agent smoke-test the app it just wrote inside an invisible iframe. Radar: Kimi K3 gets 48 tok/s/$ on AMD MI355X against 33 on a B300, and Sonnet 5 intro pricing ends 31 August." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 045 · 3 August 2026</p>
+  <h1>Two hours, 5,500 lines, ten dollars</h1>
+  <p class="lede"><b>Andrej Karpathy</b> handed Opus 5 the opening paragraph of <i>The Lord of the Rings</i> and a 1M-token budget worth about $10. It ran for roughly two hours and produced 5,500 lines of Three.js that procedurally render the story, which he says ends the era of testing a model with "an svg of pelican on a bicycle." <b>Claude Tag</b> replaces Claude in Slack today: one Claude per channel that everyone shares, ambient context from the channel history, and tasks that run across days. Anthropic says 65% of its product team's code comes from the internal version. <b>Mu</b> hit Show HN with 67 tools behind a single MCP endpoint, running real mail, search, and feed infrastructure from one Go binary instead of wrapping third-party APIs. <b>OpenAI's Astra</b> published ten open-problem proofs with Lean 4 certificates at under $2,000 per problem in tokens, every step machine-checkable. <b>Simon Willison</b> shipped <code>app_debug()</code>, which renders an agent-built app in an invisible iframe so the agent can drive JavaScript against it and verify its own work. On the radar: Kimi K3 gets 48 tok/s per dollar on an AMD MI355X against 33 on a B300, and Sonnet 5's intro pricing expires 31 August.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Karpathy retires the quick model smoke test, and the replacement is a two-hour agent run with a token budget attached.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Karpathy: the pelican-on-a-bicycle test is finished</span><span class="em">x.com/karpathy · 2 Aug</span></div>
+    <p>Karpathy gave Opus 5 one paragraph of Tolkien, a 1M-token budget (~$10), and asked for a Three.js render. The model worked ~2 hours and wrote 5,500 lines that procedurally generate the scene. His verdict on the output: "kind of janky but fun." His verdict on what it means: "We're starting to leave the territory where you'd test an LLM by e.g. 'create an svg of pelican on a bicycle'." What he finds striking is the orchestration, since the model has to place polygon assets at <code>(x,y,z)</code> and write the code that animates all of it, with no visual feedback loop. The thread hit the Hacker News front page at 430 points.</p>
+    <p class="y">Your model-comparison setup is probably still a one-shot prompt scored in seconds, which now discriminates poorly between frontier models. The probe that separates them is a long-horizon task with an explicit token budget, judged on whether the artifact runs. Two practical numbers fall out: a two-hour autonomous run costs about $10 at Opus 5 rates, and 5,500 lines is the working ceiling for a single uninterrupted generation. Budget-capped agent runs are now a pricing unit you can quote a client.</p>
+    <a class="src" href="https://x.com/karpathy/status/2083749667410727319">x.com ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=48453002">discussion ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">A shared agent lands in Slack channels today, and a single Go binary offers 67 tools over one MCP endpoint.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Claude Tag replaces Claude in Slack today</span><span class="em">anthropic.com · 3 Aug</span></div>
+    <p>The cutover lands today for Enterprise and Team customers. Claude Tag is multiplayer by design: within a channel there is one Claude, so anyone can see what it is working on and pick up where a colleague stopped. It builds context from the channels it sits in, connects to your tools and data sources, and plans tasks that stretch across multiple days without the original requester staying in the thread. Anthropic says 65% of its product team's code is written by the internal version, including most of Claude Tag itself. Launch credits ($25,000 Enterprise, $2,500 for Team accounts with 10+ paid seats) are Tag-only and expire 1 September.</p>
+    <p class="y">One agent instance per channel is a different product shape from one agent per user, and it changes what you build. Shared state means the transcript is the audit trail and any teammate can take over a run mid-flight, which removes the "only Dave knows what he asked the bot" failure mode. For a small team, copy the model: scope the agent to a channel rather than a person, let it read the channel as ambient context instead of re-briefing it, and treat handoff as the default. If you run client data through Slack, note that granting channel access grants history access.</p>
+    <a class="src" href="https://www.anthropic.com/news/introducing-claude-tag">anthropic.com ↗</a>
+    <a class="src" href="https://claude.com/product/tag">claude.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Mu: 67 tools, one MCP endpoint, one Go binary</span><span class="em">github.com/micro/mu · 3 Aug</span></div>
+    <p>Asim Aslam (Go Micro) posted Mu to Show HN: "the everyday internet as tools" — news, web search, mail, markets, weather, video, places, images, files, calendar, contacts, 67 in total behind one MCP endpoint. The argument is "real tools, not wrappers": Mu runs its own SMTP with DKIM, its own feed aggregators, search indexes, and storage rather than proxying third-party products. Services are Go packages registered in-process, so adding one exposes it across MCP, the CLI, and the web app at once, from the same single binary.</p>
+    <p class="y">Most MCP servers are a thin shim over someone else's API, which means their reliability, rate limits, and terms are yours to inherit. Owning the service under the tool removes that dependency and makes the tool surface something you can actually version. The in-process registry pattern is the reusable part: define a capability once and get MCP, CLI, and HTTP for free, so you stop maintaining three descriptions of the same tool that drift apart.</p>
+    <a class="src" href="https://github.com/micro/mu">github.com ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Two answers to the same question — how does an agent prove that what it produced is correct?</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Astra ships proofs with machine-checkable certificates attached</span><span class="em">github.com/openai · 1 Aug</span></div>
+    <p>OpenAI ran an internal Astra against ten open problems in mathematics and theoretical computer science, at under $2,000 per problem in token cost, and published the results with a 249-page manuscript plus a 62-page account of how the arguments came together. The headline is the first explicit construction of a non-sofic group, open since Gromov introduced soficity in 1999. Every result ships as a Lean 4 formalization in <code>openai/ten-proofs</code> under Apache-2.0, with a <code>sorry</code> count of zero, so anyone can recompile against mathlib and confirm the proof holds. Simon Willison notes the prompts were not published.</p>
+    <p class="y">The certificate is what makes the answer publishable, because it lets a stranger verify the result without trusting the model. That pattern generalizes to any domain with a checker: SQL against a golden result set, a schedule against constraint solver output, a tax or contribution calculation against a rules engine. If you can emit a machine-checkable receipt alongside each agent output, review shifts from "does this look right" to running the checker, and the reviewer's expertise stops being the bottleneck. The cost figure is the other signal: under $2k of tokens for a research-grade result resets what an expensive agent run means.</p>
+    <a class="src" href="https://github.com/openai/ten-proofs">github.com ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Aug/1/ten-advances-in-mathematics/">simonwillison.net ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Willison's invisible iframe: let the agent test the app it just wrote</span><span class="em">simonwillison.net · 1 Aug</span></div>
+    <p>datasette-apps 0.2a0 adds <code>app_debug()</code>, which renders an agent-built app in an iframe set to <code>opacity: 0</code> and <code>pointer-events: none</code>, then runs JavaScript inside that sandbox so the agent can assert behaviour and measure element dimensions without the user seeing anything. It rides on <code>context.browser_task()</code> from datasette-agent 0.4a0. The release also adds <code>app_list()</code> so the agent can enumerate and edit the apps it has permission to touch.</p>
+    <p class="y">Generating UI is cheap now; confirming the generated UI actually renders is the gap. A hidden iframe plus scripted assertions is a smoke test that costs one page load and needs no Playwright process, no browser binary, and no screenshot round-trip through the model. Wire it into the generate step so the agent fixes a broken layout before you ever see it, and log what it asserted, since those assertions become your regression suite for free.</p>
+    <a class="src" href="https://simonwillison.net/2026/Aug/1/datasette-apps/">simonwillison.net ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Inference economics move on AMD, and a 50% price rise on Sonnet 5 lands at the end of the month.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Kimi K3 runs cheaper per token on MI355X than on a B300</span><span class="em">wafer.ai · 31 Jul</span></div>
+    <p>Wafer benchmarked Kimi K3 (2.8T params) and got 48 tok/s per dollar on an AMD MI355X against 33 on an NVIDIA B300, even though the B300 wins on raw throughput (1,568 vs 952 tok/s). The MI355X is roughly 2.4× cheaper per GPU, and its 288GB of VRAM fits the full weights plus a 1M-token cache on a single node, which a B200 cannot do alone. AMD had day-0 kernel support for K3. The authors conclude "SOTA on AMD is imminent." The post reached the Hacker News front page at 203 points on 2 August.</p>
+    <p class="y">If you have written off AMD on CUDA-moat grounds, that assumption is now a year out of date and worth re-pricing. The number that matters for agent workloads is tokens per dollar, not peak throughput, since an agent loop burns tokens in bulk and tolerates latency. Fitting a frontier-scale model plus a 1M-token cache on one node also removes the multi-node complexity that usually kills self-hosting for a small team, which matters if client data cannot leave your infrastructure. Check vendor day-0 kernel support before committing, since that is what decided this benchmark.</p>
+    <a class="src" href="https://www.wafer.ai/blog/kimi-k3-mi355x">wafer.ai ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Sonnet 5 intro pricing ends 31 August</span><span class="em">anthropic.com · deadline</span></div>
+    <p>Sonnet 5 launched 30 June at <code>$2/$10</code> per million input/output tokens as introductory pricing. That runs through 31 August, after which standard rates of <code>$3/$15</code> apply — a 50% increase on both sides.</p>
+    <p class="y">Four weeks to re-forecast. If Sonnet 5 carries your high-volume path, model the September bill at the new rate now rather than discovering it in an invoice. Worth testing this month whether cheaper models can take the easy tier of your traffic, and whether prompt caching and batch pricing close the gap on what stays.</p>
+    <a class="src" href="https://www.anthropic.com/news/claude-sonnet-5">anthropic.com ↗</a>
+    <a class="src" href="https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5">platform.claude.com ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
