@@ -71,6 +71,15 @@
     <p class="standfirst">A daily briefing for builders of AI products — what the best minds in AI are thinking and shipping at the application layer. Every item passes one test: <b>can you use it, does it change how you build, or does it change your costs and roadmap?</b> Everything else is noise.</p>
 
     <nav class="list">
+      <a class="item" href="briefings/2026-08-04.html">
+        <span class="date">Aug 4</span>
+        <span class="body">
+          <span class="t">Sixty-nine billion tokens and no merge queue</span>
+          <span class="d">Steve Yegge published the meter on a year of agent-fleet development: $87k a month in API spend, 69 billion tokens in July at 96% cache hits, 175+ commits a day, 18 crew agents plus named production roles, and a "Land Rush" CI/CD model that dumps every commit onto main and puts parallel agents on diagnosis instead of bisecting serially — plus the admission that Opus 4.7's "just two more things" tic killed his Gas Town project outright. David Crawshaw argues devtools must now ship their source, because a nightly cron job that rebases your local patches onto upstream has collapsed the cost of a private fork. Framer wired Claude Code, Codex, and Cursor straight into its canvas and CMS with no MCP server to configure, agent edits landing on a branch. Hoplite launched sandboxed cloud agents that verify before handing you a PR, and ship as an MCP server so you can drive them from Claude Code. Memmy gives Cursor, Claude Code, and Codex one shared local SQLite memory on 127.0.0.1. Airbnb's eval playbook: three layers, 3-5 calibrated judges rather than 30 noisy ones, 50-100 labelled examples to start, 5% of live traffic sampled daily, and tool calls graded separately from final answers. Cloudflare's FP8 KV cache took Kimi K2.6 from 686k to 1.37M usable tokens at 41% more throughput and ~30% less cost. Radar: 54 of 55 SQLite advisories from one account were LLM fabrications that walked into the CVE pipeline, and Qwen3.8-Max lands 12-15 points behind frontier on agentic coding with weights due next week.</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
       <a class="item" href="briefings/2026-08-03.html">
         <span class="date">Aug 3</span>
         <span class="body">

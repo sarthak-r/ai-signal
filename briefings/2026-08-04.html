@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sixty-nine billion tokens and no merge queue — 4 August 2026 — AI Builder Signal</title>
+<meta name="description" content="Steve Yegge published the numbers behind a year of agent-run development: $87k a month in API spend, 69 billion tokens in July at 96% cache hits, 175 commits a day, and a CI/CD model that abandons the merge queue entirely. David Crawshaw argues devtools must be open source because a nightly cron job can now rebase your local patches onto upstream. Framer connected Claude Code, Codex, and Cursor straight to its canvas and CMS with no MCP setup, changes landing on a branch. Hoplite launched cloud coding agents on Show HN. Memmy gives Cursor, Claude Code, and Codex one shared local SQLite memory. Airbnb published its eval-driven development playbook: three layers, 3-5 calibrated judges, 5% of live traffic sampled daily. Cloudflare doubled Kimi K2.6's usable context to 1.37M tokens with FP8 KV cache. Radar: 54 of 55 SQLite advisories from one account were fabricated by an LLM." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfbfc;
+    --text: #18181b;
+    --body: #3f3f46;
+    --muted: #71717a;
+    --faint: #a1a1aa;
+    --line: #ececef;
+    --accent: #5b51e8;
+    --accent-dark: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 28px 90px; }
+
+  .back { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--faint); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 48px 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.4vw, 2.7rem);
+    font-weight: 800; letter-spacing: -0.03em; margin: 0 0 16px; line-height: 1.12;
+  }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 26px; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 64px 0 4px; scroll-margin-top: 24px;
+  }
+  h2.sec .num { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--accent); font-weight: 600; margin-right: 10px; }
+  .secdesc { color: var(--muted); font-size: .94rem; margin: 0 0 10px; }
+
+  .e { padding: 20px 0 18px; border-bottom: 1px solid var(--line); }
+  .eh { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .et { font-weight: 700; letter-spacing: -0.01em; font-size: 1.04rem; }
+  .et.star::before { content: "★ "; color: var(--accent); font-size: .85em; }
+  .em { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--faint); white-space: nowrap; }
+  .e p { margin: 7px 0 0; font-size: .95rem; color: var(--body); }
+  .e p.y { color: var(--muted); }
+  .e p.y::before { content: "→ "; color: var(--accent); font-weight: 600; }
+  .e code { font-family: 'JetBrains Mono', monospace; font-size: .85em; background: #f1f0fb; color: var(--accent-dark); padding: 1px 5px; border-radius: 4px; }
+  .src { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-dark); text-decoration: none; margin-right: 14px; }
+  .src:hover { text-decoration: underline; }
+
+  footer { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--accent-dark); text-decoration: none; }
+
+  ::selection { background: #ddd6fe; color: #18181b; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../index.html">← AI Builder Signal</a>
+
+  <p class="kicker">Briefing 046 · 4 August 2026</p>
+  <h1>Sixty-nine billion tokens and no merge queue</h1>
+  <p class="lede"><b>Steve Yegge</b> published the operating numbers from a year of running his game on an agent fleet: $87k a month in API spend, 69 billion tokens in July at 96% cache hits, 175 commits a day, and a CI/CD model that throws out the merge queue. He also says Opus 4.7 killed one of his projects outright. <b>David Crawshaw</b> makes the case that devtools must be open source now, because the maintenance cost of a private fork has collapsed to one nightly cron job that rebases your patches onto upstream. <b>Framer</b> wired Claude Code, Codex, and Cursor directly into its canvas and CMS with no MCP server to configure, and agent edits land on a branch. <b>Hoplite</b> launched on Show HN with sandboxed cloud agents that run from ticket to reviewed PR. <b>Memmy</b> gives Cursor, Claude Code, and Codex a single local SQLite memory so they stop re-learning the same things. <b>Airbnb</b> published its eval playbook: three layers, 3-5 calibrated judges rather than 30 noisy ones, and 5% of live traffic sampled daily. <b>Cloudflare</b> doubled Kimi K2.6's usable context to 1.37M tokens with an FP8 KV cache and cut cost per token about 30%. On the radar: 54 of 55 SQLite advisories from one account were fabricated by an LLM and went straight into the CVE pipeline.</p>
+
+  <h2 class="sec">Voices</h2>
+  <p class="secdesc">Yegge puts real numbers on agent-fleet development, and Crawshaw explains why your tools now need to ship their source.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Yegge: $87k a month, 175 commits a day, no merge queue</span><span class="em">yegge.ai · 4 Aug</span></div>
+    <p>Part 1 of "The Shape of Things to Come" is the first time Yegge has shown the meter. His game Wyvern burns roughly <code>$87k/month</code> in API tokens, about 69 billion tokens in July at 96% cache hits, which he cuts roughly 30× by rotating twelve extra Claude Max accounts alongside his own. The fleet is 18 Fable-class crew agents plus Opus and Sonnet-class specialists, coordinated through Beads (a graph issue tracker) and Wheelhouse, his own orchestrator at 150k-300k lines. Production has named agent roles: Gargoyle on SRE, Drawbridge watching deploys, Warden on abuse. At 175+ commits a day the merge queue backed up past 100 commits, so he abandoned it. "Land Rush" slams every commit onto main and puts parallel agents on diagnosis instead of bisecting serially. He also reports that Gas Town, a project built for reuse, died when Opus 4.7 developed a "just two more things" tic and stopped converging. His prediction: human code review survives only as a SOC 2 artifact and is gone within a year.</p>
+    <p class="y">The cache-hit number is the one to copy: 96% is what makes 69 billion tokens affordable, and it comes from holding prompt prefixes stable across a fleet rather than rebuilding context per agent. Measure your own hit rate before you tune anything else. The Land Rush inversion is worth testing at small scale too. When agents can diagnose in parallel, gating merges serially becomes the bottleneck, and detect-and-repair beats prevent-at-the-gate. Take the account-rotation trick as a warning rather than a recipe, since it depends on subscription terms that can change. And Gas Town is a reminder that a model upgrade is a behavioural change to your orchestration, not a drop-in: pin versions and re-run your agent harness against a new model before it reaches production.</p>
+    <a class="src" href="https://yegge.ai/essays/the-shape-of-things-to-come/">yegge.ai ↗</a>
+    <a class="src" href="https://simonwillison.net/2026/Aug/4/steve-yegge/">simonwillison.net ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Crawshaw: devtools must be open source, because forks maintain themselves now</span><span class="em">blog.exe.dev · 2 Aug</span></div>
+    <p>David Crawshaw's argument turns on economics rather than ideology. Customising a tool used to cost more than it returned, because you paid the learning cost up front and the merge cost forever. Both are now near zero. Two prompts do the work: clone the source and modify it locally, then "set up a nightly cron job that executes the prompt: fetch upstream changes to the &lt;software&gt; and rebase all local changes on top of upstream." He added a diff-filtering tool to Shelley, an open-source agent, with a single prompt so commits get pre-processed in the background, something he calls nigh-on impossible against the extension APIs of VS Code or Claude Code. The post hit the Hacker News front page at 513 points on 3 August. Simon Willison added his own version: the friction of reading a dependency has dropped to asking Claude to clone the repo and explain how a subsystem works.</p>
+    <p class="y">This reframes the build-vs-buy question for every tool in your stack. A closed SaaS tool with a plugin API caps your customisation at whatever the vendor exposed; an open-source equivalent now costs one cron job to keep forked. For a regulated product, the ability to patch a tool's behaviour yourself (redaction rules, audit hooks, data residency) is worth more than the polish you give up. Applied to your own product, the argument cuts the other way: if your customers are advisers who want the workflow bent to their practice, an extension API may be the weaker answer than making the surface agent-editable.</p>
+    <a class="src" href="https://blog.exe.dev/devtools-must-be-open-source">blog.exe.dev ↗</a>
+    <a class="src" href="https://news.ycombinator.com/item?id=49156111">discussion ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Two posts on the same worry: nobody is reading the output</span><span class="em">HN front page · 2-3 Aug</span></div>
+    <p>Ankur Sethi tells his coding assistant to show every proposed edit in chat rather than writing files, then retypes each line by hand, reviewing and refactoring during transcription and looking up unfamiliar APIs as he goes. He puts the cost at roughly 2× faster instead of 10×, and the return as a spatial map of his own codebase plus a much better hit rate on hallucinations. It reached 394 points. Separately, gruhn coined "meat proxy" for the person who forwards Claude's answer unread: the recipient could have asked the model themselves, so the only value you add is having read, validated, and rephrased it. His sharpest case is code review, where approving unread agent output makes the reviewer complicit rather than accountable.</p>
+    <p class="y">Both land on review capacity as the constraint, and both are workflow settings rather than opinions. Sethi's is a config change you can make today, telling the agent to propose diffs in chat instead of editing files, and it is worth applying selectively to the code you will be on the hook for at 2am, not to everything. The gruhn point matters for the review process you write down: if your team ships agent-written code into a regulated product, "reviewed" has to mean a human can restate what the change does without the model in the loop, or the sign-off is decoration.</p>
+    <a class="src" href="https://ankursethi.com/blog/prevent-cognitive-debt-by-manually-retyping-llm-generated-code/">ankursethi.com ↗</a>
+    <a class="src" href="https://gruhn.me/blog/2026-08-03/">gruhn.me ↗</a>
+  </article>
+
+  <h2 class="sec">Ship Log</h2>
+  <p class="secdesc">Design tools open their canvas to terminal agents, cloud sandboxes go from ticket to PR, and agents get one shared memory.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Framer External Agents: point Claude Code at a design canvas</span><span class="em">framer.com · 3 Aug</span></div>
+    <p>Framer now connects Claude Code, Codex, Cursor, and Gemini CLI directly to a project with full access to the canvas, components, and CMS. There is no MCP server to stand up, since an install prompt drops in the bridge the agent talks to. The agent can read and write CMS collections (create, update, delete items), change anything in the project without Framer being open, and publish remotely. Every agent change lands on a branch, so you review before merging to the live version. The point of running the local agent rather than an in-app one is that it keeps your files, scripts, APIs, and command-line tools in reach while it works on the site.</p>
+    <p class="y">Design tools have been the last place agents couldn't reach, because the state lived in a proprietary document rather than in files. Framer's answer is to expose the document to whatever agent you already run, which is a better pattern than shipping yet another in-app assistant. Two things to take: the branch-by-default rule is the right safety model for any agent that writes to production state, and the install-prompt-instead-of-MCP-config path removes the setup step that kills adoption. If your product holds structured state a client would want an agent to edit (a plan, a model, a document), this is the shape of the integration to build.</p>
+    <a class="src" href="https://www.framer.com/agents/external/">framer.com ↗</a>
+    <a class="src" href="https://www.framer.com/help/articles/what-you-can-do-with-local-agents/">docs ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Hoplite: sandboxed cloud agents that hand you a reviewed PR</span><span class="em">hoplite.sh · 3 Aug</span></div>
+    <p>Launch HN for Hoplite (YC S26): agents run in isolated cloud environments and take a task from request to reviewed code in one thread, editing the repo, running tests, driving a browser, and opening the pull request. Access is through a GitHub App with scoped permissions and encrypted env vars rather than handing over credentials, and you approve sensitive actions mid-run. It ships an MCP server so you can drive Hoplite from Claude Code or another client, plus a CLI that imports your existing development history. Pricing is by plan and sandbox capacity.</p>
+    <p class="y">The agent verifies in the sandbox before you ever see the diff: tests run and the browser gets driven, so the PR arrives with evidence attached rather than as a hopeful patch. It is the same certificate-alongside-output idea as this week's agent smoke-testing patterns, applied to a whole task instead of a single file. Shipping as an MCP server as well as a product is the other lesson, since a cloud agent you can call from Claude Code composes into your existing setup, while one that lives only behind its own UI becomes a tab you forget.</p>
+    <a class="src" href="https://hoplite.sh">hoplite.sh ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Memmy: one local memory for Cursor, Claude Code, and Codex</span><span class="em">github.com/MemTensor · 3 Aug</span></div>
+    <p>Memmy Agent runs a memory service on <code>127.0.0.1:18960</code> backed by SQLite at <code>~/.memmy/memory-service/memory.sqlite</code>, exposed over an OpenAI-compatible API. Adapters called Agent Sources pull historical context out of Cursor, Claude Code, Codex, OpenCode, OpenClaw, and Hermes, then a MemOS-based engine structures it into shared memory every tool can read. Local-first by default, with desktop app, CLI, and API entry points. 543 stars.</p>
+    <p class="y">If you use one tool for writing code, another for debugging, and a third for automation, each one re-learns your conventions from scratch every session. A single memory store behind an OpenAI-compatible endpoint is the cheapest fix, and keeping it on localhost in SQLite means the memory never becomes a third-party data-residency question, which matters if what the agent remembers includes client detail. Worth reading the adapter design even if you don't adopt it, since normalising six agents' transcript formats into one store is the hard part of the problem.</p>
+    <a class="src" href="https://github.com/MemTensor/memmy-agent">github.com ↗</a>
+  </article>
+
+  <h2 class="sec">Build Patterns</h2>
+  <p class="secdesc">Airbnb writes down how it grades GenAI in production, and Cloudflare quantises its way to double the context window.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">Airbnb's eval playbook: 3 layers, 5 judges, 5% of traffic</span><span class="em">airbnb engineering · Jul</span></div>
+    <p>Airbnb's engineering blog sets out eval-driven development as its own discipline, and the specifics are unusually concrete. Evaluation runs in three layers: deterministic programmatic checks first, LLM-as-judge with a written rubric second, human review for edge cases and calibration third. Start from 50-100 hand-labelled examples, including bad ones, before scaling anything. Keep 3-5 well-calibrated judges rather than 20-30 noisy ones, and target high-80s to 90s percent agreement between judge and human. In production, sample 5% of live de-identified traffic daily. For agentic systems, grade individual agent decisions, sub-agent invocations, and tool calls separately rather than only the final answer, using DFS trace reconstruction to walk the reasoning path. One named person decides quality disputes.</p>
+    <p class="y">The 3-5 figure and the agreement target give you a stopping rule on judge count, which most eval setups lack. The layered order also saves real money, because programmatic checks catch the cheap failures before you spend judge tokens on them. Grading tool calls and sub-agent invocations separately is the part most relevant to a multi-step advisory workflow, where the final document can look right while a lookup silently returned the wrong figure. The named decision-maker earns its place too: without one, rubric disagreements stall releases indefinitely.</p>
+    <a class="src" href="https://medium.com/airbnb-engineering/eval-driven-development-lessons-from-evaluating-genai-at-scale-e817e5ae5788">airbnb-engineering ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Cloudflare: FP8 KV cache doubles usable context, INT4 shrinks GLM 40%</span><span class="em">blog.cloudflare.com · 3 Aug</span></div>
+    <p>Cloudflare published the numbers from quantising its hosted open models on SGLang. Moving the KV cache from BF16 to FP8 took Kimi K2.6's context capacity from about 686,000 tokens to about 1.37 million, raised peak throughput 41% (2,192 vs 1,558 tok/s), and cut cost per token roughly 30%, with negligible accuracy loss across the benchmarks tested. INT4 weight compression took a GLM 5.2 checkpoint from 705GB to 421GB, about 40%, dropping per-GPU memory from 88GB to 52GB and lifting decode speed 55% at single concurrency, 16-27% at higher concurrency, with accuracy within 0.8 percentage points. KV cache integrity checking costs under 1% of throughput and latency.</p>
+    <p class="y">These are the two levers if you self-host, and the FP8 KV cache one is nearly free: same weights, same accuracy, double the context you can actually serve and 30% off the bill. The context result is the interesting one for agent workloads, since long-horizon runs die on cache capacity rather than parameter count. If you evaluated self-hosting six months ago and concluded the memory maths didn't work, the INT4 numbers move a 705GB checkpoint onto materially cheaper hardware. Both are SGLang features you can turn on rather than research you have to reproduce.</p>
+    <a class="src" href="https://blog.cloudflare.com/smaller-faster-safer-models/">blog.cloudflare.com ↗</a>
+  </article>
+
+  <h2 class="sec">Your Radar</h2>
+  <p class="secdesc">Fabricated advisories are entering the CVE pipeline, and Qwen's 2.4T model lands short of frontier on agentic coding.</p>
+
+  <article class="e">
+    <div class="eh"><span class="et star">54 of 55 SQLite advisories were LLM fabrications</span><span class="em">research.jfrog.com · 30 Jul</span></div>
+    <p>JFrog investigated a batch of SQLite CVEs and found that of 55 advisories from a single account, 54 were entirely fabricated. The tells: cited code that doesn't exist in the referenced versions, proof-of-concept payloads that trigger no crash, line numbers past the end of the file (line 3555 in a 2,706-line file), and nothing on SQLite's own advisory page. Detector testing pointed to generated text. It got through because NIST cut back manual validation in February 2024, so a plausible advisory sails into the pipeline. The post hit the Hacker News front page at 699 points on 3 August.</p>
+    <p class="y">Your dependency scanner is downstream of this. Two costs land on you: engineering time burned chasing vulnerabilities in code that was never written, and worse, an automated remediation agent patching against a phantom advisory. If you run agentic dependency updates, add a verification gate before any CVE triggers work — check the advisory appears on the upstream project's own security page and that the cited line actually exists. For a regulated product, this also breaks the assumption behind your vulnerability-management evidence, since "we act on all reported CVEs" is no longer a defensible policy when most reports in a batch can be invented.</p>
+    <a class="src" href="https://research.jfrog.com/post/sqlite-critical-cves-or-llm-slops/">research.jfrog.com ↗</a>
+  </article>
+
+  <article class="e">
+    <div class="eh"><span class="et">Qwen3.8-Max lands, weights next week</span><span class="em">qwen.ai · 3 Aug</span></div>
+    <p>Alibaba shipped Qwen3.8-Max, a 2.4T-parameter MoE, on QwenCloud, with weights due on Hugging Face and ModelScope next week. Reported 67.7 on SWE-bench Pro against Fable 5's 80.0, and 73.5 on FrontierSWE against 88.8. Alibaba has not published an official benchmark table. It topped Hacker News at 1,057 points.</p>
+    <p class="y">This doesn't change a roadmap, since the agentic coding gap to frontier is still 12-15 points. The date to note is the weights drop next week, which is when a 2.4T model becomes something you can run on your own infrastructure. Re-run your own task suite then rather than trusting the published numbers, since the gap between benchmark rank and behaviour on your workflows is where the last three open-weight releases have surprised people.</p>
+    <a class="src" href="https://qwen.ai/blog?id=qwen3.8">qwen.ai ↗</a>
+  </article>
+
+  <footer>
+    All the content on this page is AI generated — compiled from primary sources linked inline.<br />
+    <a href="../index.html">← All briefings</a>
+  </footer>
+</main>
+</body>
+</html>
